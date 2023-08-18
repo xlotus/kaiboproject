@@ -1,0 +1,42 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="common_unit_time_second">秒</string>
+    <string name="common_unit_time_minute">分</string>
+    <string name="setting_storage_default">默认存储卡</string>
+    <string name="setting_storage_sdcard">外置存储卡</string>
+    <string name="setting_storage_no_permission">(没有权限)</string>
+
+    <string name="timer_ago_minutes">%s分钟前</string>
+    <string name="timer_ago_hours">%s小时前</string>
+    <string name="timer_ago_days">%s天前</string>
+    <string name="timer_ago_months">%s月前</string>
+    <string name="timer_ago_years">%s年前</string>
+
+    <string name="timer_ago_one_minute">1分钟前</string>
+    <string name="timer_ago_one_hour">1小时前</string>
+    <string name="timer_ago_one_day">1天前</string>
+    <string name="timer_ago_one_month">1月前</string>
+    <string name="timer_ago_one_year">1年前</string>
+
+    <string name="sz_media_view_times_unit_k" translatable="false">K</string>
+    <string name="sz_media_view_times_unit_m" translatable="false">M</string>
+
+    <string name="common_no_more_data">无更多内容 </string>
+    <string name="common_loading">加载 &#8230;</string>
+    <string name="common_loading_failed">加载失败，点击重试！</string>
+    <string name="common_load_error_opening_network">连接网络中&#8230;</string>
+    <string name="common_load_error_reload">刷新</string>
+
+    <string name="video_list_item_error_msg">加载失败</string>
+
+    <string name="common_operate_later_caps">以后再说</string>
+    <string name="common_load_error_set_network">打开网络</string>
+    <string name="common_operate_retry">重试</string>
+    <string name="request_failed_network_msg">Oops! Network Error. \nFailed to load</string>
+    <string name="request_empty">无内容</string>
+
+    <string name="common_tip_loading">加载中&#8230;</string>
+    <string name="common_operate_ok">确定</string>
+    <string name="common_operate_cancel">取消</string>
+    <string name="common_operate_cancel_caps">@string/common_operate_cancel</string>
+    <string name="common_tip_not_prompt_next_time">下次不再提示</string>
+</resources>

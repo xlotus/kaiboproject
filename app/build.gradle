@@ -1,0 +1,37 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    compileSdk rootProject.ext.COMPILE_SDK
+
+    defaultConfig {
+//        applicationId "cn.cibn.kaibo"
+        applicationId "cibn_text.alplay.com"
+        minSdk rootProject.ext.MIN_SDK
+        targetSdk rootProject.ext.TARGET_SDK
+        versionCode 1
+        versionName "1.0"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    viewBinding {
+        enabled = true
+    }
+}
+
+dependencies {
+
+    api project(':kaibo')
+//    implementation project(':localRepo:liveSdk')
+
+//    api 'androidx.appcompat:appcompat:1.5.1'
+//    api 'androidx.constraintlayout:constraintlayout:2.1.4'
+}

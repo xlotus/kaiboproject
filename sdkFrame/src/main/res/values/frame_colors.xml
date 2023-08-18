@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorButtonHighlight">#80fb5627</color>
+
+    <color name="primary_blue">#FF1668d0</color>
+    <color name="primary_dark_blue">#FF145dbb</color>
+
+    <color name="color_191919">#ff191919</color>
+    <color name="color_999999">#ff999999</color>
+    <color name="color_666666">#ff666666</color>
+    <color name="color_e0e0e0">#e0e0e0</color>
+    <color name="color_ffffff">#ffffffff</color>
+    <color name="color_757575">#ff757575</color>
+
+    <color name="common_color_transparent">#00000000</color>
+    <color name="common_white_transparent_50">#7fffffff</color>
+    <color name="common_white_transparent_70">#b3ffffff</color>
+    <color name="common_white_transparent_80">#ccffffff</color>
+    <color name="common_white_transparent_90">#e6ffffff</color>
+    <color name="common_black_transparent_20">#33000000</color>
+    <color name="common_black_transparent_30">#4c000000</color>
+    <color name="common_black_transparent_50">#7f000000</color>
+    <color name="common_black_transparent_60">#99000000</color>
+    <color name="common_black_transparent_70">#b2000000</color>
+    <color name="common_black_transparent_80">#cc000000</color>
+
+</resources>

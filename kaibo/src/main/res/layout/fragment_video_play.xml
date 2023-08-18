@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_live_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <ImageView
+        android:id="@+id/iv_live_loading_cover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0"
+        android:scaleType="fitXY" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_live_anchor_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|top"
+        android:layout_marginTop="@dimen/dp_26">
+
+        <ImageView
+            android:id="@+id/iv_logo_cibn"
+            android:layout_width="@dimen/dp_130"
+            android:layout_height="@dimen/dp_28"
+            android:layout_marginStart="@dimen/dp_10"
+            android:src="@drawable/ggshop_logo_cibn"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view_bg_live_anchor_info"
+            android:layout_width="@dimen/dp_201"
+            android:layout_height="@dimen/dp_57"
+            android:layout_marginStart="@dimen/dp_28"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="@drawable/bg_live_anchor_info"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_logo_cibn" />
+
+        <ImageView
+            android:id="@+id/iv_live_anchor_head"
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
+            android:layout_marginStart="@dimen/dp_10"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toTopOf="@id/tv_live_anchor_certification_no"
+            app:layout_constraintLeft_toLeftOf="@id/view_bg_live_anchor_info"
+            app:layout_constraintTop_toTopOf="@id/view_bg_live_anchor_info"
+            app:layout_constraintVertical_chainStyle="spread"
+            tools:src="@drawable/cover" />
+
+        <TextView
+            android:id="@+id/tv_live_anchor_certification_no"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dp_10"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_10"
+            app:layout_constraintBottom_toBottomOf="@id/view_bg_live_anchor_info"
+            app:layout_constraintLeft_toLeftOf="@id/iv_live_anchor_head"
+            app:layout_constraintRight_toRightOf="@id/view_bg_live_anchor_info"
+            app:layout_constraintTop_toBottomOf="@id/iv_live_anchor_head"
+            tools:text="@string/anchor_certification_no" />
+
+        <TextView
+            android:id="@+id/tv_live_anchor_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_4"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxWidth="@dimen/dp_140"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintBottom_toBottomOf="@id/iv_live_anchor_head"
+            app:layout_constraintLeft_toRightOf="@id/iv_live_anchor_head"
+            app:layout_constraintTop_toTopOf="@id/iv_live_anchor_head"
+            tools:text="主播主播主播主播主播主播主播主播主播主播主播" />
+
+        <ImageView
+            android:id="@+id/iv_live_anchor_v"
+            android:layout_width="@dimen/dp_12"
+            android:layout_height="@dimen/dp_12"
+            android:layout_marginStart="@dimen/dp_4"
+            android:baselineAlignBottom="true"
+            android:src="@drawable/ggshop_icon_v"
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_live_anchor_name"
+            app:layout_constraintLeft_toRightOf="@id/tv_live_anchor_name" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/layout_qr_code"
+        android:layout_width="@dimen/dp_230"
+        android:layout_height="@dimen/dp_236"
+        android:layout_gravity="end|bottom"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_qr_code_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            tools:src="@drawable/ggshop_bg_qrcode" />
+
+        <ImageView
+            android:id="@+id/iv_qr_code"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="@dimen/dp_52"
+            android:paddingTop="@dimen/dp_61"
+            android:paddingEnd="@dimen/dp_46"
+            android:paddingBottom="@dimen/dp_43"
+            android:scaleType="fitXY"
+            tools:src="@drawable/cover" />
+    </FrameLayout>
+
+
+</FrameLayout>
