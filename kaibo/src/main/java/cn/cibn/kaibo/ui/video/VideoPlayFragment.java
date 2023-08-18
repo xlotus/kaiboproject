@@ -26,6 +26,7 @@ import cn.cibn.kaibo.model.ModelLive;
 import cn.cibn.kaibo.player.PlayerWrapper;
 import cn.cibn.kaibo.stat.StatHelper;
 import cn.cibn.kaibo.ui.KbBaseFragment;
+import cn.cibn.kaibo.viewmodel.PlayerViewModel;
 
 public class VideoPlayFragment extends KbBaseFragment<FragmentVideoPlayBinding> {
     private static final String TAG = "PlayerFragment";

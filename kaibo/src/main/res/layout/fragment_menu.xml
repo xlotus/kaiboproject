@@ -3,52 +3,79 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/menu_root"
-    android:focusable="false"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:focusable="false">
 
-    <Button
-        android:id="@+id/btn_recommend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/menu_item_bg"
-        android:focusable="true"
-        android:nextFocusDown="@id/btn_follow"
-        android:nextFocusUp="@id/btn_me"
-        android:text="推荐"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/btn_follow"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_menu"
+        android:layout_width="@dimen/drawer_menu_width"
+        android:layout_height="match_parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        android:background="@color/white">
 
-    <Button
-        android:id="@+id/btn_follow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/menu_item_bg"
-        android:layout_marginTop="@dimen/dp_10"
-        android:focusable="true"
-        android:nextFocusDown="@id/btn_me"
-        android:nextFocusUp="@id/btn_recommend"
-        android:text="关注"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/btn_me"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_recommend" />
+        <Button
+            android:id="@+id/btn_recommend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/menu_item_bg"
+            android:focusable="true"
+            android:nextFocusUp="@id/btn_me"
+            android:nextFocusDown="@id/btn_follow"
+            android:text="推荐"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/btn_follow"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
 
-    <Button
-        android:id="@+id/btn_me"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/menu_item_bg"
-        android:layout_marginTop="@dimen/dp_10"
-        android:focusable="true"
-        android:nextFocusDown="@id/btn_recommend"
-        android:text="我的"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_follow" />
+        <Button
+            android:id="@+id/btn_follow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="@drawable/menu_item_bg"
+            android:focusable="true"
+            android:nextFocusUp="@id/btn_recommend"
+            android:nextFocusDown="@id/btn_me"
+            android:text="关注"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/btn_me"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_recommend" />
+
+        <Button
+            android:id="@+id/btn_me"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="@drawable/menu_item_bg"
+            android:focusable="true"
+            android:nextFocusDown="@id/btn_recommend"
+            android:text="我的"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_follow" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/menu_drawer"
+        android:layout_width="@dimen/drawer_menu_width"
+        android:layout_height="match_parent"
+        app:layout_constraintLeft_toRightOf="@id/layout_menu">
+
+        <FrameLayout
+            android:id="@+id/sub_menu_container"
+            android:layout_width="@dimen/drawer_menu_width"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@android:color/white"
+            android:focusable="true"
+            android:text="left"
+            android:textColor="@android:color/black" />
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

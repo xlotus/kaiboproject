@@ -29,7 +29,8 @@ import cn.cibn.kaibo.databinding.FragmentMainBinding;
 import cn.cibn.kaibo.model.ModelLive;
 import cn.cibn.kaibo.settings.LiveSettings;
 import cn.cibn.kaibo.stat.StatHelper;
-import cn.cibn.kaibo.ui.video.PlayerViewModel;
+import cn.cibn.kaibo.ui.goods.GoodsListFragment;
+import cn.cibn.kaibo.viewmodel.PlayerViewModel;
 import cn.cibn.kaibo.ui.video.VideoPlayFragment;
 import cn.cibn.kaibo.utils.ToastUtils;
 
@@ -44,6 +45,8 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
     private PlayerViewModel playerViewModel;
     private MenuFragment menuFragment;
     private VideoPlayFragment playerFragment;
+    private GoodsListFragment goodsListFragment;
+
 
     private String intentLiveId;
 
@@ -77,9 +80,11 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
     protected void initView() {
         menuFragment = new MenuFragment();
         playerFragment = new VideoPlayFragment();
+        goodsListFragment = GoodsListFragment.createInstance();
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.replace(R.id.menu_container, menuFragment);
         transaction.replace(R.id.player_fragment_container, playerFragment);
+        transaction.replace(R.id.navi_right_container, goodsListFragment);
         transaction.commit();
         exitToastTranslationY = mContext.getResources().getDimension(R.dimen.dp_140);
         binding.layoutPressBackToClose.setTranslationY(exitToastTranslationY);
@@ -204,12 +209,25 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
             return playerFragment.onKeyDown(keyCode, event);
         }
         if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-            binding.mainLiveDrawer.openDrawer(GravityCompat.START);
-            menuFragment.requestFocus();
+            if (binding.mainLiveDrawer.isDrawerOpen(GravityCompat.END)) {
+                if (goodsListFragment.onKeyDown(keyCode, event)) {
+                    return true;
+                }
+                binding.mainLiveDrawer.closeDrawer(GravityCompat.END);
+            } else {
+                binding.mainLiveDrawer.openDrawer(GravityCompat.START);
+                menuFragment.requestFocus();
+            }
             return true;
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
             if (binding.mainLiveDrawer.isDrawerOpen(GravityCompat.START)) {
+                if (menuFragment.onKeyDown(keyCode, event)) {
+                    return true;
+                }
                 binding.mainLiveDrawer.closeDrawer(GravityCompat.START);
+            } else {
+                binding.mainLiveDrawer.openDrawer(GravityCompat.END);
+                goodsListFragment.requestFocus();
             }
             return true;
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
@@ -233,6 +251,20 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                 return true;
             }
         } else if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (binding.mainLiveDrawer.isDrawerOpen(GravityCompat.START)) {
+                if (menuFragment.onKeyDown(keyCode, event)) {
+                    return true;
+                }
+                binding.mainLiveDrawer.closeDrawer(GravityCompat.START);
+                return true;
+            }
+            if (binding.mainLiveDrawer.isDrawerOpen(GravityCompat.END)) {
+                if (goodsListFragment.onKeyDown(keyCode, event)) {
+                    return true;
+                }
+                binding.mainLiveDrawer.closeDrawer(GravityCompat.END);
+                return true;
+            }
             if (lastBackTime == 0 || System.currentTimeMillis() - lastBackTime > MIN_BACK_DURATION) {
                 lastBackTime = System.currentTimeMillis();
 //                SafeToast.showToast("exit", Toast.LENGTH_SHORT);

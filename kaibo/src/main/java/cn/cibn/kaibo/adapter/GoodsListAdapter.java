@@ -4,13 +4,11 @@ import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
-import androidx.recyclerview.widget.RecyclerView;
+
+import com.tv.lib.frame.adapter.ListBindingAdapter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,11 +16,12 @@ import java.util.Objects;
 
 import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.data.ConfigModel;
+import cn.cibn.kaibo.databinding.ItemGoodsBinding;
 import cn.cibn.kaibo.imageloader.ImageLoadHelper;
 import cn.cibn.kaibo.model.ModelGoods;
 import cn.cibn.kaibo.utils.FocusUtils;
 
-public class GoodsListAdapter extends ListAdapter<ModelGoods.Item, GoodsListAdapter.LiveViewHolder> {
+public class GoodsListAdapter extends ListBindingAdapter<ModelGoods.Item, ItemGoodsBinding> {
 
     private Map<Boolean, ModelGoods.Item> map = new HashMap<>();
     private View lastSelectedView = null;
@@ -33,18 +32,52 @@ public class GoodsListAdapter extends ListAdapter<ModelGoods.Item, GoodsListAdap
         super(new LiveDiffCallback());
     }
 
-    @NonNull
     @Override
-    public LiveViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new LiveViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_goods, parent, false));
+    public ItemGoodsBinding createBinding(ViewGroup parent) {
+        return ItemGoodsBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull LiveViewHolder holder, int position) {
-        holder.bind(getItem(position));
-        if (position == 0) {
-            lastSelectedView = holder.itemView;
+    public void onBindViewHolder(ModelGoods.Item item, ItemGoodsBinding binding, int position) {
+        View itemView = binding.getRoot();
+        if (ConfigModel.getInstance().isGrayMode()) {
+            binding.bgFocusedGoods.setBackgroundResource(R.drawable.bg_recyclerview_item_gray);
+        } else {
+            binding.bgFocusedGoods.setBackgroundResource(R.drawable.bg_recyclerview_item);
         }
+        ImageLoadHelper.loadImage(binding.ivGoodsCover, item.getCover_pic(), (int) itemView.getResources().getDimension(R.dimen.dp_2), ConfigModel.getInstance().isGrayMode());
+        binding.tvGoodsName.setText(item.getName());
+        binding.tvGoodsPrice.setText(item.getPrice());
+        binding.tvGoodsNum.setText(binding.tvGoodsNum.getResources().getString(R.string.goods_num, item.getNum()));
+        binding.tvGoodsPrice.setTextColor(binding.tvGoodsPrice.getResources().getColor(ConfigModel.getInstance().isGrayMode() ?
+                R.color.white : R.color.color_ff1933));
+
+        boolean isForSale = isForSale(item);
+        setStyle(item, binding, itemView.hasFocus(), isForSale);
+
+        if (position == 0) {
+            lastSelectedView = binding.getRoot();
+        }
+    }
+
+    @Override
+    public void onItemFocusChanged(ItemGoodsBinding binding, boolean hasFocus) {
+        View itemView = binding.getRoot();
+        ModelGoods.Item item = (ModelGoods.Item) itemView.getTag();
+        map.put(hasFocus, item);
+        if (map.get(true) == map.get(false)) {
+            // 获得焦点和失去焦点的是同一个item，会有以下两种情况：
+            //  RecyclerView失去焦点
+            //  RecyclerView重新获得焦点
+            // 让此item保持选中状态，
+            itemView.setSelected(true);
+            lastSelectedView = itemView;
+        } else {
+            if (lastSelectedView != null) {
+                lastSelectedView.setSelected(false);
+            }
+        }
+        setStyle(item, binding, hasFocus, isForSale((ModelGoods.Item) itemView.getTag()));
     }
 
     public void requestFocus() {
@@ -53,119 +86,56 @@ public class GoodsListAdapter extends ListAdapter<ModelGoods.Item, GoodsListAdap
         }
     }
 
-    public class LiveViewHolder extends RecyclerView.ViewHolder {
-        private View bgFocused;
-        private ImageView ivGoodsCover;
-        private TextView tvGoodsName;
-        private TextView tvGoodsPriceSign;
-        private TextView tvGoodsPrice;
-        private TextView tvGoodsNum;
-        private ImageView ivSaleStatus;
+    private void setStyle(ModelGoods.Item data, ItemGoodsBinding binding, boolean hasFocus, boolean isForSale) {
+        if (hasFocus) {
+            binding.bgFocusedGoods.setSelected(true);
+            FocusUtils.scaleLeft(binding.ivGoodsCover);
+            FocusUtils.scaleRight(binding.tvGoodsName);
+            int offsetX = FocusUtils.scaleRight(binding.tvGoodsPriceSign);
+            FocusUtils.scaleRight(binding.tvGoodsPrice, offsetX);
+            FocusUtils.scaleRight(binding.tvGoodsNum);
+            binding.tvGoodsPriceSign.setTextColor(binding.tvGoodsPriceSign.getResources().getColor(R.color.white));
+            binding.tvGoodsPrice.setTextColor(binding.tvGoodsName.getResources().getColor(R.color.white));
+            binding.tvGoodsNum.setTextColor(binding.tvGoodsName.getResources().getColor(R.color.white));
+            binding.tvGoodsName.setTextColor(binding.tvGoodsName.getResources().getColor(R.color.white));
 
-        private ModelGoods.Item data;
-
-        public LiveViewHolder(View v) {
-            super(v);
-            bgFocused = v.findViewById(R.id.bg_focused_goods);
-            ivGoodsCover = v.findViewById(R.id.iv_goods_cover);
-            tvGoodsName = v.findViewById(R.id.tv_goods_name);
-            tvGoodsPriceSign = v.findViewById(R.id.tv_goods_price_sign);
-            tvGoodsPrice = v.findViewById(R.id.tv_goods_price);
-            tvGoodsNum = v.findViewById(R.id.tv_goods_num);
-            ivSaleStatus = v.findViewById(R.id.iv_sale_status);
-
-            itemView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    map.put(hasFocus, (ModelGoods.Item) v.getTag());
-                    if (map.get(true) == map.get(false)) {
-                        // 获得焦点和失去焦点的是同一个item，会有以下两种情况：
-                        //  RecyclerView失去焦点
-                        //  RecyclerView重新获得焦点
-                        // 让此item保持选中状态，
-                        v.setSelected(true);
-                        lastSelectedView = v;
-                    } else {
-                        if (lastSelectedView != null) {
-                            lastSelectedView.setSelected(false);
-                        }
-                    }
-                    setStyle(hasFocus, isForSale((ModelGoods.Item) v.getTag()));
-                }
-            });
-        }
-
-        public void bind(ModelGoods.Item item) {
-            itemView.setTag(item);
-            data = item;
-//            ivGoodsCover.setImageResource(R.drawable.cover);
-            if (ConfigModel.getInstance().isGrayMode()) {
-                bgFocused.setBackgroundResource(R.drawable.bg_recyclerview_item_gray);
+            if (isForSale) {
+                ImageLoadHelper.loadGif(binding.ivSaleStatus, R.drawable.ggshop_live_status_w, false);
+                binding.ivSaleStatus.setVisibility(View.VISIBLE);
             } else {
-                bgFocused.setBackgroundResource(R.drawable.bg_recyclerview_item);
+                binding.ivSaleStatus.setVisibility(View.GONE);
             }
-            ImageLoadHelper.loadImage(ivGoodsCover, item.getCover_pic(), (int) itemView.getResources().getDimension(R.dimen.dp_2), ConfigModel.getInstance().isGrayMode());
-            tvGoodsName.setText(item.getName());
-            tvGoodsPrice.setText(item.getPrice());
-            tvGoodsNum.setText(tvGoodsNum.getResources().getString(R.string.goods_num, item.getNum()));
-            tvGoodsPrice.setTextColor(tvGoodsPrice.getResources().getColor(ConfigModel.getInstance().isGrayMode() ?
-                    R.color.white : R.color.color_ff1933));
 
-            boolean isForSale = isForSale(item);
-            setStyle(itemView.hasFocus(), isForSale);
-        }
-
-        private void setStyle(boolean hasFocus, boolean isForSale) {
-            if (hasFocus) {
-                bgFocused.setSelected(true);
-                FocusUtils.scaleLeft(ivGoodsCover);
-                FocusUtils.scaleRight(tvGoodsName);
-                int offsetX = FocusUtils.scaleRight(tvGoodsPriceSign);
-                FocusUtils.scaleRight(tvGoodsPrice, offsetX);
-                FocusUtils.scaleRight(tvGoodsNum);
-                tvGoodsPriceSign.setTextColor(tvGoodsPriceSign.getResources().getColor(R.color.white));
-                tvGoodsPrice.setTextColor(tvGoodsName.getResources().getColor(R.color.white));
-                tvGoodsNum.setTextColor(tvGoodsName.getResources().getColor(R.color.white));
-                tvGoodsName.setTextColor(tvGoodsName.getResources().getColor(R.color.white));
-
-                if (isForSale) {
-                    ImageLoadHelper.loadGif(ivSaleStatus, R.drawable.ggshop_live_status_w, false);
-                    ivSaleStatus.setVisibility(View.VISIBLE);
-                } else {
-                    ivSaleStatus.setVisibility(View.GONE);
-                }
-
-            } else {
-                bgFocused.setSelected(false);
-                FocusUtils.resetScale(ivGoodsCover);
-                FocusUtils.resetScale(tvGoodsName);
-                FocusUtils.resetScale(tvGoodsPrice);
-                FocusUtils.resetScale(tvGoodsNum);
+        } else {
+            binding.bgFocusedGoods.setSelected(false);
+            FocusUtils.resetScale(binding.ivGoodsCover);
+            FocusUtils.resetScale(binding.tvGoodsName);
+            FocusUtils.resetScale(binding.tvGoodsPrice);
+            FocusUtils.resetScale(binding.tvGoodsNum);
 //                tvGoodsPrice.setTextColor(tvGoodsName.getResources().getColor(R.color.color_ff1933));
-                tvGoodsPriceSign.setTextColor(tvGoodsPriceSign.getResources().getColor(ConfigModel.getInstance().isGrayMode() ?
-                        R.color.white : R.color.color_ff1933));
-                tvGoodsPrice.setTextColor(tvGoodsPrice.getResources().getColor(ConfigModel.getInstance().isGrayMode() ?
-                        R.color.white : R.color.color_ff1933));
-                tvGoodsNum.setTextColor(tvGoodsName.getResources().getColor(R.color.color_cccccc));
-                if (isForSale) {
+            binding.tvGoodsPriceSign.setTextColor(binding.tvGoodsPriceSign.getResources().getColor(ConfigModel.getInstance().isGrayMode() ?
+                    R.color.white : R.color.color_ff1933));
+            binding.tvGoodsPrice.setTextColor(binding.tvGoodsPrice.getResources().getColor(ConfigModel.getInstance().isGrayMode() ?
+                    R.color.white : R.color.color_ff1933));
+            binding.tvGoodsNum.setTextColor(binding.tvGoodsName.getResources().getColor(R.color.color_cccccc));
+            if (isForSale) {
 //                    tvGoodsName.setTextColor(tvGoodsName.getResources().getColor(R.color.color_ff1535));
-                    tvGoodsName.setTextColor(tvGoodsPrice.getResources().getColor(ConfigModel.getInstance().isGrayMode() ?
-                            R.color.white : R.color.color_ff1535));
-                } else {
-                    tvGoodsName.setTextColor(tvGoodsName.getResources().getColor(R.color.white));
-                }
-                if (isForSale) {
-                    ImageLoadHelper.loadGif(ivSaleStatus, R.drawable.ggshop_live_status, ConfigModel.getInstance().isGrayMode());
-                    ivSaleStatus.setVisibility(View.VISIBLE);
-                } else {
-                    ivSaleStatus.setVisibility(View.GONE);
-                }
+                binding.tvGoodsName.setTextColor(binding.tvGoodsPrice.getResources().getColor(ConfigModel.getInstance().isGrayMode() ?
+                        R.color.white : R.color.color_ff1535));
+            } else {
+                binding.tvGoodsName.setTextColor(binding.tvGoodsName.getResources().getColor(R.color.white));
+            }
+            if (isForSale) {
+                ImageLoadHelper.loadGif(binding.ivSaleStatus, R.drawable.ggshop_live_status, ConfigModel.getInstance().isGrayMode());
+                binding.ivSaleStatus.setVisibility(View.VISIBLE);
+            } else {
+                binding.ivSaleStatus.setVisibility(View.GONE);
             }
         }
+    }
 
-        private boolean isForSale(ModelGoods.Item item) {
-            return Objects.equals(sellingGoodsId, item.getGoods_id());
-        }
+    private boolean isForSale(ModelGoods.Item item) {
+        return Objects.equals(sellingGoodsId, item.getGoods_id());
     }
 
     private static class LiveDiffCallback extends DiffUtil.ItemCallback<ModelGoods.Item> {

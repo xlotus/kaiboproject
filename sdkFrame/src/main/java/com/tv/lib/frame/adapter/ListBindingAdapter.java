@@ -1,6 +1,6 @@
 package com.tv.lib.frame.adapter;
 
-import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -19,6 +19,8 @@ import com.tv.lib.core.Logger;
 public abstract class ListBindingAdapter<T, VB extends ViewBinding> extends ListAdapter<T, BindingViewHolder<VB>> {
     private static final String TAG = "ListBindingAdapter";
 
+    protected OnItemClickListener<T> listener;
+
     public ListBindingAdapter(DiffUtil.ItemCallback<T> callback) {
         super(callback);
     }
@@ -27,15 +29,51 @@ public abstract class ListBindingAdapter<T, VB extends ViewBinding> extends List
     @Override
     public final BindingViewHolder<VB> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Logger.d(TAG, "onCreateViewHolder");
-        return new BindingViewHolder<>(createBinding(parent));
+        VB binding = createBinding(parent);
+        binding.getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Object tag = v.getTag();
+                if (tag != null) {
+                    onItemClick((T) v.getTag());
+                }
+            }
+        });
+        binding.getRoot().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                onItemFocusChanged(binding, hasFocus);
+            }
+        });
+        return new BindingViewHolder<>(binding);
     }
 
     @Override
     public final void onBindViewHolder(@NonNull BindingViewHolder<VB> holder, int position) {
         holder.setPosition(position);
-        onBindViewHolder(getItem(position), holder.getBinding(), position);
+        T item = getItem(position);
+        holder.getBinding().getRoot().setTag(item);
+        onBindViewHolder(item, holder.getBinding(), position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener<T> listener) {
+        this.listener = listener;
+    }
+
+    protected void onItemClick(T item) {
+        if (listener != null) {
+            listener.onItemClick(item);
+        }
+    }
+
+    protected void onItemFocusChanged(VB binding, boolean hasFocus) {
+
     }
 
     public abstract VB createBinding(ViewGroup parent);
     public abstract void onBindViewHolder(T data, VB binding, int position);
+
+    public interface OnItemClickListener<T> {
+        void onItemClick(T item);
+    }
 }

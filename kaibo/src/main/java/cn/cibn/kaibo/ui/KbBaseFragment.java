@@ -10,6 +10,8 @@ import cn.cibn.kaibo.change.ChangedKeys;
 
 public abstract class KbBaseFragment<T extends ViewBinding> extends BaseFragment<T> {
 
+    protected int grade = 1;
+
     @Override
     protected void addChangedListenerKey(ArrayList<String> keys) {
 

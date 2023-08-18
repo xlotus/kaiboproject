@@ -21,12 +21,21 @@
 
         <FrameLayout
             android:id="@+id/menu_container"
-            android:layout_width="@dimen/dp_150"
+            android:layout_width="@dimen/dp_469"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:background="@android:color/white"
+            android:background="@android:color/transparent"
             android:focusable="true"
             android:text="left"
+            android:textColor="@android:color/black" />
+
+        <FrameLayout
+            android:id="@+id/navi_right_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:background="@android:color/transparent"
+            android:text="right"
             android:textColor="@android:color/black" />
 
     </androidx.drawerlayout.widget.DrawerLayout>

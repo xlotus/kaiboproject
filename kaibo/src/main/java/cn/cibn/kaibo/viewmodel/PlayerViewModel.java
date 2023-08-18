@@ -1,4 +1,4 @@
-package cn.cibn.kaibo.ui.video;
+package cn.cibn.kaibo.viewmodel;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

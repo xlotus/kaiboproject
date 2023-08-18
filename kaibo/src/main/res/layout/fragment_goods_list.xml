@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_goods_list_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_goods_list"
+        android:layout_width="@dimen/drawer_menu_width"
+        android:layout_height="match_parent"
+        android:background="@color/common_list_bg"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <TextView
+            android:id="@+id/tv_goods_list_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_8"
+            android:text="@string/goods_list_title"
+            android:textColor="@color/common_white_transparent_80"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <include
+            android:id="@+id/layout_press_back_to_close_goods_list"
+            layout="@layout/layout_press_back_to_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@id/tv_goods_list_title"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_goods_list_title" />
+
+        <View
+            android:id="@+id/view_bg_shop_qrcode"
+            android:layout_width="@dimen/dp_150"
+            android:layout_height="@dimen/dp_175"
+            android:layout_marginTop="@dimen/dp_28"
+            android:background="@drawable/bg_shop_qrcode"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_goods_list_title" />
+
+        <ImageView
+            android:id="@+id/iv_shop_qrcode"
+            android:layout_width="@dimen/dp_132"
+            android:layout_height="@dimen/dp_132"
+            android:layout_marginTop="@dimen/dp_8"
+            android:background="@color/white"
+            app:layout_constraintLeft_toLeftOf="@id/view_bg_shop_qrcode"
+            app:layout_constraintRight_toRightOf="@id/view_bg_shop_qrcode"
+            app:layout_constraintTop_toTopOf="@id/view_bg_shop_qrcode" />
+
+        <TextView
+            android:id="@+id/tv_shop_qrcode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/shop_qrcode"
+            android:textColor="#FEF0CF"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintBottom_toBottomOf="@id/view_bg_shop_qrcode"
+            app:layout_constraintLeft_toLeftOf="@id/view_bg_shop_qrcode"
+            app:layout_constraintRight_toRightOf="@id/view_bg_shop_qrcode"
+            app:layout_constraintTop_toBottomOf="@id/iv_shop_qrcode" />
+
+        <androidx.leanback.widget.VerticalGridView
+            android:id="@+id/recycler_goods"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/dp_20"
+            android:paddingTop="@dimen/dp_2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_bg_shop_qrcode" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/goods_drawer"
+        android:layout_width="@dimen/drawer_menu_width"
+        android:layout_height="match_parent"
+        app:layout_constraintRight_toLeftOf="@id/layout_goods_list">
+
+        <FrameLayout
+            android:id="@+id/sub_goods_container"
+            android:layout_width="@dimen/drawer_menu_width"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:focusable="true" />
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

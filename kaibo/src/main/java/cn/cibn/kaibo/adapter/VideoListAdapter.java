@@ -38,38 +38,11 @@ public class VideoListAdapter extends ListBindingAdapter<ModelLive.Item, ItemVid
     @Override
     public ItemVideoBinding createBinding(ViewGroup parent) {
         Logger.d(TAG, "createBinding");
-        ItemVideoBinding binding = ItemVideoBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        binding.getRoot().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ChangeListenerManager.getInstance().notifyChange(ChangedKeys.CHANGED_LIVE_ITEM_CLICKED, binding.getRoot().getTag());
-            }
-        });
-        binding.getRoot().setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                map.put(hasFocus, (ModelLive.Item) v.getTag());
-                if (map.get(true) == map.get(false)) {
-                    // 获得焦点和失去焦点的是同一个item，会有以下两种情况：
-                    //  RecyclerView失去焦点
-                    //  RecyclerView重新获得焦点
-                    // 让此item保持选中状态，
-                    v.setSelected(true);
-                    lastSelectedView = v;
-                } else {
-                    if (lastSelectedView != null) {
-                        lastSelectedView.setSelected(false);
-                    }
-                }
-                setStyle((ModelLive.Item) binding.getRoot().getTag(), binding, hasFocus);
-            }
-        });
-        return binding;
+        return ItemVideoBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
     }
 
     @Override
     public void onBindViewHolder(ModelLive.Item item, ItemVideoBinding binding, int position) {
-        binding.getRoot().setTag(item);
         binding.bgFocusedLive.setBackgroundResource(ConfigModel.getInstance().isGrayMode() ?
                 R.drawable.bg_recyclerview_item_gray : R.drawable.bg_recyclerview_item);
 
@@ -82,6 +55,31 @@ public class VideoListAdapter extends ListBindingAdapter<ModelLive.Item, ItemVid
         if (position == 0) {
             lastSelectedView = binding.getRoot();
         }
+    }
+
+    @Override
+    public void onItemClick(ModelLive.Item item) {
+        ChangeListenerManager.getInstance().notifyChange(ChangedKeys.CHANGED_LIVE_ITEM_CLICKED, item);
+    }
+
+    @Override
+    public void onItemFocusChanged(ItemVideoBinding binding, boolean hasFocus) {
+        View itemView = binding.getRoot();
+        ModelLive.Item item = (ModelLive.Item) itemView.getTag();
+        map.put(hasFocus, item);
+        if (map.get(true) == map.get(false)) {
+            // 获得焦点和失去焦点的是同一个item，会有以下两种情况：
+            //  RecyclerView失去焦点
+            //  RecyclerView重新获得焦点
+            // 让此item保持选中状态，
+            itemView.setSelected(true);
+            lastSelectedView = itemView;
+        } else {
+            if (lastSelectedView != null) {
+                lastSelectedView.setSelected(false);
+            }
+        }
+        setStyle(item, binding, hasFocus);
     }
 
     public void requestFocus() {
