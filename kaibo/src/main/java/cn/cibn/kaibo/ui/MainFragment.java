@@ -149,6 +149,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
             if (data instanceof ModelLive.Item) {
                 ModelLive.Item item = (ModelLive.Item) data;
                 StatHelper.statConfirmLiveRoom();
+                RecommendModel.getInstance().addHistory(item);
                 reqUpdateLive(item);
                 binding.mainLiveDrawer.closeDrawer(GravityCompat.START);
             }
@@ -215,8 +216,10 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                 }
                 binding.mainLiveDrawer.closeDrawer(GravityCompat.END);
             } else {
-                binding.mainLiveDrawer.openDrawer(GravityCompat.START);
-                menuFragment.requestFocus();
+                if (!binding.mainLiveDrawer.isDrawerOpen(GravityCompat.START)) {
+                    binding.mainLiveDrawer.openDrawer(GravityCompat.START);
+                    menuFragment.requestFocus();
+                }
             }
             return true;
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
@@ -226,8 +229,10 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                 }
                 binding.mainLiveDrawer.closeDrawer(GravityCompat.START);
             } else {
-                binding.mainLiveDrawer.openDrawer(GravityCompat.END);
-                goodsListFragment.requestFocus();
+                if (!binding.mainLiveDrawer.isDrawerOpen(GravityCompat.END)) {
+                    binding.mainLiveDrawer.openDrawer(GravityCompat.END);
+                    goodsListFragment.requestFocus();
+                }
             }
             return true;
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {

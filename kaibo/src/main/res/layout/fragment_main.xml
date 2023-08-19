@@ -40,6 +40,11 @@
 
     </androidx.drawerlayout.widget.DrawerLayout>
 
+    <FrameLayout
+        android:id="@+id/stack_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <ViewStub
         android:id="@+id/layout_guide_stub"
         android:layout="@layout/layout_guide"
