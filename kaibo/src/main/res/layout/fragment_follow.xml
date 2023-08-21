@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_menu"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/dp_10"
+    android:background="#a0000000"
+    app:layout_constraintLeft_toLeftOf="parent">
+
+    <Button
+        android:id="@+id/btn_anchor"
+        android:layout_width="@dimen/dp_180"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_20"
+        android:background="@drawable/menu_item_bg"
+        android:focusable="true"
+        android:nextFocusLeft="@id/btn_anchor"
+        android:nextFocusUp="@id/btn_anchor"
+        android:nextFocusDown="@id/recycler_anchor_list"
+        android:text="主播"
+        android:textColor="@color/black"
+        app:focusOutFront="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <cn.cibn.kaibo.ui.widget.MyVerticalGridView
+        android:id="@+id/recycler_anchor_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/dp_7"
+        app:focusOutFront="true"
+        app:focusOutSideStart="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_anchor" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

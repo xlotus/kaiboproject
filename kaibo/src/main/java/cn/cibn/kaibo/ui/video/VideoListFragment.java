@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import androidx.leanback.widget.BaseGridView;
 
 import com.tv.lib.core.Logger;
+import com.tv.lib.core.change.ChangeListenerManager;
+import com.tv.lib.frame.adapter.ListBindingAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,6 +60,12 @@ public class VideoListFragment extends KbBaseFragment<FragmentVideoListBinding> 
         });
 
         adapter = new VideoListAdapter();
+        adapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<ModelLive.Item>() {
+            @Override
+            public void onItemClick(ModelLive.Item item) {
+                ChangeListenerManager.getInstance().notifyChange(ChangedKeys.CHANGED_LIVE_ITEM_CLICKED, item);
+            }
+        });
         binding.recyclerVideoList.setAdapter(adapter);
         adapter.submitList(Collections.emptyList());
     }

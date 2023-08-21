@@ -8,7 +8,9 @@ import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -21,6 +23,7 @@ import com.tv.lib.core.utils.ui.SafeToast;
 import com.tv.lib.frame.activity.ILoading;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.change.ChangedKeys;
@@ -30,9 +33,12 @@ import cn.cibn.kaibo.model.ModelLive;
 import cn.cibn.kaibo.settings.LiveSettings;
 import cn.cibn.kaibo.stat.StatHelper;
 import cn.cibn.kaibo.ui.goods.GoodsListFragment;
-import cn.cibn.kaibo.viewmodel.PlayerViewModel;
+import cn.cibn.kaibo.ui.me.AnchorFragment;
+import cn.cibn.kaibo.ui.me.FollowFragment;
+import cn.cibn.kaibo.ui.me.MeFragment;
 import cn.cibn.kaibo.ui.video.VideoPlayFragment;
 import cn.cibn.kaibo.utils.ToastUtils;
+import cn.cibn.kaibo.viewmodel.PlayerViewModel;
 
 public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements ILoading {
     private static final String TAG = "MainFragment";
@@ -49,6 +55,8 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
 
 
     private String intentLiveId;
+
+    private Stack<KbBaseFragment> fragmentStack = new Stack<>();
 
     public static MainFragment createInstance(String intentLiveId) {
         Logger.d(TAG, "createInstance");
@@ -98,6 +106,35 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                 }
             });
         }
+
+        getChildFragmentManager().setFragmentResultListener("menu", getViewLifecycleOwner(), new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                String page = result.getString("page");
+                Logger.d(TAG, "requestKey = " + requestKey + ", page = " + page);
+                if ("me".equals(page)) {
+                    MeFragment f = new MeFragment();
+                    fragmentStack.push(f);
+                    binding.stackContainer.setVisibility(View.VISIBLE);
+                    getChildFragmentManager().beginTransaction().replace(R.id.stack_container, f).commit();
+                    f.requestFocus();
+                } else if ("follow".equals(page)) {
+                    FollowFragment f = new FollowFragment();
+                    fragmentStack.push(f);
+                    binding.stackContainer.setVisibility(View.VISIBLE);
+                    getChildFragmentManager().beginTransaction().replace(R.id.stack_container, f).commit();
+                    f.requestFocus();
+                } else if ("anchor".equals(page)) {
+                    AnchorFragment f = new AnchorFragment();
+                    fragmentStack.push(f);
+                    binding.stackContainer.setVisibility(View.VISIBLE);
+                    getChildFragmentManager().beginTransaction().replace(R.id.stack_container, f).commit();
+                    f.requestFocus();
+                } else if ("back".equals(page)) {
+                    backStack();
+                }
+            }
+        });
     }
 
     @Override
@@ -141,6 +178,8 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
         keys.add(ChangedKeys.CHANGED_GOODS_LIST_UPDATE);
         keys.add(ChangedKeys.CHANGED_NETWORK);
         keys.add(ChangedKeys.CHANGED_REQUEST_PLAY);
+        keys.add(ChangedKeys.CHANGED_REQUEST_SUB_PLAY);
+        keys.add(ChangedKeys.CHANGED_REQUEST_RESTORE_PLAY);
     }
 
     @Override
@@ -149,7 +188,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
             if (data instanceof ModelLive.Item) {
                 ModelLive.Item item = (ModelLive.Item) data;
                 StatHelper.statConfirmLiveRoom();
-                RecommendModel.getInstance().addHistory(item);
+                RecommendModel.getInstance().addHistory(item, true);
                 reqUpdateLive(item);
                 binding.mainLiveDrawer.closeDrawer(GravityCompat.START);
             }
@@ -158,9 +197,23 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
         if (ChangedKeys.CHANGED_REQUEST_PLAY.equals(key)) {
             if (data instanceof ModelLive.Item) {
                 ModelLive.Item item = (ModelLive.Item) data;
-                RecommendModel.getInstance().addHistory(item);
+                RecommendModel.getInstance().addHistory(item, true);
                 reqUpdateLive(item);
             }
+            return;
+        }
+
+        if (ChangedKeys.CHANGED_REQUEST_SUB_PLAY.equals(key)) {
+            if (data instanceof ModelLive.Item) {
+                ModelLive.Item item = (ModelLive.Item) data;
+                RecommendModel.getInstance().addHistory(item, false);
+                reqUpdateLive(item);
+            }
+            return;
+        }
+        if (ChangedKeys.CHANGED_REQUEST_RESTORE_PLAY.equals(key)) {
+            ModelLive.Item item = RecommendModel.getInstance().getCurrent();
+            reqUpdateLive(item);
             return;
         }
         if (ChangedKeys.CHANGED_LIVE_LIST_UPDATE.equals(key)) {
@@ -208,6 +261,9 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
         Logger.d(TAG, "onKeyDown code = " + keyCode);
         if (isInPlay()) {
             return playerFragment.onKeyDown(keyCode, event);
+        }
+        if (!fragmentStack.isEmpty()) {
+            return fragmentStack.peek().onKeyDown(keyCode, event);
         }
         if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
             if (binding.mainLiveDrawer.isDrawerOpen(GravityCompat.END)) {
@@ -322,5 +378,22 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
 
     private boolean isDrawClosed() {
         return !binding.mainLiveDrawer.isDrawerOpen(GravityCompat.START) && !binding.mainLiveDrawer.isDrawerOpen(GravityCompat.END);
+    }
+
+    //后退
+    private boolean backStack() {
+        if (!fragmentStack.isEmpty()) {
+            fragmentStack.pop();
+            if (fragmentStack.isEmpty()) {
+                binding.stackContainer.setVisibility(View.GONE);
+                menuFragment.requestFocus();
+            } else {
+                KbBaseFragment<?> prev = fragmentStack.peek();
+                getChildFragmentManager().beginTransaction().replace(R.id.stack_container, prev).commit();
+                prev.requestFocus();
+            }
+            return true;
+        }
+        return false;
     }
 }

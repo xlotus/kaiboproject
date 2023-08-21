@@ -1,5 +1,6 @@
 package cn.cibn.kaibo.ui;
 
+import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,9 @@ import androidx.core.view.GravityCompat;
 import androidx.leanback.widget.BaseGridView;
 
 import com.tv.lib.core.Logger;
+import com.tv.lib.core.change.ChangeListenerManager;
 import com.tv.lib.core.utils.ui.SafeToast;
+import com.tv.lib.frame.adapter.ListBindingAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,14 +20,17 @@ import java.util.List;
 
 import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.adapter.VideoListAdapter;
+import cn.cibn.kaibo.change.ChangedKeys;
 import cn.cibn.kaibo.databinding.FragmentMenuBinding;
 import cn.cibn.kaibo.model.ModelLive;
 
-public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> {
+public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements View.OnClickListener {
     private static final String TAG = "MenuFragment";
 
     private MenuFragment subFragment;
     private VideoListAdapter adapter;
+
+    private View selectedView;
 
     @Override
     protected FragmentMenuBinding createBinding(LayoutInflater inflater) {
@@ -39,6 +45,12 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> {
             getChildFragmentManager().beginTransaction().replace(R.id.sub_menu_container, subFragment).commit();
         }
         adapter = new VideoListAdapter();
+        adapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<ModelLive.Item>() {
+            @Override
+            public void onItemClick(ModelLive.Item item) {
+                ChangeListenerManager.getInstance().notifyChange(ChangedKeys.CHANGED_LIVE_ITEM_CLICKED, item);
+            }
+        });
         binding.recyclerVideoList.setAdapter(adapter);
         binding.recyclerVideoList.setOnKeyInterceptListener(new BaseGridView.OnKeyInterceptListener() {
             @Override
@@ -54,27 +66,9 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> {
             }
         });
         adapter.submitList(Collections.emptyList());
-        binding.btnRecommend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SafeToast.showToast("推荐", Toast.LENGTH_SHORT);
-                if (grade == 1) {
-                    binding.menuDrawer.openDrawer(GravityCompat.START);
-                }
-            }
-        });
-        binding.btnFollow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SafeToast.showToast("关注", Toast.LENGTH_SHORT);
-            }
-        });
-        binding.btnMe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SafeToast.showToast("我的", Toast.LENGTH_SHORT);
-            }
-        });
+        binding.btnRecommend.setOnClickListener(this);
+        binding.btnFollow.setOnClickListener(this);
+        binding.btnMe.setOnClickListener(this);
 
         requestFocus();
     }
@@ -96,13 +90,18 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> {
         binding.btnRecommend.requestFocus();
     }
 
+    @Override
     public void requestFocus() {
-        binding.btnRecommend.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                binding.btnRecommend.requestFocus();
-            }
-        }, 10);
+        if (selectedView != null) {
+            selectedView.requestFocus();
+        } else {
+            binding.btnRecommend.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    binding.btnRecommend.requestFocus();
+                }
+            }, 10);
+        }
 
         List<ModelLive.Item> itemList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
@@ -116,15 +115,43 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> {
         adapter.submitList(itemList);
     }
 
+    @Override
+    public void onClick(View v) {
+        if (selectedView != null) {
+            selectedView.setSelected(false);
+        }
+        int id = v.getId();
+        if (id == binding.btnRecommend.getId()) {
+            SafeToast.showToast("推荐", Toast.LENGTH_SHORT);
+            if (grade == 1) {
+                binding.menuDrawer.openDrawer(GravityCompat.START);
+                binding.btnRecommend.setSelected(true);
+                selectedView = binding.btnRecommend;
+                subFragment.requestFocus();
+            }
+        } else if (id == binding.btnFollow.getId()) {
+            SafeToast.showToast("关注", Toast.LENGTH_SHORT);
+        } else if (id == binding.btnMe.getId()) {
+            binding.btnMe.setSelected(true);
+            SafeToast.showToast("我的", Toast.LENGTH_SHORT);
+            Bundle result = new Bundle();
+            result.putString("page", "me");
+            selectedView = binding.btnMe;
+            getParentFragmentManager().setFragmentResult("menu", result);
+        }
+    }
+
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (binding.menuDrawer.isDrawerOpen(GravityCompat.START)) {
                 binding.menuDrawer.closeDrawer(GravityCompat.START);
+                requestFocus();
                 return true;
             }
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
             if (binding.menuDrawer.isDrawerOpen(GravityCompat.START)) {
                 binding.menuDrawer.closeDrawer(GravityCompat.START);
+                requestFocus();
                 return true;
             }
         }

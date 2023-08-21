@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 
 import com.tv.lib.core.Logger;
-import com.tv.lib.core.change.ChangeListenerManager;
 import com.tv.lib.frame.adapter.ListBindingAdapter;
 
 import java.util.HashMap;
@@ -17,7 +16,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import cn.cibn.kaibo.R;
-import cn.cibn.kaibo.change.ChangedKeys;
 import cn.cibn.kaibo.data.ConfigModel;
 import cn.cibn.kaibo.databinding.ItemVideoBinding;
 import cn.cibn.kaibo.imageloader.ImageLoadHelper;
@@ -55,11 +53,6 @@ public class VideoListAdapter extends ListBindingAdapter<ModelLive.Item, ItemVid
         if (position == 0) {
             lastSelectedView = binding.getRoot();
         }
-    }
-
-    @Override
-    public void onItemClick(ModelLive.Item item) {
-        ChangeListenerManager.getInstance().notifyChange(ChangedKeys.CHANGED_LIVE_ITEM_CLICKED, item);
     }
 
     @Override

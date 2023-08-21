@@ -54,8 +54,16 @@ public class RecommendModel {
         return null;
     }
 
-    public void addHistory(ModelLive.Item item) {
-        historyStack.push(item);
+    public void addHistory(ModelLive.Item item, boolean push) {
+        if (push) {
+            historyStack.push(item);
+        } else {
+            if (historyStack.size() > 0) {
+                historyStack.add(historyStack.size() - 1, item);
+            } else  {
+                historyStack.push(item);
+            }
+        }
     }
 
     public void reqLiveList(int page) {
