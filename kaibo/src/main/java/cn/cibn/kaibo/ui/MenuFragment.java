@@ -66,6 +66,7 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
             }
         });
         adapter.submitList(Collections.emptyList());
+        binding.btnSearch.setOnClickListener(this);
         binding.btnRecommend.setOnClickListener(this);
         binding.btnFollow.setOnClickListener(this);
         binding.btnMe.setOnClickListener(this);
@@ -121,7 +122,14 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
             selectedView.setSelected(false);
         }
         int id = v.getId();
-        if (id == binding.btnRecommend.getId()) {
+        if (id == binding.btnSearch.getId()) {
+            binding.btnSearch.setSelected(true);
+            SafeToast.showToast("搜索", Toast.LENGTH_SHORT);
+            Bundle result = new Bundle();
+            result.putString("page", "search");
+            selectedView = binding.btnSearch;
+            getParentFragmentManager().setFragmentResult("menu", result);
+        } else if (id == binding.btnRecommend.getId()) {
             SafeToast.showToast("推荐", Toast.LENGTH_SHORT);
             if (grade == 1) {
                 binding.menuDrawer.openDrawer(GravityCompat.START);

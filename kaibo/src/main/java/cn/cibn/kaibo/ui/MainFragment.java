@@ -36,6 +36,7 @@ import cn.cibn.kaibo.ui.goods.GoodsListFragment;
 import cn.cibn.kaibo.ui.me.AnchorFragment;
 import cn.cibn.kaibo.ui.me.FollowFragment;
 import cn.cibn.kaibo.ui.me.MeFragment;
+import cn.cibn.kaibo.ui.search.SearchFragment;
 import cn.cibn.kaibo.ui.video.VideoPlayFragment;
 import cn.cibn.kaibo.utils.ToastUtils;
 import cn.cibn.kaibo.viewmodel.PlayerViewModel;
@@ -112,7 +113,15 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 String page = result.getString("page");
                 Logger.d(TAG, "requestKey = " + requestKey + ", page = " + page);
-                if ("me".equals(page)) {
+                if ("search".equals(page)) {
+                    binding.mainLiveDrawer.closeDrawer(GravityCompat.START);
+                    SearchFragment f = new SearchFragment();
+                    fragmentStack.push(f);
+                    binding.stackContainer.setVisibility(View.VISIBLE);
+                    getChildFragmentManager().beginTransaction().replace(R.id.stack_container, f).commit();
+                    f.requestFocus();
+                }
+                else if ("me".equals(page)) {
                     MeFragment f = new MeFragment();
                     fragmentStack.push(f);
                     binding.stackContainer.setVisibility(View.VISIBLE);
