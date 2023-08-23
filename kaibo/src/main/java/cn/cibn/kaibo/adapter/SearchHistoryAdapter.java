@@ -20,6 +20,8 @@ import cn.cibn.kaibo.model.ModelAnchor;
 public class SearchHistoryAdapter extends ListBindingAdapter<String, ItemSearchHistoryBinding> {
     private static final String TAG = "VideoListAdapter";
 
+    private View lastSelectedView = null;
+
     public SearchHistoryAdapter() {
         super(new HistoryDiffCallback());
     }
@@ -32,13 +34,26 @@ public class SearchHistoryAdapter extends ListBindingAdapter<String, ItemSearchH
 
     @Override
     public void onBindViewHolder(String item, ItemSearchHistoryBinding binding, int position) {
-
         binding.tvSearchHistory.setText(item);
+        if (position == 0) {
+            lastSelectedView = binding.getRoot();
+        }
     }
 
     @Override
     public void onItemFocusChanged(ItemSearchHistoryBinding binding, boolean hasFocus) {
+        if (hasFocus) {
+            binding.getRoot().setSelected(true);
+            lastSelectedView = binding.getRoot();
+        } else {
+            binding.getRoot().setSelected(false);
+        }
+    }
 
+    public void requestFocus() {
+        if (lastSelectedView != null) {
+            lastSelectedView.requestFocus();
+        }
     }
 
     private static class HistoryDiffCallback extends DiffUtil.ItemCallback<String> {

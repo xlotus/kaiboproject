@@ -2,6 +2,7 @@ package cn.cibn.kaibo.ui.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +11,13 @@ import android.widget.FrameLayout;
 import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.leanback.widget.BaseGridView;
 import androidx.leanback.widget.VerticalGridView;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tv.lib.core.Logger;
 import com.tv.lib.frame.adapter.ListBindingAdapter;
 
 import java.util.ArrayList;
@@ -29,6 +32,7 @@ import cn.cibn.kaibo.databinding.ItemKeyboardBinding;
  *
  */
 public class SearchKeyboard extends FrameLayout {
+    private static final String TAG = "SearchKeyboard";
     private VerticalGridView mRecyclerView;
     private List<String> keys = Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0");
     private List<Keyboard> keyboardList = new ArrayList<>();
@@ -74,6 +78,21 @@ public class SearchKeyboard extends FrameLayout {
 
             }
         });
+//        mRecyclerView.setOnKeyInterceptListener(new BaseGridView.OnKeyInterceptListener() {
+//            @Override
+//            public boolean onInterceptKeyEvent(KeyEvent event) {
+//                if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT && event.getAction() == KeyEvent.ACTION_DOWN) {
+//                    int position = mRecyclerView.getSelectedPosition();
+//                    if ((position % 6) == 5) {
+//                        if (searchKeyListener != null) {
+//                            searchKeyListener.onLoseFocusRight();
+//                        }
+//                        return true;
+//                    }
+//                }
+//                return false;
+//            }
+//        });
         int size = keys.size();
         for (int i = 0; i < size; i++) {
             keyboardList.add(new Keyboard(1, keys.get(i)));
@@ -168,5 +187,6 @@ public class SearchKeyboard extends FrameLayout {
 
     public interface OnSearchKeyListener {
         void onSearchKey(String key);
+        void onLoseFocusRight();
     }
 }

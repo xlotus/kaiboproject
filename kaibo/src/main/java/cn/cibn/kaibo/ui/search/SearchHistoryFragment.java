@@ -16,7 +16,7 @@ import cn.cibn.kaibo.ui.KbBaseFragment;
 public class SearchHistoryFragment extends KbBaseFragment<FragmentSearchHistoryBinding> {
 
     private SearchHistoryAdapter adapter;
-
+    private OnSearchHistoryClickedListener listener;
     @Override
     protected FragmentSearchHistoryBinding createBinding(LayoutInflater inflater) {
         return FragmentSearchHistoryBinding.inflate(inflater);
@@ -28,7 +28,9 @@ public class SearchHistoryFragment extends KbBaseFragment<FragmentSearchHistoryB
         adapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<String>() {
             @Override
             public void onItemClick(String item) {
-
+                if (listener != null) {
+                    listener.onSearchHistoryClicked(item);
+                }
             }
         });
         binding.recyclerSearchHistory.setAdapter(adapter);
@@ -46,5 +48,27 @@ public class SearchHistoryFragment extends KbBaseFragment<FragmentSearchHistoryB
     @Override
     protected void updateView() {
 
+    }
+
+    @Override
+    public void requestFocus() {
+        super.requestFocus();
+        if (adapter != null) {
+            binding.recyclerSearchHistory.post(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.requestFocus();
+                }
+            });
+
+        }
+    }
+
+    public void setOnHistoryClickedListener(OnSearchHistoryClickedListener listener) {
+        this.listener = listener;
+    }
+
+    public interface OnSearchHistoryClickedListener {
+        void onSearchHistoryClicked(String word);
     }
 }

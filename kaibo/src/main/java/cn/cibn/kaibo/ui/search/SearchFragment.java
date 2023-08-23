@@ -1,12 +1,13 @@
 package cn.cibn.kaibo.ui.search;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewTreeObserver;
+import android.view.animation.DecelerateInterpolator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +17,7 @@ import com.tv.lib.core.Logger;
 import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.databinding.FragmentSearchBinding;
 import cn.cibn.kaibo.ui.KbBaseFragment;
+import cn.cibn.kaibo.ui.widget.FocusFrameLayout;
 import cn.cibn.kaibo.ui.widget.SearchKeyboard;
 
 public class SearchFragment extends KbBaseFragment<FragmentSearchBinding> implements Handler.Callback {
@@ -27,6 +29,13 @@ public class SearchFragment extends KbBaseFragment<FragmentSearchBinding> implem
     private String inputValue = "";
 
     private SearchHistoryFragment historyFragment;
+    private SearchResultFragment resultFragment;
+    private KbBaseFragment<?> middleFragment;
+
+    private Animator moveRightAnimator;
+    private Animator moveLeftAnimator;
+
+    private int lastFocusPart;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,19 +61,65 @@ public class SearchFragment extends KbBaseFragment<FragmentSearchBinding> implem
                     handler.sendEmptyMessageDelayed(WHAT_SEARCH, 500);
                 }
             }
-        });
-        showHistory();
 
-        binding.layoutSearchMiddle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                Logger.d(TAG, "onFocusChange " + hasFocus);
+            public void onLoseFocusRight() {
+                if (middleFragment != null) {
+                    middleFragment.requestFocus();
+                }
             }
         });
-        binding.getRoot().getViewTreeObserver().addOnGlobalFocusChangeListener(new ViewTreeObserver.OnGlobalFocusChangeListener() {
+        showHistory();
+        showResult();
+        initAnimator();
+
+        binding.fflSearchInput.setOnFocusChangeListener(new FocusFrameLayout.OnFocusChangeListener() {
             @Override
-            public void onGlobalFocusChanged(View oldFocus, View newFocus) {
-                Logger.d(TAG, "onGlobalFocusChanged " + oldFocus + " | " + newFocus);
+            public void onFocusEnter() {
+                Logger.d(TAG, "lastFocusPart = " + lastFocusPart);
+                if (lastFocusPart != 0) {
+                    moveRightAnimator.start();
+                }
+                binding.fflSearchInput.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        binding.fflSearchInput.requestFocus();
+                    }
+                });
+
+            }
+
+            @Override
+            public void onFocusLeave() {
+                lastFocusPart = 1;
+            }
+        });
+        binding.fflSearchMiddle.setOnFocusChangeListener(new FocusFrameLayout.OnFocusChangeListener() {
+            @Override
+            public void onFocusEnter() {
+                if (lastFocusPart == 1) {
+                    moveLeftAnimator.start();
+                } else if (lastFocusPart == 3) {
+                    moveRightAnimator.start();
+                }
+                middleFragment.requestFocus();
+            }
+
+            @Override
+            public void onFocusLeave() {
+                lastFocusPart = 2;
+            }
+        });
+        binding.fflSearchResult.setOnFocusChangeListener(new FocusFrameLayout.OnFocusChangeListener() {
+            @Override
+            public void onFocusEnter() {
+                moveLeftAnimator.start();
+                resultFragment.requestFocus();
+            }
+
+            @Override
+            public void onFocusLeave() {
+                lastFocusPart = 3;
             }
         });
     }
@@ -106,6 +161,16 @@ public class SearchFragment extends KbBaseFragment<FragmentSearchBinding> implem
         return false;
     }
 
+    private void initAnimator() {
+        float translationX = mContext.getResources().getDimension(R.dimen.dp_469);
+        moveRightAnimator = ObjectAnimator.ofFloat(binding.searchRoot, "x", -translationX, 0);
+        moveRightAnimator.setDuration(500);
+        moveRightAnimator.setInterpolator(new DecelerateInterpolator());
+        moveLeftAnimator = ObjectAnimator.ofFloat(binding.searchRoot, "x", 0, -translationX);
+        moveLeftAnimator.setDuration(500);
+        moveLeftAnimator.setInterpolator(new DecelerateInterpolator());
+    }
+
     private void reqSearchNames() {
 
     }
@@ -113,7 +178,27 @@ public class SearchFragment extends KbBaseFragment<FragmentSearchBinding> implem
     private void showHistory() {
         if (historyFragment == null) {
             historyFragment = new SearchHistoryFragment();
+            historyFragment.setOnHistoryClickedListener(new SearchHistoryFragment.OnSearchHistoryClickedListener() {
+                @Override
+                public void onSearchHistoryClicked(String word) {
+                    hideKeyboard();
+                }
+            });
         }
         getChildFragmentManager().beginTransaction().replace(R.id.layout_search_middle, historyFragment).commit();
+        middleFragment = historyFragment;
+    }
+
+    private void showResult() {
+        if (resultFragment == null) {
+            resultFragment = new SearchResultFragment();
+        }
+        getChildFragmentManager().beginTransaction().replace(R.id.layout_search_result, resultFragment).commit();
+    }
+
+    private void hideKeyboard() {
+        moveLeftAnimator.start();
+
+//        binding.layoutSearchInput.setVisibility(View.GONE);
     }
 }

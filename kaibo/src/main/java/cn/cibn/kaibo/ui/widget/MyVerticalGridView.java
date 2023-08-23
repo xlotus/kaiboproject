@@ -11,12 +11,21 @@ import androidx.leanback.widget.OnChildViewHolderSelectedListener;
 import androidx.leanback.widget.VerticalGridView;
 import androidx.recyclerview.widget.RecyclerView;
 
-/*拦截过快移动 支持边界向右向下找寻焦点*/
+import com.tv.lib.core.Logger;
+
+import java.util.ArrayList;
+
+/**拦截过快移动 支持边界向右向下找寻焦点*/
 public class MyVerticalGridView extends VerticalGridView {
-    private long cacheTime;
     private static final String TAG = "MyVerticalGridView";
+    private long cacheTime;
     private int lastFocusPos = -1;
     private int numColumns = 1;
+
+    //最后一次聚焦的位置
+    private int mLastFocusPosition = 0;
+    private View mLastFocusView = null;
+
     private OnChildViewHolderSelectedListener myListener = new OnChildViewHolderSelectedListener() {
         @Override
         public void onChildViewHolderSelected(RecyclerView parent, ViewHolder child, int position, int subposition) {
@@ -126,7 +135,59 @@ public class MyVerticalGridView extends VerticalGridView {
         return super.dispatchKeyEvent(event);
     }
 
+    /**
+     * 通过ViewParent#requestChildFocus通知父控件即将获取焦点
+     *
+     * @param child   下一个要获得焦点的recyclerview item
+     * @param focused 当前聚焦的view
+     */
+    @Override
+    public void requestChildFocus(View child, View focused) {
+        if (null != child) {
+            Logger.i(TAG, "nextchild = " + child + ",focused = " + focused);
+            if (!hasFocus()) {
+                //recyclerview 子view 重新获取焦点，调用移入焦点的事件监听
+//                if (mFocusGainListener != null) {
+//                    mFocusGainListener.onFocusGain(child, focused);
+//                }
+            }
 
+            //执行过super.requestChildFocus之后hasFocus会变成true
+            super.requestChildFocus(child, focused);
+            //取得获得焦点的item的position
+            mLastFocusView = focused;
+            mLastFocusPosition = getChildViewHolder(child).getAdapterPosition();
+            Logger.i(TAG, "focusPos = " + mLastFocusPosition);
+
+            //计算控制recyclerview 选中item的居中从参数
+//            if (mSelectedItemCentered) {
+//                mSelectedItemOffsetStart = !isVertical() ? (getFreeWidth() - child.getWidth()) : (getFreeHeight() - child.getHeight());
+//                mSelectedItemOffsetStart /= 2;
+//                mSelectedItemOffsetEnd = mSelectedItemOffsetStart;
+//            }
+        }
+//        Logger.i(TAG, "mSelectedItemOffsetStart = " + mSelectedItemOffsetStart);
+//        Logger.i(TAG, "mSelectedItemOffsetEnd = " + mSelectedItemOffsetEnd);
+    }
+
+    /**
+     * 实现焦点记忆的关键代码
+     * <p>
+     * root.addFocusables会遍历root的所有子view和孙view,然后调用addFocusable把isFocusable的view添加到focusables
+     */
+    @Override
+    public void addFocusables(ArrayList<View> views, int direction, int focusableMode) {
+        Logger.i(TAG, "views = " + views);
+        Logger.i(TAG, "lastFocusView = " + mLastFocusView + " mLastFocusPosition = " + mLastFocusPosition);
+        if (this.hasFocus() || mLastFocusView == null) {
+            //在recyclerview内部焦点切换
+            super.addFocusables(views, direction, focusableMode);
+        } else {
+            //将当前的view放到Focusable views列表中，再次移入焦点时会取到该view,实现焦点记忆功能
+            views.add(getLayoutManager().findViewByPosition(mLastFocusPosition));
+            Logger.i(TAG, "views.add(lastFocusView)");
+        }
+    }
 }
 
 
