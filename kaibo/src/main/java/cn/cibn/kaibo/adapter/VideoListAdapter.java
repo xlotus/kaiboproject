@@ -46,9 +46,9 @@ public class VideoListAdapter extends ListBindingAdapter<ModelLive.Item, ItemVid
 
         String img = item.getBack_img();
         ImageLoadHelper.loadImage(binding.ivLiveCover, img, (int) binding.getRoot().getResources().getDimension(R.dimen.dp_2), ConfigModel.getInstance().isGrayMode());
-        ImageLoadHelper.loadCircleImage(binding.ivAnchorHead, item.getCover_img(), ConfigModel.getInstance().isGrayMode());
+//        ImageLoadHelper.loadCircleImage(binding.ivAnchorHead, item.getCover_img(), ConfigModel.getInstance().isGrayMode());
         binding.tvLiveName.setText(item.getTitle());
-        binding.tvAnchorName.setText(item.getName());
+//        binding.tvAnchorName.setText(item.getName());
         setStyle(item, binding, binding.getRoot().hasFocus());
         if (position == 0) {
             lastSelectedView = binding.getRoot();
@@ -85,34 +85,34 @@ public class VideoListAdapter extends ListBindingAdapter<ModelLive.Item, ItemVid
         boolean living = Objects.equals(data.getId(), playingVideoId);
         if (hasFocus) {
             binding.bgFocusedLive.setSelected(true);
-            FocusUtils.scaleLeft(binding.ivLiveCover);
-            int offsetX = FocusUtils.scaleRight(binding.tvLiveName);
-            if (binding.ivLiveStatus.getVisibility() == View.VISIBLE) {
-                FocusUtils.scaleRight(binding.ivLiveStatus, offsetX);
-            }
-            offsetX = FocusUtils.scaleRight(binding.ivAnchorHead);
-            FocusUtils.scaleRight(binding.tvAnchorName, offsetX);
+//            FocusUtils.scaleLeft(binding.ivLiveCover);
+//            int offsetX = FocusUtils.scaleRight(binding.tvLiveName);
+//            if (binding.ivLiveStatus.getVisibility() == View.VISIBLE) {
+//                FocusUtils.scaleRight(binding.ivLiveStatus, offsetX);
+//            }
+//            offsetX = FocusUtils.scaleRight(binding.ivAnchorHead);
+//            FocusUtils.scaleRight(binding.tvAnchorName, offsetX);
 
-            binding.ivLiveStatus.setVisibility(View.VISIBLE);
-            if (living) {
-                binding.ivLiveStatus.setVisibility(View.VISIBLE);
-                ImageLoadHelper.loadGif(binding.ivLiveStatus, R.drawable.ggshop_live_status_w, false);
-            } else {
-                binding.ivLiveStatus.setVisibility(View.GONE);
-            }
+//            binding.ivLiveStatus.setVisibility(View.VISIBLE);
+//            if (living) {
+//                binding.ivLiveStatus.setVisibility(View.VISIBLE);
+//                ImageLoadHelper.loadGif(binding.ivLiveStatus, R.drawable.ggshop_live_status_w, false);
+//            } else {
+//                binding.ivLiveStatus.setVisibility(View.GONE);
+//            }
 
         } else {
             binding.bgFocusedLive.setSelected(false);
-            FocusUtils.resetScale(binding.ivLiveCover);
-            FocusUtils.resetScale(binding.tvLiveName);
-            FocusUtils.resetScale(binding.ivAnchorHead);
-            FocusUtils.resetScale(binding.tvAnchorName);
-            if (living) {
-                binding.ivLiveStatus.setVisibility(View.VISIBLE);
-                ImageLoadHelper.loadGif(binding.ivLiveStatus, R.drawable.ggshop_live_status, ConfigModel.getInstance().isGrayMode());
-            } else {
-                binding.ivLiveStatus.setVisibility(View.GONE);
-            }
+//            FocusUtils.resetScale(binding.ivLiveCover);
+//            FocusUtils.resetScale(binding.tvLiveName);
+//            FocusUtils.resetScale(binding.ivAnchorHead);
+//            FocusUtils.resetScale(binding.tvAnchorName);
+//            if (living) {
+//                binding.ivLiveStatus.setVisibility(View.VISIBLE);
+//                ImageLoadHelper.loadGif(binding.ivLiveStatus, R.drawable.ggshop_live_status, ConfigModel.getInstance().isGrayMode());
+//            } else {
+//                binding.ivLiveStatus.setVisibility(View.GONE);
+//            }
         }
     }
 

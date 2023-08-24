@@ -10,4 +10,10 @@
         <!--borderview宽度-->
         <attr name="borderview_width" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="MenuItemView">
+        <attr name="menu_icon" format="reference"/>
+        <attr name="icon_size" format="dimension"/>
+        <attr name="menu_name" format="reference|string"/>
+    </declare-styleable>
 </resources>

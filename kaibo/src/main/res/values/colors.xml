@@ -20,4 +20,12 @@
     <color name="color_cccccc">#CCCCCC</color>
 
     <color name="select_bg_color">#F29702</color>
+
+
+    <color name="drawer_first_bg">#CC000000</color>
+
+    <color name="menu_item_bg_n">#33FFFFFF</color>
+    <color name="menu_item_bg_p">#33FFB0B0</color>
+    <color name="menu_item_border_n">#66FFFFFF</color>
+    <color name="menu_item_border_p">#FFFF1933</color>
 </resources>

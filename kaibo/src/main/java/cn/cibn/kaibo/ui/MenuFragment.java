@@ -108,7 +108,7 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
         for (int i = 0; i < 10; i++) {
             ModelLive.Item item = new ModelLive.Item();
             item.setPlay_addr("http://1500005830.vod2.myqcloud.com/43843ec0vodtranscq1500005830/3afba03a387702294394228636/adp.10.m3u8");
-            item.setName("Video");
+            item.setTitle("VideoVideoVideoVideoVideoVideoVideoVideoVideoVideo");
             item.setId(String.valueOf(i));
             item.setBack_img("https://img.cbnlive.cn/web/uploads/image/store_1/503630a36565cb688fc94bb7380fd1fe9fb99cf5.jpg");
             itemList.add(item);

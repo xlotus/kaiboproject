@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/menu_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,80 +10,86 @@
         android:id="@+id/layout_menu"
         android:layout_width="@dimen/drawer_menu_width"
         android:layout_height="match_parent"
-        android:background="@color/common_list_bg"
+        android:background="@color/drawer_first_bg"
         app:layout_constraintLeft_toLeftOf="parent">
 
-        <Button
+        <cn.cibn.kaibo.ui.widget.MenuItemView
             android:id="@+id/btn_search"
-            android:layout_width="@dimen/dp_180"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_20"
-            android:background="@drawable/menu_item_bg"
-            android:focusable="true"
-            android:nextFocusDown="@id/btn_follow"
-            android:text="搜索"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toTopOf="@+id/btn_recommend"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="@dimen/dp_93"
+            android:layout_height="@dimen/dp_28"
+            android:layout_marginTop="@dimen/dp_16"
+            android:background="@drawable/bg_menu_item_search_selector"
+            app:icon_size="@dimen/dp_15"
+            app:layout_constraintLeft_toLeftOf="@+id/btn_recommend"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:menu_icon="@drawable/menu_search"
+            app:menu_name="@string/search" />
 
-        <Button
+        <cn.cibn.kaibo.ui.widget.MenuItemView
             android:id="@+id/btn_recommend"
-            android:layout_width="@dimen/dp_180"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_10"
-            android:background="@drawable/menu_item_bg"
-            android:focusable="true"
-            android:nextFocusDown="@id/btn_follow"
-            android:text="推荐"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toTopOf="@+id/btn_follow"
+            android:layout_width="@dimen/dp_195"
+            android:layout_height="@dimen/dp_36"
+            android:layout_marginTop="@dimen/dp_12"
+            android:background="@drawable/bg_menu_item_selector"
+            app:icon_size="@dimen/dp_29"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btn_search"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:menu_icon="@drawable/menu_recommend"
+            app:menu_name="@string/recommend" />
 
-        <Button
+        <cn.cibn.kaibo.ui.widget.MenuItemView
             android:id="@+id/btn_follow"
-            android:layout_width="@dimen/dp_180"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dp_195"
+            android:layout_height="@dimen/dp_36"
             android:layout_marginTop="@dimen/dp_10"
-            android:background="@drawable/menu_item_bg"
+            android:background="@drawable/bg_menu_item_selector"
             android:focusable="true"
             android:nextFocusUp="@id/btn_recommend"
             android:nextFocusDown="@id/btn_me"
-            android:text="关注"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toTopOf="@+id/btn_me"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_recommend" />
+            app:icon_size="@dimen/dp_29"
+            app:layout_constraintLeft_toLeftOf="@+id/btn_recommend"
+            app:layout_constraintTop_toBottomOf="@+id/btn_recommend"
+            app:menu_icon="@drawable/menu_follow"
+            app:menu_name="@string/follow" />
 
-        <Button
+        <cn.cibn.kaibo.ui.widget.MenuItemView
             android:id="@+id/btn_me"
-            android:layout_width="@dimen/dp_180"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dp_195"
+            android:layout_height="@dimen/dp_36"
             android:layout_marginTop="@dimen/dp_10"
-            android:background="@drawable/menu_item_bg"
+            android:background="@drawable/bg_menu_item_selector"
             android:focusable="true"
             android:nextFocusDown="@id/recycler_video_list"
-            android:text="我的"
             android:textColor="@color/black"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_follow" />
+            app:icon_size="@dimen/dp_29"
+            app:layout_constraintLeft_toLeftOf="@+id/btn_recommend"
+            app:layout_constraintTop_toBottomOf="@id/btn_follow"
+            app:menu_icon="@drawable/menu_me"
+            app:menu_name="@string/me" />
+
+        <TextView
+            android:id="@+id/tv_sub_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_20"
+            android:text="@string/relative_recommend"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintLeft_toLeftOf="@id/btn_me"
+            app:layout_constraintTop_toBottomOf="@id/btn_me" />
 
         <androidx.leanback.widget.VerticalGridView
             android:id="@+id/recycler_video_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="@dimen/dp_20"
+            android:layout_marginLeft="@dimen/dp_8"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_8"
+            android:layout_marginBottom="@dimen/dp_8"
             android:nextFocusUp="@id/btn_me"
-            android:paddingTop="@dimen/dp_2"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_me" />
+            app:layout_constraintTop_toBottomOf="@id/tv_sub_title" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -98,10 +103,7 @@
             android:layout_width="@dimen/drawer_menu_width"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:background="@android:color/white"
-            android:focusable="true"
-            android:text="left"
-            android:textColor="@android:color/black" />
+            android:background="@android:color/white" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
 
