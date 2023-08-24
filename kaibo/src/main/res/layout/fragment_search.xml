@@ -1,78 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/search_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ff000000"
+    android:scrollbars="none"
     app:focusOutEnd="false"
     app:focusOutFront="false"
     app:focusOutSideEnd="false"
     app:focusOutSideStart="false"
     app:layout_constraintLeft_toLeftOf="parent">
 
-    <cn.cibn.kaibo.ui.widget.FocusFrameLayout
-        android:id="@+id/ffl_search_input"
-        android:layout_width="@dimen/dp_469"
+    <LinearLayout
+        android:id="@+id/ll_content"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:nextFocusRight="@+id/layout_search_middle"
-        app:specified_focus_id="@id/search_keyboard"
-        app:layout_constraintLeft_toLeftOf="parent">
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/layout_search_input"
-            android:layout_width="match_parent"
+        <cn.cibn.kaibo.ui.widget.FocusFrameLayout
+            android:id="@+id/ffl_search_input"
+            android:layout_width="@dimen/dp_469"
             android:layout_height="match_parent"
-            android:nextFocusRight="@+id/layout_search_middle"
-            android:orientation="vertical"
-            android:padding="@dimen/dp_20"
-            app:layout_constraintLeft_toLeftOf="parent">
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:specified_focus_id="@id/search_keyboard">
 
-            <EditText
-                android:id="@+id/et_search"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_search_input"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_50"
-                android:background="@drawable/bg_exit_toast"
-                android:focusable="false"
-                android:hint="请输入要搜索的内容"
-                android:inputType="text"
-                android:maxLines="1"
-                android:paddingLeft="@dimen/dp_10"
-                android:paddingRight="@dimen/dp_10"
-                android:textColor="@android:color/white"
-                android:textColorHint="#99FFFFFF"
-                android:textSize="@dimen/dp_20" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/dp_20"
+                app:layout_constraintLeft_toLeftOf="parent">
 
-            <cn.cibn.kaibo.ui.widget.SearchKeyboard
-                android:id="@+id/search_keyboard"
+                <EditText
+                    android:id="@+id/et_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_50"
+                    android:background="@drawable/bg_exit_toast"
+                    android:focusable="false"
+                    android:hint="请输入要搜索的内容"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:paddingLeft="@dimen/dp_10"
+                    android:paddingRight="@dimen/dp_10"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="#99FFFFFF"
+                    android:textSize="@dimen/dp_20"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <Button
+                    android:id="@+id/btn_clear"
+                    android:layout_width="@dimen/dp_180"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@drawable/menu_item_bg"
+                    android:focusable="true"
+                    android:nextFocusDown="@id/search_keyboard"
+                    android:text="清空"
+                    android:nextFocusLeft="@id/btn_clear"
+                    android:nextFocusUp="@id/btn_clear"
+                    android:nextFocusRight="@id/btn_delete"
+                    android:textColor="@color/black"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_search" />
+
+                <Button
+                    android:id="@+id/btn_delete"
+                    android:layout_width="@dimen/dp_180"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/menu_item_bg"
+                    android:focusable="true"
+                    android:nextFocusDown="@id/search_keyboard"
+                    android:text="删除"
+                    android:textColor="@color/black"
+                    android:nextFocusLeft="@id/btn_clear"
+                    android:nextFocusUp="@id/btn_delete"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/btn_clear"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <cn.cibn.kaibo.ui.widget.SearchKeyboard
+                    android:id="@+id/search_keyboard"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/dp_10"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/btn_clear"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </cn.cibn.kaibo.ui.widget.FocusFrameLayout>
+
+        <cn.cibn.kaibo.ui.widget.FocusFrameLayout
+            android:id="@+id/ffl_search_middle"
+            android:layout_width="@dimen/dp_469"
+            android:layout_height="match_parent"
+            app:layout_constraintLeft_toRightOf="@id/ffl_search_input"
+            app:specified_focus_id="@id/recycler_search_history">
+
+            <LinearLayout
+                android:id="@+id/ll_search_middle"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/dp_20">
 
-        </LinearLayout>
-    </cn.cibn.kaibo.ui.widget.FocusFrameLayout>
+                <TextView
+                    android:id="@+id/tv_middle_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_40"
+                    android:gravity="center_vertical"
+                    android:text="搜索历史" />
 
-    <cn.cibn.kaibo.ui.widget.FocusFrameLayout
-        android:id="@+id/ffl_search_middle"
-        android:layout_width="@dimen/dp_469"
-        android:layout_height="match_parent"
-        app:layout_constraintLeft_toRightOf="@id/ffl_search_input">
+                <androidx.leanback.widget.VerticalGridView
+                    android:id="@+id/recycler_search_history"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dp_20"
+                    app:focusOutSideStart="true" />
+            </LinearLayout>
+        </cn.cibn.kaibo.ui.widget.FocusFrameLayout>
 
-        <FrameLayout
-            android:id="@+id/layout_search_middle"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </cn.cibn.kaibo.ui.widget.FocusFrameLayout>
+        <cn.cibn.kaibo.ui.widget.FocusFrameLayout
+            android:id="@+id/ffl_search_result"
+            android:layout_width="@dimen/dp_469"
+            android:layout_height="match_parent"
+            app:layout_constraintLeft_toRightOf="@id/ffl_search_middle"
+            app:specified_focus_id="@id/recycler_search_result">
 
-    <cn.cibn.kaibo.ui.widget.FocusFrameLayout
-        android:id="@+id/ffl_search_result"
-        android:layout_width="@dimen/dp_469"
-        android:layout_height="match_parent"
-        app:layout_constraintLeft_toRightOf="@id/ffl_search_middle">
 
-        <FrameLayout
-            android:id="@+id/layout_search_result"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </cn.cibn.kaibo.ui.widget.FocusFrameLayout>
+            <LinearLayout
+                android:id="@+id/ll_search_result"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/dp_20">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/tv_result_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_40"
+                    android:gravity="center_vertical"
+                    android:text="搜索结果" />
+
+                <androidx.leanback.widget.VerticalGridView
+                    android:id="@+id/recycler_search_result"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dp_20"
+                    app:focusOutSideStart="true" />
+            </LinearLayout>
+        </cn.cibn.kaibo.ui.widget.FocusFrameLayout>
+    </LinearLayout>
+</HorizontalScrollView>

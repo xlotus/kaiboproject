@@ -2,7 +2,6 @@ package cn.cibn.kaibo.ui.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +10,10 @@ import android.widget.FrameLayout;
 import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.leanback.widget.BaseGridView;
 import androidx.leanback.widget.VerticalGridView;
 import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tv.lib.core.Logger;
 import com.tv.lib.frame.adapter.ListBindingAdapter;
 
 import java.util.ArrayList;
@@ -78,21 +74,6 @@ public class SearchKeyboard extends FrameLayout {
 
             }
         });
-//        mRecyclerView.setOnKeyInterceptListener(new BaseGridView.OnKeyInterceptListener() {
-//            @Override
-//            public boolean onInterceptKeyEvent(KeyEvent event) {
-//                if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT && event.getAction() == KeyEvent.ACTION_DOWN) {
-//                    int position = mRecyclerView.getSelectedPosition();
-//                    if ((position % 6) == 5) {
-//                        if (searchKeyListener != null) {
-//                            searchKeyListener.onLoseFocusRight();
-//                        }
-//                        return true;
-//                    }
-//                }
-//                return false;
-//            }
-//        });
         int size = keys.size();
         for (int i = 0; i < size; i++) {
             keyboardList.add(new Keyboard(1, keys.get(i)));
@@ -100,6 +81,15 @@ public class SearchKeyboard extends FrameLayout {
         final KeyboardAdapter adapter = new KeyboardAdapter();
         mRecyclerView.setAdapter(adapter);
         adapter.submitList(keyboardList);
+//        ((GridLayoutManager)mRecyclerView.getLayoutManager()).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+//            @Override
+//            public int getSpanSize(int position) {
+//                if (position == 0 || position == 1) {
+//                    return 3;
+//                }
+//                return 1;
+//            }
+//        });
 
         adapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<Keyboard>() {
             @Override
@@ -187,6 +177,5 @@ public class SearchKeyboard extends FrameLayout {
 
     public interface OnSearchKeyListener {
         void onSearchKey(String key);
-        void onLoseFocusRight();
     }
 }

@@ -6,12 +6,12 @@
     android:layout_marginLeft="@dimen/dp_4"
     android:layout_marginRight="@dimen/dp_4">
 
-    <androidx.leanback.widget.VerticalGridView
+    <cn.cibn.kaibo.ui.widget.MyVerticalGridView
         android:id="@+id/mRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:focusOutEnd="false"
-        app:focusOutFront="false"
+        app:focusOutFront="true"
         app:focusOutSideStart="false"
         app:focusOutSideEnd="true"/>
 </FrameLayout>
