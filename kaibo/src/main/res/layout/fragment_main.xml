@@ -19,6 +19,8 @@
             tools:deviceIds="tv"
             tools:ignore="MergeRootFrame" />
 
+        <include layout="@layout/fragment_operate_guide"/>
+
         <FrameLayout
             android:id="@+id/menu_container"
             android:layout_width="@dimen/dp_469"
