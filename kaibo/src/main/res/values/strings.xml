@@ -13,7 +13,7 @@
     <string name="guide_left">遥控按下左键弹出直播列表</string>
     <string name="guide_right">遥控按下右键弹出直播间商品</string>
 
-    <string name="anchor_certification_no">主播认证编号：%s</string>
+    <string name="anchor_certification_no">主播认证编号</string>
 
     <string name="sdk_loading">努力加载中，精彩马上开始</string>
     <string name="shop_qrcode">微信扫码进入店铺下单</string>

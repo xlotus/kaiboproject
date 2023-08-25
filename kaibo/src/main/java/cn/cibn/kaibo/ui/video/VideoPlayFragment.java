@@ -73,18 +73,18 @@ public class VideoPlayFragment extends KbBaseFragment<FragmentVideoPlayBinding> 
             return;
         }
         Logger.d(TAG, "updateView start");
-        ImageLoadHelper.loadResource(binding.ivQrCodeBg, ConfigModel.getInstance().isGrayMode() ? R.drawable.ggshop_bg_qrcode_gray : R.drawable.ggshop_bg_qrcode);
+        ImageLoadHelper.loadResource(binding.ivQrCodeBg, ConfigModel.getInstance().isGrayMode() ? R.drawable.bg_qrcode_live : R.drawable.bg_qrcode_live);
         ImageLoadHelper.loadResource(binding.ivLiveLoadingCover, ConfigModel.getInstance().isGrayMode() ? R.drawable.ggshop_live_loading_gray : R.drawable.ggshop_live_loading);
         if (liveItem == null) {
             binding.layoutLiveAnchorInfo.setVisibility(View.GONE);
         } else {
             binding.layoutLiveAnchorInfo.setVisibility(View.VISIBLE);
             ImageLoadHelper.loadCircleImage(binding.ivLiveAnchorHead, liveItem.getCover_img(), ConfigModel.getInstance().isGrayMode());
-            binding.tvLiveAnchorName.setText(liveItem.getTitle());
+            binding.tvLiveAnchorName.setText("@" + liveItem.getTitle());
             String no = liveItem.getCertification_no() == null ? "" : liveItem.getCertification_no();
-            binding.tvLiveAnchorCertificationNo.setText(mContext.getResources().getString(R.string.anchor_certification_no, no));
+            binding.tvLiveAnchorCertificationNo.setText(no);
 
-            ImageLoadHelper.loadResource(binding.ivLiveAnchorV, ConfigModel.getInstance().isGrayMode() ? R.drawable.ggshop_icon_v_gray : R.drawable.ggshop_icon_v);
+//            ImageLoadHelper.loadResource(binding.ivLiveAnchorV, ConfigModel.getInstance().isGrayMode() ? R.drawable.ggshop_icon_v_gray : R.drawable.ggshop_icon_v);
         }
         Logger.d(TAG, "updateView end");
     }
