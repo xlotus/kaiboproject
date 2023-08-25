@@ -30,8 +30,10 @@ import cn.cibn.kaibo.change.ChangedKeys;
 import cn.cibn.kaibo.data.RecommendModel;
 import cn.cibn.kaibo.databinding.FragmentMainBinding;
 import cn.cibn.kaibo.model.ModelLive;
+import cn.cibn.kaibo.player.VideoType;
 import cn.cibn.kaibo.settings.LiveSettings;
 import cn.cibn.kaibo.stat.StatHelper;
+import cn.cibn.kaibo.ui.goods.GoodsDetailFragment;
 import cn.cibn.kaibo.ui.goods.GoodsListFragment;
 import cn.cibn.kaibo.ui.me.AnchorFragment;
 import cn.cibn.kaibo.ui.me.FollowFragment;
@@ -53,6 +55,8 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
     private MenuFragment menuFragment;
     private VideoPlayFragment playerFragment;
     private GoodsListFragment goodsListFragment;
+    private GoodsDetailFragment goodsDetailFragment;
+    private KbBaseFragment<?> naviRightFragment;
 
 
     private String intentLiveId;
@@ -87,14 +91,16 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
 
     @Override
     protected void initView() {
-        menuFragment = new MenuFragment();
-        playerFragment = new VideoPlayFragment();
+        menuFragment = MenuFragment.createInstance();
+        playerFragment = VideoPlayFragment.createInstance();
         goodsListFragment = GoodsListFragment.createInstance();
+        goodsDetailFragment = GoodsDetailFragment.createInstance(0);
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.replace(R.id.menu_container, menuFragment);
         transaction.replace(R.id.player_fragment_container, playerFragment);
         transaction.replace(R.id.navi_right_container, goodsListFragment);
         transaction.commit();
+        naviRightFragment = goodsListFragment;
         exitToastTranslationY = mContext.getResources().getDimension(R.dimen.dp_140);
         binding.layoutPressBackToClose.setTranslationY(exitToastTranslationY);
         initAnimator();
@@ -170,6 +176,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
         if (playerViewModel != null) {
             playerViewModel.isInPlay.removeObservers(getViewLifecycleOwner());
         }
+        getChildFragmentManager().clearFragmentResultListener("menu");
     }
 
     @Override
@@ -276,7 +283,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
         }
         if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
             if (binding.mainLiveDrawer.isDrawerOpen(GravityCompat.END)) {
-                if (goodsListFragment.onKeyDown(keyCode, event)) {
+                if (naviRightFragment.onKeyDown(keyCode, event)) {
                     return true;
                 }
                 binding.mainLiveDrawer.closeDrawer(GravityCompat.END);
@@ -295,8 +302,10 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                 binding.mainLiveDrawer.closeDrawer(GravityCompat.START);
             } else {
                 if (!binding.mainLiveDrawer.isDrawerOpen(GravityCompat.END)) {
-                    binding.mainLiveDrawer.openDrawer(GravityCompat.END);
-                    goodsListFragment.requestFocus();
+                    binding.naviRightContainer.post(() -> {
+                        naviRightFragment.requestFocus();
+                        binding.mainLiveDrawer.openDrawer(GravityCompat.END);
+                    });
                 }
             }
             return true;
@@ -329,7 +338,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                 return true;
             }
             if (binding.mainLiveDrawer.isDrawerOpen(GravityCompat.END)) {
-                if (goodsListFragment.onKeyDown(keyCode, event)) {
+                if (naviRightFragment.onKeyDown(keyCode, event)) {
                     return true;
                 }
                 binding.mainLiveDrawer.closeDrawer(GravityCompat.END);
@@ -374,6 +383,15 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
             if (!NetUtils.isNetworkConnected(ObjectStore.getContext())) {
                 ToastUtils.showToast(ObjectStore.getContext().getString(R.string.no_network));
             }
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            if (item.getType() == VideoType.LIVE.getValue()) {
+                transaction.replace(R.id.navi_right_container, goodsListFragment);
+                naviRightFragment = goodsListFragment;
+            } else {
+                transaction.replace(R.id.navi_right_container, goodsDetailFragment);
+                naviRightFragment = goodsDetailFragment;
+            }
+            transaction.commit();
             playerFragment.updateLive(item);
 //            if (liveWebSocket != null) {
 //                liveWebSocket.reqChangeLive(item.getId());

@@ -33,7 +33,9 @@ public class RecommendModel {
 
     public ModelLive.Item getNext() {
         if (!backupStack.empty()) {
-            return backupStack.pop();
+            ModelLive.Item item = backupStack.pop();
+            addHistory(item, true);
+            return item;
         }
         reqLiveList(PAGE_FIRST + historyStack.size());
         return null;

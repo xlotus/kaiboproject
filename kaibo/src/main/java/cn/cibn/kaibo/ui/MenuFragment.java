@@ -23,6 +23,7 @@ import cn.cibn.kaibo.adapter.VideoListAdapter;
 import cn.cibn.kaibo.change.ChangedKeys;
 import cn.cibn.kaibo.databinding.FragmentMenuBinding;
 import cn.cibn.kaibo.model.ModelLive;
+import cn.cibn.kaibo.player.VideoType;
 
 public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements View.OnClickListener {
     private static final String TAG = "MenuFragment";
@@ -31,6 +32,10 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
     private VideoListAdapter adapter;
 
     private View selectedView;
+
+    public static MenuFragment createInstance() {
+        return new MenuFragment();
+    }
 
     @Override
     protected FragmentMenuBinding createBinding(LayoutInflater inflater) {
@@ -111,6 +116,8 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
             item.setTitle("VideoVideoVideoVideoVideoVideoVideoVideoVideoVideo");
             item.setId(String.valueOf(i));
             item.setBack_img("https://img.cbnlive.cn/web/uploads/image/store_1/503630a36565cb688fc94bb7380fd1fe9fb99cf5.jpg");
+            item.setType(VideoType.SHORT.getValue());
+            item.setId("300");
             itemList.add(item);
         }
         adapter.submitList(itemList);

@@ -1,5 +1,6 @@
 package cn.cibn.kaibo.ui.goods;
 
+import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,7 +57,7 @@ public class GoodsListFragment extends KbBaseFragment<FragmentGoodsListBinding> 
     @Override
     protected void initView() {
         Logger.d(TAG, "initView");
-        goodsDetailFragment = GoodsDetailFragment.createInstance();
+        goodsDetailFragment = GoodsDetailFragment.createInstance(1);
         getChildFragmentManager().beginTransaction().replace(R.id.sub_goods_container, goodsDetailFragment).commit();
 
         binding.tvGoodsListTitle.setText(mContext.getResources().getString(R.string.goods_list_title, 0));
@@ -75,6 +76,9 @@ public class GoodsListFragment extends KbBaseFragment<FragmentGoodsListBinding> 
             @Override
             public void onItemClick(ModelGoods.Item item) {
                 if (binding != null) {
+                    Bundle data = new Bundle();
+                    data.putSerializable("goodsDetail", item);
+                    getChildFragmentManager().setFragmentResult("goods", data);
                     binding.goodsDrawer.openDrawer(GravityCompat.END);
                 }
             }
@@ -198,9 +202,6 @@ public class GoodsListFragment extends KbBaseFragment<FragmentGoodsListBinding> 
             return;
         }
         this.liveItem = liveItem;
-        if (goodsViewModel != null) {
-            goodsViewModel.reqFirstPage(liveItem.getId());
-        }
     }
 
     private void updateGoodsList(List<ModelGoods.Item> goods) {

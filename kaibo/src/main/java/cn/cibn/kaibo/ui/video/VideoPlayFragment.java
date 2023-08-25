@@ -26,6 +26,7 @@ import cn.cibn.kaibo.model.ModelLive;
 import cn.cibn.kaibo.player.PlayerWrapper;
 import cn.cibn.kaibo.stat.StatHelper;
 import cn.cibn.kaibo.ui.KbBaseFragment;
+import cn.cibn.kaibo.viewmodel.GoodsViewModel;
 import cn.cibn.kaibo.viewmodel.PlayerViewModel;
 
 public class VideoPlayFragment extends KbBaseFragment<FragmentVideoPlayBinding> {
@@ -37,10 +38,14 @@ public class VideoPlayFragment extends KbBaseFragment<FragmentVideoPlayBinding> 
 
     private long startLiveTime;
     private PlayerViewModel playerViewModel;
+    private GoodsViewModel goodsViewModel;
 
     private PlayerWrapper player;
     private TXCloudVideoView videoView;
 
+    public static VideoPlayFragment createInstance() {
+        return new VideoPlayFragment();
+    }
 
     @Override
     protected FragmentVideoPlayBinding createBinding(LayoutInflater inflater) {
@@ -92,7 +97,9 @@ public class VideoPlayFragment extends KbBaseFragment<FragmentVideoPlayBinding> 
     @Override
     public void onActivityCreated() {
         if (getActivity() != null) {
-            playerViewModel = new ViewModelProvider(getActivity()).get(PlayerViewModel.class);
+            ViewModelProvider provider = new ViewModelProvider(getActivity());
+            playerViewModel = provider.get(PlayerViewModel.class);
+            goodsViewModel = provider.get(GoodsViewModel.class);
         }
     }
 
@@ -197,6 +204,9 @@ public class VideoPlayFragment extends KbBaseFragment<FragmentVideoPlayBinding> 
 //        SafeToast.showToast("start live " + item.getName(), Toast.LENGTH_SHORT);
         binding.ivQrCode.setImageResource(R.drawable.default_qrcode);
         reqQrCode();
+        if (goodsViewModel != null) {
+            goodsViewModel.reqFirstPage(liveItem.getId());
+        }
 
         updateView();
 
