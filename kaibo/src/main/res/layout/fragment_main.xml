@@ -47,6 +47,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <FrameLayout
+        android:id="@+id/video_operate_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent" />
+
     <ViewStub
         android:id="@+id/layout_guide_stub"
         android:layout="@layout/layout_guide"

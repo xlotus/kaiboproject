@@ -75,8 +75,6 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
         binding.btnRecommend.setOnClickListener(this);
         binding.btnFollow.setOnClickListener(this);
         binding.btnMe.setOnClickListener(this);
-
-        requestFocus();
     }
 
     @Override

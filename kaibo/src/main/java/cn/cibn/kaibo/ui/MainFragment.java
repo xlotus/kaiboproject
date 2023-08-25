@@ -39,6 +39,7 @@ import cn.cibn.kaibo.ui.me.AnchorFragment;
 import cn.cibn.kaibo.ui.me.FollowFragment;
 import cn.cibn.kaibo.ui.me.MeFragment;
 import cn.cibn.kaibo.ui.search.SearchFragment;
+import cn.cibn.kaibo.ui.video.VideoOperateDialog;
 import cn.cibn.kaibo.ui.video.VideoPlayFragment;
 import cn.cibn.kaibo.utils.ToastUtils;
 import cn.cibn.kaibo.viewmodel.PlayerViewModel;
@@ -361,6 +362,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
 //            if (playerViewModel != null) {
 //                playerViewModel.setIsInPlay(true);
 //            }
+            VideoOperateDialog.show(getParentFragmentManager());
             return true;
         }
         return false;

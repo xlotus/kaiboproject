@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/menu_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="false">
+
+
+    <Button
+        android:id="@+id/btn_play_follow"
+        android:layout_width="@dimen/dp_110"
+        android:layout_height="@dimen/dp_44"
+        android:layout_marginBottom="@dimen/dp_25"
+        android:background="@drawable/bg_video_operate_selector"
+        android:nextFocusRight="@id/btn_like"
+        android:text="@string/follow"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_15"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/btn_like" />
+
+    <cn.cibn.kaibo.ui.widget.MenuItemView
+        android:id="@+id/btn_like"
+        android:layout_width="@dimen/dp_110"
+        android:layout_height="@dimen/dp_44"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:background="@drawable/bg_video_operate_selector"
+        app:icon_size="@dimen/dp_15"
+        app:layout_constraintLeft_toRightOf="@id/btn_play_follow"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btn_play_follow"
+        app:menu_icon="@drawable/like"
+        app:menu_name="@string/recommend"
+        app:name_color="@color/white" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

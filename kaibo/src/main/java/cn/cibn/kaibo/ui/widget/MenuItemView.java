@@ -2,6 +2,7 @@ package cn.cibn.kaibo.ui.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -73,6 +74,10 @@ public class MenuItemView extends LinearLayout implements View.OnFocusChangeList
                 String menuName = a.getString(R.styleable.MenuItemView_menu_name);
                 tvName.setText(menuName);
 
+                if (a.hasValue(R.styleable.MenuItemView_name_color)) {
+                    int nameColor = a.getColor(R.styleable.MenuItemView_name_color, Color.WHITE);
+                    tvName.setTextColor(nameColor);
+                }
 
                 a.recycle();
             } catch (Exception e) {
