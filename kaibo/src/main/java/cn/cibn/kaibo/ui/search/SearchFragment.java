@@ -24,11 +24,11 @@ import java.util.List;
 import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.adapter.SearchHistoryAdapter;
 import cn.cibn.kaibo.databinding.FragmentSearchBinding;
-import cn.cibn.kaibo.ui.KbBaseFragment;
+import cn.cibn.kaibo.ui.BaseStackFragment;
 import cn.cibn.kaibo.ui.widget.FocusFrameLayout;
 import cn.cibn.kaibo.ui.widget.SearchKeyboard;
 
-public class SearchFragment extends KbBaseFragment<FragmentSearchBinding> implements Handler.Callback, View.OnClickListener {
+public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> implements Handler.Callback, View.OnClickListener {
     private static final String TAG = "SearchFragment";
     private static final int WHAT_SEARCH = 1;
 
@@ -55,21 +55,22 @@ public class SearchFragment extends KbBaseFragment<FragmentSearchBinding> implem
     }
 
     @Override
-    protected FragmentSearchBinding createBinding(LayoutInflater inflater) {
+    protected FragmentSearchBinding createSubBinding(LayoutInflater inflater) {
         return FragmentSearchBinding.inflate(inflater);
     }
 
     @Override
     protected void initView() {
-        binding.searchRoot.setSmoothScrollingEnabled(true);
-        binding.btnClear.setOnClickListener(this);
-        binding.btnDelete.setOnClickListener(this);
-        binding.searchKeyboard.setOnSearchKeyListener(new SearchKeyboard.OnSearchKeyListener() {
+        super.initView();
+        subBinding.searchRoot.setSmoothScrollingEnabled(true);
+        subBinding.btnClear.setOnClickListener(this);
+        subBinding.btnDelete.setOnClickListener(this);
+        subBinding.searchKeyboard.setOnSearchKeyListener(new SearchKeyboard.OnSearchKeyListener() {
             @Override
             public void onSearchKey(String key) {
                 inputValue += key;
-                binding.etSearch.setText(inputValue);
-                binding.etSearch.setSelection(inputValue.length());
+                subBinding.etSearch.setText(inputValue);
+                subBinding.etSearch.setSelection(inputValue.length());
                 if (handler != null) {
                     handler.removeCallbacksAndMessages(null);
                     handler.sendEmptyMessageDelayed(WHAT_SEARCH, 500);
@@ -80,11 +81,11 @@ public class SearchFragment extends KbBaseFragment<FragmentSearchBinding> implem
         showResult();
         initAnimator();
 
-        binding.fflSearchInput.setOnFocusChangeListener(new FocusFrameLayout.OnFocusChangeListener() {
+        subBinding.fflSearchInput.setOnFocusChangeListener(new FocusFrameLayout.OnFocusChangeListener() {
             @Override
             public void onFocusEnter() {
                 Logger.d(TAG, "lastFocusPart = " + lastFocusPart);
-                binding.searchRoot.smoothScrollTo(0, 0);
+                subBinding.searchRoot.smoothScrollTo(0, 0);
 
             }
 
@@ -93,7 +94,7 @@ public class SearchFragment extends KbBaseFragment<FragmentSearchBinding> implem
 //                lastFocusPart = 1;
             }
         });
-        binding.fflSearchMiddle.setOnFocusChangeListener(new FocusFrameLayout.OnFocusChangeListener() {
+        subBinding.fflSearchMiddle.setOnFocusChangeListener(new FocusFrameLayout.OnFocusChangeListener() {
             @Override
             public void onFocusEnter() {
 //                if (lastFocusPart == 1) {
@@ -109,7 +110,7 @@ public class SearchFragment extends KbBaseFragment<FragmentSearchBinding> implem
 //                lastFocusPart = 2;
             }
         });
-        binding.fflSearchResult.setOnFocusChangeListener(new FocusFrameLayout.OnFocusChangeListener() {
+        subBinding.fflSearchResult.setOnFocusChangeListener(new FocusFrameLayout.OnFocusChangeListener() {
             @Override
             public void onFocusEnter() {
 //                moveLeftAnimator.start();
@@ -123,14 +124,14 @@ public class SearchFragment extends KbBaseFragment<FragmentSearchBinding> implem
         });
 
         historyAdapter = new SearchHistoryAdapter();
-        binding.recyclerSearchHistory.setAdapter(historyAdapter);
+        subBinding.recyclerSearchHistory.setAdapter(historyAdapter);
         resultAdapter = new SearchHistoryAdapter();
-        binding.recyclerSearchResult.setAdapter(resultAdapter);
-        binding.recyclerSearchResult.setNumColumns(4);
+        subBinding.recyclerSearchResult.setAdapter(resultAdapter);
+        subBinding.recyclerSearchResult.setNumColumns(4);
         int w = Utils.getScreenWidth(ObjectStore.getContext());
-        ViewGroup.LayoutParams lp = binding.fflSearchResult.getLayoutParams();
+        ViewGroup.LayoutParams lp = subBinding.fflSearchResult.getLayoutParams();
         lp.width = w;
-        binding.fflSearchResult.setLayoutParams(lp);
+        subBinding.fflSearchResult.setLayoutParams(lp);
     }
 
     @Override
@@ -168,13 +169,13 @@ public class SearchFragment extends KbBaseFragment<FragmentSearchBinding> implem
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == binding.btnClear.getId()) {
+        if (id == subBinding.btnClear.getId()) {
             this.inputValue = "";
-            binding.etSearch.setText("");
-        } else if (id == binding.btnDelete.getId()) {
+            subBinding.etSearch.setText("");
+        } else if (id == subBinding.btnDelete.getId()) {
             if (!this.inputValue.isEmpty()) {
                 inputValue = inputValue.substring(0, inputValue.length() - 1);
-                binding.etSearch.setText(inputValue);
+                subBinding.etSearch.setText(inputValue);
                 if (handler != null) {
                     handler.removeCallbacksAndMessages(null);
                     handler.sendEmptyMessageDelayed(WHAT_SEARCH, 500);
@@ -183,22 +184,21 @@ public class SearchFragment extends KbBaseFragment<FragmentSearchBinding> implem
         }
     }
 
+    @Override
+    protected boolean isFullScreen() {
+        return true;
+    }
+
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            Bundle bundle = new Bundle();
-            bundle.putString("page", "back");
-            getParentFragmentManager().setFragmentResult("menu", bundle);
-            return true;
-        }
-        return false;
+        return super.onKeyDown(keyCode, event);
     }
 
     private void initAnimator() {
         float translationX = mContext.getResources().getDimension(R.dimen.dp_469);
-        moveRightAnimator = ObjectAnimator.ofFloat(binding.searchRoot, "x", -translationX, 0);
+        moveRightAnimator = ObjectAnimator.ofFloat(subBinding.searchRoot, "x", -translationX, 0);
         moveRightAnimator.setDuration(500);
         moveRightAnimator.setInterpolator(new DecelerateInterpolator());
-        moveLeftAnimator = ObjectAnimator.ofFloat(binding.searchRoot, "x", 0, -translationX);
+        moveLeftAnimator = ObjectAnimator.ofFloat(subBinding.searchRoot, "x", 0, -translationX);
         moveLeftAnimator.setDuration(500);
         moveLeftAnimator.setInterpolator(new DecelerateInterpolator());
     }

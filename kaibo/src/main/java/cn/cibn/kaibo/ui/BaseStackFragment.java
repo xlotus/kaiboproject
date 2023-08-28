@@ -32,9 +32,16 @@ public abstract class BaseStackFragment<T extends ViewBinding> extends KbBaseFra
     @Override
     @CallSuper
     protected void initView() {
+        if (isFullScreen()) {
+            binding.getRoot().setPadding(0, 0, 0, 0);
+        }
         subBinding = createSubBinding(LayoutInflater.from(mContext));
         ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         binding.getRoot().addView(subBinding.getRoot(), lp);
+    }
+
+    protected boolean isFullScreen() {
+        return false;
     }
 
     protected abstract T createSubBinding(LayoutInflater inflater);

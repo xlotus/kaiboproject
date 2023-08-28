@@ -39,6 +39,7 @@ import cn.cibn.kaibo.ui.me.AnchorFragment;
 import cn.cibn.kaibo.ui.me.FollowFragment;
 import cn.cibn.kaibo.ui.me.MeFragment;
 import cn.cibn.kaibo.ui.search.SearchFragment;
+import cn.cibn.kaibo.ui.video.SubVideoPlayFragment;
 import cn.cibn.kaibo.ui.video.VideoOperateDialog;
 import cn.cibn.kaibo.ui.video.VideoPlayFragment;
 import cn.cibn.kaibo.utils.ToastUtils;
@@ -62,7 +63,9 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
 
     private String intentLiveId;
 
-    private Stack<KbBaseFragment> fragmentStack = new Stack<>();
+    private Stack<BaseStackFragment<?>> fragmentStack = new Stack<>();
+
+    private boolean isSubPlaying; //播放的子页面的视频
 
     public static MainFragment createInstance(String intentLiveId) {
         Logger.d(TAG, "createInstance");
@@ -123,31 +126,22 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                 if ("search".equals(page)) {
                     binding.mainLiveDrawer.closeDrawer(GravityCompat.START);
                     SearchFragment f = new SearchFragment();
-                    fragmentStack.push(f);
-                    binding.stackContainer.setVisibility(View.VISIBLE);
-                    getChildFragmentManager().beginTransaction().replace(R.id.stack_container, f).commit();
-                    f.requestFocus();
+                    openStack(f);
                 }
                 else if ("me".equals(page)) {
                     MeFragment f = new MeFragment();
-                    fragmentStack.push(f);
-                    binding.stackContainer.setVisibility(View.VISIBLE);
-                    getChildFragmentManager().beginTransaction().replace(R.id.stack_container, f).commit();
-                    f.requestFocus();
+                    openStack(f);
                 } else if ("follow".equals(page)) {
                     FollowFragment f = new FollowFragment();
-                    fragmentStack.push(f);
-                    binding.stackContainer.setVisibility(View.VISIBLE);
-                    getChildFragmentManager().beginTransaction().replace(R.id.stack_container, f).commit();
-                    f.requestFocus();
+                    openStack(f);
                 } else if ("anchor".equals(page)) {
                     AnchorFragment f = new AnchorFragment();
-                    fragmentStack.push(f);
-                    binding.stackContainer.setVisibility(View.VISIBLE);
-                    getChildFragmentManager().beginTransaction().replace(R.id.stack_container, f).commit();
-                    f.requestFocus();
+                    openStack(f);
                 } else if ("back".equals(page)) {
                     backStack();
+                } else if ("subPlay".equals(page)) {
+                    SubVideoPlayFragment f = new SubVideoPlayFragment();
+                    openStack(f);
                 }
             }
         });
@@ -222,13 +216,16 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
 
         if (ChangedKeys.CHANGED_REQUEST_SUB_PLAY.equals(key)) {
             if (data instanceof ModelLive.Item) {
+                isSubPlaying = true;
                 ModelLive.Item item = (ModelLive.Item) data;
                 RecommendModel.getInstance().addHistory(item, false);
                 reqUpdateLive(item);
+                binding.mainLiveDrawer.closeDrawer(GravityCompat.START);
             }
             return;
         }
         if (ChangedKeys.CHANGED_REQUEST_RESTORE_PLAY.equals(key)) {
+            isSubPlaying = false;
             ModelLive.Item item = RecommendModel.getInstance().getCurrent();
             reqUpdateLive(item);
             return;
@@ -289,7 +286,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                 }
                 binding.mainLiveDrawer.closeDrawer(GravityCompat.END);
             } else {
-                if (!binding.mainLiveDrawer.isDrawerOpen(GravityCompat.START)) {
+                if (!isSubPlaying && !binding.mainLiveDrawer.isDrawerOpen(GravityCompat.START)) {
                     binding.mainLiveDrawer.openDrawer(GravityCompat.START);
                     menuFragment.requestFocus();
                 }
@@ -409,15 +406,27 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
         return !binding.mainLiveDrawer.isDrawerOpen(GravityCompat.START) && !binding.mainLiveDrawer.isDrawerOpen(GravityCompat.END);
     }
 
+    private void openStack(BaseStackFragment<?> f) {
+        fragmentStack.push(f);
+        binding.stackContainer.setVisibility(View.VISIBLE);
+        getChildFragmentManager().beginTransaction().replace(R.id.stack_container, f).commit();
+        f.requestFocus();
+    }
+
     //后退
     private boolean backStack() {
         if (!fragmentStack.isEmpty()) {
             fragmentStack.pop();
             if (fragmentStack.isEmpty()) {
                 binding.stackContainer.setVisibility(View.GONE);
-                menuFragment.requestFocus();
+                if (binding.mainLiveDrawer.isDrawerOpen(GravityCompat.START)) {
+                    menuFragment.requestFocus();
+                }
             } else {
-                KbBaseFragment<?> prev = fragmentStack.peek();
+                BaseStackFragment<?> prev = fragmentStack.peek();
+                if (!prev.isFullScreen() && !binding.mainLiveDrawer.isDrawerOpen(GravityCompat.START)) {
+                    binding.mainLiveDrawer.openDrawer(GravityCompat.START);
+                }
                 getChildFragmentManager().beginTransaction().replace(R.id.stack_container, prev).commit();
                 prev.requestFocus();
             }

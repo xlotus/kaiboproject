@@ -8,7 +8,7 @@
         android:id="@+id/view_menu_icon"
         android:layout_width="@dimen/dp_29"
         android:layout_height="@dimen/dp_29"
-        tools:background="@drawable/menu_recommend" />
+        tools:background="@drawable/menu_recommend_n" />
 
     <TextView
         android:id="@+id/tv_menu_name"
