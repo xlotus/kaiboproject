@@ -98,6 +98,7 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
     public void requestFocus() {
         if (selectedView != null) {
             selectedView.requestFocus();
+            selectedView.setSelected(false);
         } else {
             binding.btnRecommend.postDelayed(new Runnable() {
                 @Override
@@ -128,11 +129,11 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
         }
         int id = v.getId();
         if (id == binding.btnSearch.getId()) {
-            binding.btnSearch.setSelected(true);
+//            binding.btnSearch.setSelected(true);
             SafeToast.showToast("搜索", Toast.LENGTH_SHORT);
             Bundle result = new Bundle();
             result.putString("page", "search");
-            selectedView = binding.btnSearch;
+//            selectedView = binding.btnSearch;
             getParentFragmentManager().setFragmentResult("menu", result);
         } else if (id == binding.btnRecommend.getId()) {
             SafeToast.showToast("推荐", Toast.LENGTH_SHORT);
@@ -158,12 +159,20 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (binding.menuDrawer.isDrawerOpen(GravityCompat.START)) {
                 binding.menuDrawer.closeDrawer(GravityCompat.START);
+                if (selectedView != null) {
+                    selectedView.setSelected(false);
+                    selectedView = null;
+                }
                 requestFocus();
                 return true;
             }
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
             if (binding.menuDrawer.isDrawerOpen(GravityCompat.START)) {
                 binding.menuDrawer.closeDrawer(GravityCompat.START);
+                if (selectedView != null) {
+                    selectedView.setSelected(false);
+                    selectedView = null;
+                }
                 requestFocus();
                 return true;
             }
