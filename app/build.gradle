@@ -1,18 +1,33 @@
 plugins {
     id 'com.android.application'
+//    id 'walle'
 }
 
 android {
     compileSdk rootProject.ext.COMPILE_SDK
+
+    signingConfigs {
+        config {
+            storeFile file("../cibn.keystore")
+            storePassword "123456"
+            keyAlias "kaiboApp"
+            keyPassword "123456"
+        }
+    }
 
     defaultConfig {
 //        applicationId "cn.cibn.kaibo"
         applicationId "cibn_text.alplay.com"
         minSdk rootProject.ext.MIN_SDK
         targetSdk rootProject.ext.TARGET_SDK
-        versionCode 1
-        versionName "1.0"
+        versionCode project.VERSION_CODE as int
+        versionName project.VERSION_NAME
 
+        signingConfig signingConfigs.config
+
+        ndk {
+            abiFilters "armeabi-v7a", "arm64-v8a"    //"armeabi", "armeabi-v7a", "x86", "mips", "arm64-v8a"
+        }
     }
 
     buildTypes {
@@ -25,13 +40,22 @@ android {
     viewBinding {
         enabled = true
     }
+
+
 }
 
 dependencies {
 
     api project(':kaibo')
-//    implementation project(':localRepo:liveSdk')
 
-//    api 'androidx.appcompat:appcompat:1.5.1'
-//    api 'androidx.constraintlayout:constraintlayout:2.1.4'
 }
+
+//walle {
+//    targetProject = project
+//    // 指定渠道包的输出路径
+//    apkOutputFolder = new File("${project.getProjectDir()}/outputs/channels");
+//    // 定制渠道包的APK的文件名称
+//    apkFileNameFormat = '${appName}-${channel}-${buildType}-v${versionName}-${versionCode}-${buildTime}.apk';
+//    // 渠道配置文件
+//    channelFile = new File("${project.getProjectDir()}/channel")
+//}

@@ -37,4 +37,5 @@ dependencies {
     api 'com.google.code.gson:gson:2.8.8'
     api "com.tencent.liteav:LiteAVSDK_Player:11.3.0.13176"
 
+    api 'com.meituan.android.walle:library:1.1.7'
 }

@@ -22,3 +22,10 @@
 
 # 腾讯播放器
 -keep class com.tencent.** { *; }
+
+-dontwarn com.squareup.okhttp3.**
+-keep class com.squareup.okhttp3.** { *;}
+-dontwarn okio.**
+
+-keep class cn.cibn.kaibo.model.** { *;}
+

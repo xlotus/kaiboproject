@@ -19,6 +19,7 @@ import com.tv.lib.core.Logger;
 import com.tv.lib.core.lang.ObjectStore;
 import com.tv.lib.core.lang.thread.TaskHelper;
 import com.tv.lib.core.net.NetUtils;
+import com.tv.lib.core.utils.Utils;
 import com.tv.lib.core.utils.ui.SafeToast;
 import com.tv.lib.frame.activity.ILoading;
 
@@ -42,6 +43,7 @@ import cn.cibn.kaibo.ui.search.SearchFragment;
 import cn.cibn.kaibo.ui.video.SubVideoPlayFragment;
 import cn.cibn.kaibo.ui.video.VideoOperateDialog;
 import cn.cibn.kaibo.ui.video.VideoPlayFragment;
+import cn.cibn.kaibo.utils.ParamsHelper;
 import cn.cibn.kaibo.utils.ToastUtils;
 import cn.cibn.kaibo.viewmodel.PlayerViewModel;
 
@@ -95,6 +97,8 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
 
     @Override
     protected void initView() {
+        Logger.d(TAG, "channel = " + ParamsHelper.getChannel());
+        Logger.d(TAG, "versionCode = " + Utils.getVersionCode(mContext));
         menuFragment = MenuFragment.createInstance();
         playerFragment = VideoPlayFragment.createInstance();
         goodsListFragment = GoodsListFragment.createInstance();
