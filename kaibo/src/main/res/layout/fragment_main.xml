@@ -42,6 +42,16 @@
 
     </androidx.drawerlayout.widget.DrawerLayout>
 
+    <cn.cibn.kaibo.ui.widget.MusicNote
+        android:id="@+id/like_animator_view"
+        android:layout_width="@dimen/dp_120"
+        android:layout_height="@dimen/dp_200"
+        android:layout_marginRight="@dimen/dp_60"
+        android:layout_marginBottom="@dimen/dp_100"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
     <FrameLayout
         android:id="@+id/stack_container"
         android:layout_width="match_parent"

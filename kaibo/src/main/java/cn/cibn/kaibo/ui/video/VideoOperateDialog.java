@@ -1,5 +1,6 @@
 package cn.cibn.kaibo.ui.video;
 
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
@@ -46,6 +47,10 @@ public class VideoOperateDialog extends BaseDialog implements View.OnClickListen
             SafeToast.showToast("关注", Toast.LENGTH_SHORT);
         } else if (id == R.id.btn_like) {
             SafeToast.showToast("点赞", Toast.LENGTH_SHORT);
+            Bundle bundle = new Bundle();
+            bundle.putString("page", "opLike");
+            getParentFragmentManager().setFragmentResult("menu", bundle);
+            dismiss();
         }
     }
 

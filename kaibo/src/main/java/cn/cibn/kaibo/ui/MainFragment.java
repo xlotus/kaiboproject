@@ -43,6 +43,7 @@ import cn.cibn.kaibo.ui.search.SearchFragment;
 import cn.cibn.kaibo.ui.video.SubVideoPlayFragment;
 import cn.cibn.kaibo.ui.video.VideoOperateDialog;
 import cn.cibn.kaibo.ui.video.VideoPlayFragment;
+import cn.cibn.kaibo.ui.widget.ZanBean;
 import cn.cibn.kaibo.utils.ParamsHelper;
 import cn.cibn.kaibo.utils.ToastUtils;
 import cn.cibn.kaibo.viewmodel.PlayerViewModel;
@@ -146,6 +147,10 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                 } else if ("subPlay".equals(page)) {
                     SubVideoPlayFragment f = new SubVideoPlayFragment();
                     openStack(f);
+                } else if ("opFollow".equals(page)) {
+
+                } else if ("opLike".equals(page)) {
+                    playLikeAnimation();
                 }
             }
         });
@@ -175,6 +180,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
         if (playerViewModel != null) {
             playerViewModel.isInPlay.removeObservers(getViewLifecycleOwner());
         }
+        stopLikeAnimation();
         getChildFragmentManager().clearFragmentResultListener("menu");
     }
 
@@ -363,7 +369,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
 //            if (playerViewModel != null) {
 //                playerViewModel.setIsInPlay(true);
 //            }
-            VideoOperateDialog.show(getParentFragmentManager());
+            VideoOperateDialog.show(getChildFragmentManager());
             return true;
         }
         return false;
@@ -438,4 +444,29 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
         }
         return false;
     }
+
+    private void playLikeAnimation() {
+        binding.likeAnimatorView.post(likeAnimationTask);
+        likeAnimationTask.count = 0;
+    }
+
+    private void stopLikeAnimation() {
+        if (binding != null) {
+            binding.likeAnimatorView.removeCallbacks(likeAnimationTask);
+        }
+    }
+
+    private LikeAnimationTask likeAnimationTask = new LikeAnimationTask();
+    private class LikeAnimationTask extends Thread {
+        public int count = 0;
+        @Override
+        public void run() {
+            ++count;
+            ZanBean bean = new ZanBean(mContext, R.drawable.like_heart, binding.likeAnimatorView);
+            binding.likeAnimatorView.addZanXin(bean);
+            if (count < 20) {
+                binding.likeAnimatorView.postDelayed(this, 200);
+            }
+        }
+    };
 }
