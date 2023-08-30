@@ -12,6 +12,9 @@ public class LiveSettings {
     private static final String KEY_GP_TIME_START = "key_gp_time_start";
     private static final String KEY_GP_TIME_END = "key_gp_time_end";
 
+    private static final String KEY_TOKEN = "key_token";
+    private static final String KEY_USER_INFO = "key_user_info";
+
     private static Settings settings;
 
     private static Settings getSettings() {
@@ -69,5 +72,21 @@ public class LiveSettings {
 
     public static String getGpTimeEnd() {
         return getSettings().get(KEY_GP_TIME_END);
+    }
+
+    public static void setToken(String token) {
+        getSettings().set(KEY_TOKEN, token);
+    }
+
+    public static String getToken() {
+        return getSettings().get(KEY_TOKEN);
+    }
+
+    public static void setUserInfo(String userInfo) {
+        getSettings().set(KEY_USER_INFO, userInfo);
+    }
+
+    public static String getUserInfo() {
+        return getSettings().get(KEY_USER_INFO);
     }
 }

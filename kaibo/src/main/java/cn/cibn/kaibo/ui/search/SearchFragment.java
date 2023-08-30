@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,14 +17,19 @@ import androidx.annotation.Nullable;
 
 import com.tv.lib.core.Logger;
 import com.tv.lib.core.lang.ObjectStore;
+import com.tv.lib.core.lang.thread.TaskHelper;
 import com.tv.lib.core.utils.Utils;
+import com.tv.lib.frame.adapter.ListBindingAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.cibn.kaibo.R;
+import cn.cibn.kaibo.adapter.SearchGuessAdapter;
 import cn.cibn.kaibo.adapter.SearchHistoryAdapter;
 import cn.cibn.kaibo.databinding.FragmentSearchBinding;
+import cn.cibn.kaibo.db.AppDatabase;
+import cn.cibn.kaibo.db.SearchHistory;
 import cn.cibn.kaibo.ui.BaseStackFragment;
 import cn.cibn.kaibo.ui.widget.FocusFrameLayout;
 import cn.cibn.kaibo.ui.widget.SearchKeyboard;
@@ -41,6 +47,7 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
 //    private KbBaseFragment<?> middleFragment;
 
     private SearchHistoryAdapter historyAdapter;
+    private SearchGuessAdapter guessAdapter;
     private SearchHistoryAdapter resultAdapter;
 
     private Animator moveRightAnimator;
@@ -75,10 +82,13 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
                     handler.removeCallbacksAndMessages(null);
                     handler.sendEmptyMessageDelayed(WHAT_SEARCH, 500);
                 }
+                if (TextUtils.isEmpty(inputValue)) {
+                    showHistory();
+                } else {
+                    showGuess();
+                }
             }
         });
-        showHistory();
-        showResult();
         initAnimator();
 
         subBinding.fflSearchInput.setOnFocusChangeListener(new FocusFrameLayout.OnFocusChangeListener() {
@@ -94,37 +104,9 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
 //                lastFocusPart = 1;
             }
         });
-        subBinding.fflSearchMiddle.setOnFocusChangeListener(new FocusFrameLayout.OnFocusChangeListener() {
-            @Override
-            public void onFocusEnter() {
-//                if (lastFocusPart == 1) {
-//                    moveLeftAnimator.start();
-//                } else if (lastFocusPart == 3) {
-//                    moveRightAnimator.start();
-//                }
-//                middleFragment.requestFocus();
-            }
-
-            @Override
-            public void onFocusLeave() {
-//                lastFocusPart = 2;
-            }
-        });
-        subBinding.fflSearchResult.setOnFocusChangeListener(new FocusFrameLayout.OnFocusChangeListener() {
-            @Override
-            public void onFocusEnter() {
-//                moveLeftAnimator.start();
-//                resultFragment.requestFocus();
-            }
-
-            @Override
-            public void onFocusLeave() {
-//                lastFocusPart = 3;
-            }
-        });
 
         historyAdapter = new SearchHistoryAdapter();
-        subBinding.recyclerSearchHistory.setAdapter(historyAdapter);
+        guessAdapter = new SearchGuessAdapter();
         resultAdapter = new SearchHistoryAdapter();
         subBinding.recyclerSearchResult.setAdapter(resultAdapter);
         subBinding.recyclerSearchResult.setNumColumns(4);
@@ -132,16 +114,28 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
         ViewGroup.LayoutParams lp = subBinding.fflSearchResult.getLayoutParams();
         lp.width = w;
         subBinding.fflSearchResult.setLayoutParams(lp);
+
+
+        historyAdapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<String>() {
+            @Override
+            public void onItemClick(String item) {
+                reqSearch(item);
+            }
+        });
+        guessAdapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<String>() {
+            @Override
+            public void onItemClick(String item) {
+                reqSearch(item);
+            }
+        });
+
+        showHistory();
+        showResult();
     }
 
     @Override
     protected void initData() {
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < 40; i++) {
-            list.add("LIST " + i);
-        }
-        historyAdapter.submitList(list);
-        resultAdapter.submitList(list);
+
     }
 
     @Override
@@ -172,6 +166,7 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
         if (id == subBinding.btnClear.getId()) {
             this.inputValue = "";
             subBinding.etSearch.setText("");
+            showHistory();
         } else if (id == subBinding.btnDelete.getId()) {
             if (!this.inputValue.isEmpty()) {
                 inputValue = inputValue.substring(0, inputValue.length() - 1);
@@ -180,6 +175,11 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
                     handler.removeCallbacksAndMessages(null);
                     handler.sendEmptyMessageDelayed(WHAT_SEARCH, 500);
                 }
+            }
+            if (TextUtils.isEmpty(inputValue)) {
+                showHistory();
+            } else {
+                showGuess();
             }
         }
     }
@@ -204,7 +204,44 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
     }
 
     private void reqSearchNames() {
+        TaskHelper.exec(new TaskHelper.Task() {
+            @Override
+            public void execute() throws Exception {
 
+            }
+
+            @Override
+            public void callback(Exception e) {
+                List<String> list = new ArrayList<>();
+                for (int i = 0; i < 40; i++) {
+                    list.add("Guess " + i);
+                }
+                guessAdapter.submitList(list);
+            }
+        });
+    }
+
+    private void reqSearch(String key) {
+        TaskHelper.exec(new TaskHelper.Task() {
+            @Override
+            public void execute() throws Exception {
+                int count = AppDatabase.getInstance(mContext).searchHistoryDao().existCount(key);
+                if (count < 1) {
+                    SearchHistory sh = new SearchHistory();
+                    sh.setHistory(key);
+                    AppDatabase.getInstance(mContext).searchHistoryDao().insert(sh);
+                }
+            }
+
+            @Override
+            public void callback(Exception e) {
+                List<String> list = new ArrayList<>();
+                for (int i = 0; i < 40; i++) {
+                    list.add("LIST " + i);
+                }
+                resultAdapter.submitList(list);
+            }
+        });
     }
 
     private void showHistory() {
@@ -219,6 +256,32 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
 //        }
 //        getChildFragmentManager().beginTransaction().replace(R.id.layout_search_middle, historyFragment).commit();
 //        middleFragment = historyFragment;
+        subBinding.tvMiddleTitle.setText(R.string.search_history);
+        subBinding.recyclerSearchMiddle.setAdapter(historyAdapter);
+        TaskHelper.exec(new TaskHelper.Task() {
+            List<String> historyList;
+
+            @Override
+            public void execute() throws Exception {
+                historyList = new ArrayList<>();
+                List<SearchHistory> list = AppDatabase.getInstance(mContext).searchHistoryDao().getAll();
+                if (list != null && list.size() > 0) {
+                    for (int i = 0; i < list.size(); i++) {
+                        historyList.add(list.get(i).getHistory());
+                    }
+                }
+            }
+
+            @Override
+            public void callback(Exception e) {
+                historyAdapter.submitList(historyList);
+            }
+        });
+    }
+
+    private void showGuess() {
+        subBinding.tvMiddleTitle.setText(R.string.search_guess);
+        subBinding.recyclerSearchMiddle.setAdapter(guessAdapter);
     }
 
     private void showResult() {

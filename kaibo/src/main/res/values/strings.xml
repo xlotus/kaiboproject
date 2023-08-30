@@ -30,4 +30,7 @@
     <string name="relative_recommend">相关推荐</string>
 
     <string name="like">点赞</string>
+
+    <string name="search_history">历史搜索</string>
+    <string name="search_guess">猜你想搜</string>
 </resources>

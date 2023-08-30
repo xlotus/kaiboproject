@@ -37,5 +37,9 @@ dependencies {
     api 'com.google.code.gson:gson:2.8.8'
     api "com.tencent.liteav:LiteAVSDK_Player:11.3.0.13176"
 
+    implementation "androidx.room:room-runtime:2.4.0"
+    annotationProcessor "androidx.room:room-compiler:2.4.0"
+
+
     api 'com.meituan.android.walle:library:1.1.7'
 }

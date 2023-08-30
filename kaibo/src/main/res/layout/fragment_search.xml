@@ -20,7 +20,7 @@
 
         <cn.cibn.kaibo.ui.widget.FocusFrameLayout
             android:id="@+id/ffl_search_input"
-            android:layout_width="@dimen/dp_469"
+            android:layout_width="@dimen/dp_300"
             android:layout_height="match_parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:specified_focus_id="@id/search_keyboard">
@@ -52,8 +52,8 @@
 
                 <Button
                     android:id="@+id/btn_clear"
-                    android:layout_width="@dimen/dp_180"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/dp_80"
+                    android:layout_height="@dimen/dp_40"
                     android:layout_marginTop="@dimen/dp_10"
                     android:background="@drawable/menu_item_bg"
                     android:focusable="true"
@@ -68,8 +68,8 @@
 
                 <Button
                     android:id="@+id/btn_delete"
-                    android:layout_width="@dimen/dp_180"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/dp_80"
+                    android:layout_height="@dimen/dp_40"
                     android:background="@drawable/menu_item_bg"
                     android:focusable="true"
                     android:nextFocusDown="@id/search_keyboard"
@@ -98,7 +98,7 @@
             android:layout_width="@dimen/dp_469"
             android:layout_height="match_parent"
             app:layout_constraintLeft_toRightOf="@id/ffl_search_input"
-            app:specified_focus_id="@id/recycler_search_history">
+            app:specified_focus_id="@id/recycler_search_middle">
 
             <LinearLayout
                 android:id="@+id/ll_search_middle"
@@ -109,13 +109,13 @@
 
                 <TextView
                     android:id="@+id/tv_middle_title"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="@dimen/dp_40"
                     android:gravity="center_vertical"
-                    android:text="搜索历史" />
+                    android:text="@string/search_history" />
 
                 <androidx.leanback.widget.VerticalGridView
-                    android:id="@+id/recycler_search_history"
+                    android:id="@+id/recycler_search_middle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
