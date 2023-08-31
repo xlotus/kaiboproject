@@ -13,14 +13,12 @@ import com.tv.lib.frame.adapter.ListBindingAdapter;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.data.ConfigModel;
 import cn.cibn.kaibo.databinding.ItemAnchorBinding;
 import cn.cibn.kaibo.imageloader.ImageLoadHelper;
 import cn.cibn.kaibo.model.ModelAnchor;
-import cn.cibn.kaibo.utils.FocusUtils;
 
 public class AnchorAdapter extends ListBindingAdapter<ModelAnchor.Item, ItemAnchorBinding> {
     private static final String TAG = "VideoListAdapter";
@@ -30,7 +28,7 @@ public class AnchorAdapter extends ListBindingAdapter<ModelAnchor.Item, ItemAnch
     private String playingVideoId;
 
     public AnchorAdapter() {
-        super(new LiveDiffCallback());
+        super(new AnchorDiffCallback());
     }
 
     @Override
@@ -42,11 +40,12 @@ public class AnchorAdapter extends ListBindingAdapter<ModelAnchor.Item, ItemAnch
     @Override
     public void onBindViewHolder(ModelAnchor.Item item, ItemAnchorBinding binding, int position) {
         binding.bgFocusedAnchor.setBackgroundResource(ConfigModel.getInstance().isGrayMode() ?
-                R.drawable.bg_recyclerview_item_gray : R.drawable.bg_recyclerview_item);
+                R.drawable.bg_recyclerview_item_gray : R.drawable.bg_me_anchor_selector);
 
         String img = item.getCover_img();
-        ImageLoadHelper.loadImage(binding.ivAnchorCover, img, (int) binding.getRoot().getResources().getDimension(R.dimen.dp_2), ConfigModel.getInstance().isGrayMode());
-        binding.tvLiveName.setText(item.getTitle());
+        ImageLoadHelper.loadCircleImage(binding.ivAnchorCover, img, ConfigModel.getInstance().isGrayMode());
+        binding.tvAnchorName.setText("@" + item.getTitle());
+        binding.tvFansCount.setText("粉丝 110");
         setStyle(item, binding, binding.getRoot().hasFocus());
         if (position == 0) {
             lastSelectedView = binding.getRoot();
@@ -80,15 +79,10 @@ public class AnchorAdapter extends ListBindingAdapter<ModelAnchor.Item, ItemAnch
     }
 
     private void setStyle(ModelAnchor.Item data, ItemAnchorBinding binding, boolean hasFocus) {
-        boolean living = Objects.equals(data.getId(), playingVideoId);
         if (hasFocus) {
             binding.bgFocusedAnchor.setSelected(true);
-            FocusUtils.scaleLeft(binding.ivAnchorCover);
-            FocusUtils.scaleLeft(binding.tvLiveName);
         } else {
             binding.bgFocusedAnchor.setSelected(false);
-            FocusUtils.resetScale(binding.ivAnchorCover);
-            FocusUtils.resetScale(binding.tvLiveName);
         }
     }
 
@@ -96,7 +90,7 @@ public class AnchorAdapter extends ListBindingAdapter<ModelAnchor.Item, ItemAnch
         lastSelectedView = view;
     }
 
-    private static class LiveDiffCallback extends DiffUtil.ItemCallback<ModelAnchor.Item> {
+    private static class AnchorDiffCallback extends DiffUtil.ItemCallback<ModelAnchor.Item> {
 
         @Override
         public boolean areItemsTheSame(@NonNull ModelAnchor.Item oldItem, @NonNull ModelAnchor.Item newItem) {

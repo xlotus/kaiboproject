@@ -2,7 +2,6 @@ package cn.cibn.kaibo.ui.me;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
 
 import com.tv.lib.frame.adapter.ListBindingAdapter;
 
@@ -12,39 +11,34 @@ import java.util.List;
 import cn.cibn.kaibo.adapter.AnchorAdapter;
 import cn.cibn.kaibo.databinding.FragmentFollowBinding;
 import cn.cibn.kaibo.model.ModelAnchor;
-import cn.cibn.kaibo.ui.BaseStackFragment;
+import cn.cibn.kaibo.ui.KbBaseFragment;
 
-public class FollowFragment extends BaseStackFragment<FragmentFollowBinding> {
+public class FollowFragment extends KbBaseFragment<FragmentFollowBinding> {
 
     private AnchorAdapter adapter;
 
+    public static FollowFragment createInstance() {
+        return new FollowFragment();
+    }
+
     @Override
-    protected FragmentFollowBinding createSubBinding(LayoutInflater inflater) {
+    protected FragmentFollowBinding createBinding(LayoutInflater inflater) {
         return FragmentFollowBinding.inflate(inflater);
     }
 
     @Override
     protected void initView() {
-        super.initView();
-        subBinding.btnAnchor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString("page", "anchor");
-                getParentFragmentManager().setFragmentResult("menu", bundle);
-            }
-        });
-        subBinding.btnAnchor.requestFocus();
 
         adapter = new AnchorAdapter();
-        subBinding.recyclerAnchorList.setNumColumns(4);
-        subBinding.recyclerAnchorList.setAdapter(adapter);
+        binding.recyclerAnchorList.setNumColumns(3);
+        binding.recyclerAnchorList.setAdapter(adapter);
         adapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<ModelAnchor.Item>() {
             @Override
             public void onItemClick(ModelAnchor.Item item) {
                 Bundle bundle = new Bundle();
-                bundle.putString("page", "anchor");
-                getParentFragmentManager().setFragmentResult("menu", bundle);
+                bundle.putString("type", "anchor");
+                bundle.putSerializable("data", item);
+                getParentFragmentManager().setFragmentResult("meGroup", bundle);
             }
         });
 
@@ -64,5 +58,12 @@ public class FollowFragment extends BaseStackFragment<FragmentFollowBinding> {
     @Override
     protected void updateView() {
 
+    }
+
+    @Override
+    public void requestFocus() {
+        if (adapter != null) {
+            adapter.requestFocus();
+        }
     }
 }

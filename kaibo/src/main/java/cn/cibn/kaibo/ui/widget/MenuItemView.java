@@ -28,11 +28,7 @@ public class MenuItemView extends LinearLayout implements View.OnFocusChangeList
     }
 
     public MenuItemView(Context context, AttributeSet attrs, int defStyleAttr) {
-        this(context, attrs, defStyleAttr, 0);
-    }
-
-    public MenuItemView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
+        super(context, attrs, defStyleAttr);
         initView(context, attrs);
     }
 
@@ -77,6 +73,18 @@ public class MenuItemView extends LinearLayout implements View.OnFocusChangeList
                 if (a.hasValue(R.styleable.MenuItemView_name_color)) {
                     int nameColor = a.getColor(R.styleable.MenuItemView_name_color, Color.WHITE);
                     tvName.setTextColor(nameColor);
+                }
+
+                if (a.hasValue(R.styleable.MenuItemView_font_size)) {
+                    int fontSize = a.getDimensionPixelSize(R.styleable.MenuItemView_font_size, 15);
+                    tvName.setTextSize(fontSize);
+                }
+
+                if (a.hasValue(R.styleable.MenuItemView_icon_padding)) {
+                    int padding = a.getDimensionPixelSize(R.styleable.MenuItemView_icon_padding, 10);
+                    MarginLayoutParams mlp = (MarginLayoutParams) tvName.getLayoutParams();
+                    mlp.leftMargin = padding;
+                    tvName.setLayoutParams(mlp);
                 }
 
                 a.recycle();

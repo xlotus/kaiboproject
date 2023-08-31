@@ -12,7 +12,7 @@ import cn.cibn.kaibo.databinding.FragmentMeBinding;
 import cn.cibn.kaibo.ui.BaseStackFragment;
 import cn.cibn.kaibo.utils.LoginHelper;
 
-public class MeFragment extends BaseStackFragment<FragmentMeBinding> {
+public class MeFragment extends BaseStackFragment<FragmentMeBinding> implements View.OnClickListener {
 
     @Override
     protected FragmentMeBinding createSubBinding(LayoutInflater inflater) {
@@ -22,14 +22,8 @@ public class MeFragment extends BaseStackFragment<FragmentMeBinding> {
     @Override
     protected void initView() {
         super.initView();
-        subBinding.btnMyFollow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString("page", "follow");
-                getParentFragmentManager().setFragmentResult("menu", bundle);
-            }
-        });
+        subBinding.btnMyFollow.setOnClickListener(this);
+        subBinding.btnMyHistory.setOnClickListener(this);
 
         if (UserManager.getInstance().isLogin()) {
             subBinding.groupLoginYes.setVisibility(View.VISIBLE);
@@ -72,5 +66,19 @@ public class MeFragment extends BaseStackFragment<FragmentMeBinding> {
     public void requestFocus() {
         super.requestFocus();
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == subBinding.btnMyFollow.getId()) {
+            Bundle bundle = new Bundle();
+            bundle.putString("page", "follow");
+            getParentFragmentManager().setFragmentResult("menu", bundle);
+        } else if (id == subBinding.btnMyHistory.getId()) {
+            Bundle bundle = new Bundle();
+            bundle.putString("page", "history");
+            getParentFragmentManager().setFragmentResult("menu", bundle);
+        }
     }
 }

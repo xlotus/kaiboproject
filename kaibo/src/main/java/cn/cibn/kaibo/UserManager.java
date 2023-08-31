@@ -11,7 +11,7 @@ import cn.cibn.kaibo.settings.LiveSettings;
 public class UserManager {
     private static UserManager instance = new UserManager();
 
-    private String token;
+    private String token = "00";
     private ModelUser userInfo;
 
     private UserManager() {

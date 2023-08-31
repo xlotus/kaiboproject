@@ -39,6 +39,7 @@ import cn.cibn.kaibo.ui.goods.GoodsListFragment;
 import cn.cibn.kaibo.ui.me.AnchorFragment;
 import cn.cibn.kaibo.ui.me.FollowFragment;
 import cn.cibn.kaibo.ui.me.MeFragment;
+import cn.cibn.kaibo.ui.me.MeGroupFragment;
 import cn.cibn.kaibo.ui.search.SearchFragment;
 import cn.cibn.kaibo.ui.video.SubVideoPlayFragment;
 import cn.cibn.kaibo.ui.video.VideoOperateDialog;
@@ -137,13 +138,19 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                     MeFragment f = new MeFragment();
                     openStack(f);
                 } else if ("follow".equals(page)) {
-                    FollowFragment f = new FollowFragment();
+                    binding.mainLiveDrawer.closeDrawer(GravityCompat.START);
+                    fragmentStack.clear();
+                    MeGroupFragment f = MeGroupFragment.createInstance(0);
                     openStack(f);
-                } else if ("anchor".equals(page)) {
-                    AnchorFragment f = new AnchorFragment();
+                } else if ("history".equals(page)) {
+                    binding.mainLiveDrawer.closeDrawer(GravityCompat.START);
+                    fragmentStack.clear();
+                    MeGroupFragment f = MeGroupFragment.createInstance(1);
                     openStack(f);
-                } else if ("back".equals(page)) {
+                }  else if ("back".equals(page)) {
                     backStack();
+                } else if ("goHome".equals(page)) {
+                    showHome();
                 } else if ("subPlay".equals(page)) {
                     SubVideoPlayFragment f = new SubVideoPlayFragment();
                     openStack(f);
@@ -443,6 +450,11 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
             return true;
         }
         return false;
+    }
+
+    private void showHome() {
+        fragmentStack.clear();
+        binding.stackContainer.setVisibility(View.GONE);
     }
 
     private void playLikeAnimation() {

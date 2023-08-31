@@ -16,5 +16,7 @@
         <attr name="icon_size" format="dimension"/>
         <attr name="menu_name" format="reference|string"/>
         <attr name="name_color" format="color"/>
+        <attr name="font_size" format="dimension"/>
+        <attr name="icon_padding" format="dimension"/>
     </declare-styleable>
 </resources>

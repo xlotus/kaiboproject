@@ -26,6 +26,7 @@
     <string name="search">搜索</string>
     <string name="recommend">推荐</string>
     <string name="follow">关注</string>
+    <string name="cancel_follow">取消关注</string>
     <string name="me">我的</string>
     <string name="relative_recommend">相关推荐</string>
 
@@ -45,4 +46,8 @@
     <string name="order_service">售后</string>
     <string name="other_function">其他功能</string>
     <string name="settings">设置</string>
+
+    <string name="go_home">回到首页</string>
+    <string name="my_follow">我的关注</string>
+    <string name="anchor_video_list_title">主播视频列表(%d)</string>
 </resources>

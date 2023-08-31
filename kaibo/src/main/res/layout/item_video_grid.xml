@@ -2,8 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="@dimen/dp_225"
-    android:layout_height="@dimen/dp_166"
+    android:layout_width="@dimen/dp_240"
+    android:layout_height="@dimen/dp_168"
+    android:paddingBottom="@dimen/dp_8"
     android:clickable="true"
     android:focusable="true"
     tools:background="@color/common_list_bg">
@@ -18,17 +19,10 @@
         android:layout_marginBottom="@dimen/dp_1"
         android:background="@drawable/bg_recyclerview_item" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_live_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="@dimen/dp_105" />
-
     <ImageView
         android:id="@+id/iv_live_cover"
-        android:layout_width="@dimen/dp_178"
-        android:layout_height="@dimen/dp_100"
+        android:layout_width="@dimen/dp_214"
+        android:layout_height="@dimen/dp_120"
         android:scaleType="centerCrop"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -46,8 +40,8 @@
         android:lines="1"
         android:maxWidth="@dimen/dp_90"
         android:maxLines="1"
-        android:textColor="@color/color_ffffff"
-        android:textSize="@dimen/sp_9"
+        android:textColor="@color/common_white_transparent_80"
+        android:textSize="@dimen/sp_12"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="@id/iv_live_cover"
         app:layout_constraintTop_toBottomOf="@id/iv_live_cover"
