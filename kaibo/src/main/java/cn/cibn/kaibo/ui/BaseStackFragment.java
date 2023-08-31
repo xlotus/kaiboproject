@@ -44,5 +44,18 @@ public abstract class BaseStackFragment<T extends ViewBinding> extends KbBaseFra
         return false;
     }
 
+    protected void openPage(String page, int subPage) {
+        Bundle bundle = new Bundle();
+        bundle.putString("page", page);
+        bundle.putInt("subPage", subPage);
+        getParentFragmentManager().setFragmentResult("menu", bundle);
+    }
+
+    protected void goHome() {
+        Bundle bundle = new Bundle();
+        bundle.putString("page", "goHome");
+        getParentFragmentManager().setFragmentResult("menu", bundle);
+    }
+
     protected abstract T createSubBinding(LayoutInflater inflater);
 }

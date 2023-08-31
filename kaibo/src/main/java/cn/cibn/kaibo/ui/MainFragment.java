@@ -40,7 +40,9 @@ import cn.cibn.kaibo.ui.me.AnchorFragment;
 import cn.cibn.kaibo.ui.me.FollowFragment;
 import cn.cibn.kaibo.ui.me.MeFragment;
 import cn.cibn.kaibo.ui.me.MeGroupFragment;
+import cn.cibn.kaibo.ui.orders.OrdersHomeFragment;
 import cn.cibn.kaibo.ui.search.SearchFragment;
+import cn.cibn.kaibo.ui.settings.SettingsFragment;
 import cn.cibn.kaibo.ui.video.SubVideoPlayFragment;
 import cn.cibn.kaibo.ui.video.VideoOperateDialog;
 import cn.cibn.kaibo.ui.video.VideoPlayFragment;
@@ -158,6 +160,18 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
 
                 } else if ("opLike".equals(page)) {
                     playLikeAnimation();
+                } else if ("settings".equals(page)) {
+                    binding.mainLiveDrawer.closeDrawer(GravityCompat.START);
+                    fragmentStack.clear();
+                    int subPage = result.getInt("subPage");
+                    SettingsFragment f = SettingsFragment.createInstance(subPage);
+                    openStack(f);
+                } else if ("orders".equals(page)) {
+                    binding.mainLiveDrawer.closeDrawer(GravityCompat.START);
+                    fragmentStack.clear();
+                    int subPage = result.getInt("subPage");
+                    OrdersHomeFragment f = OrdersHomeFragment.createInstance(subPage);
+                    openStack(f);
                 }
             }
         });

@@ -50,4 +50,10 @@
     <string name="go_home">回到首页</string>
     <string name="my_follow">我的关注</string>
     <string name="anchor_video_list_title">主播视频列表(%d)</string>
+    
+    <string name="check_update">检查升级</string>
+    <string name="feedback">意见反馈</string>
+    <string name="problems">常见问题</string>
+    <string name="about_us">关于我们</string>
+    <string name="check_network">网络诊断</string>
 </resources>

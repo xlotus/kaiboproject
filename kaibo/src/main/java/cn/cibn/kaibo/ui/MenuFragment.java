@@ -130,13 +130,11 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
         int id = v.getId();
         if (id == binding.btnSearch.getId()) {
 //            binding.btnSearch.setSelected(true);
-            SafeToast.showToast("搜索", Toast.LENGTH_SHORT);
             Bundle result = new Bundle();
             result.putString("page", "search");
 //            selectedView = binding.btnSearch;
             getParentFragmentManager().setFragmentResult("menu", result);
         } else if (id == binding.btnRecommend.getId()) {
-            SafeToast.showToast("推荐", Toast.LENGTH_SHORT);
             if (grade == 1) {
                 binding.menuDrawer.openDrawer(GravityCompat.START);
                 binding.btnRecommend.setSelected(true);
@@ -144,10 +142,9 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
                 subFragment.requestFocus();
             }
         } else if (id == binding.btnFollow.getId()) {
-            SafeToast.showToast("关注", Toast.LENGTH_SHORT);
+
         } else if (id == binding.btnMe.getId()) {
             binding.btnMe.setSelected(true);
-            SafeToast.showToast("我的", Toast.LENGTH_SHORT);
             Bundle result = new Bundle();
             result.putString("page", "me");
             selectedView = binding.btnMe;

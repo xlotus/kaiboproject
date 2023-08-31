@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/me_group_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FF16171B"
+    android:focusable="false">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_settings_menu"
+        android:layout_width="@dimen/drawer_menu_width"
+        android:layout_height="match_parent"
+        app:layout_constraintLeft_toLeftOf="parent">
+
+        <cn.cibn.kaibo.ui.widget.MenuItemView
+            android:id="@+id/btn_go_home"
+            android:layout_width="@dimen/dp_84"
+            android:layout_height="@dimen/dp_28"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_16"
+            android:background="@drawable/bg_menu_item_search_selector"
+            app:font_size="@dimen/sp_9"
+            app:icon_padding="@dimen/dp_3"
+            app:icon_size="@dimen/dp_15"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:menu_icon="@drawable/home"
+            app:menu_name="@string/go_home"
+            app:name_color="@color/common_white_transparent_60" />
+
+        <Button
+            android:id="@+id/btn_page_check_update"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginTop="@dimen/dp_12"
+            android:background="@drawable/bg_recyclerview_item"
+            android:text="@string/check_update"
+            android:gravity="start|center_vertical"
+            android:paddingLeft="@dimen/dp_25"
+            android:textColor="@color/common_white_transparent_80"
+            android:textSize="@dimen/sp_15"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_go_home" />
+
+        <Button
+            android:id="@+id/btn_page_feed_back"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginTop="@dimen/dp_12"
+            android:background="@drawable/bg_recyclerview_item"
+            android:text="@string/feedback"
+            android:textColor="@color/common_white_transparent_80"
+            android:textSize="@dimen/sp_15"
+            android:gravity="start|center_vertical"
+            android:paddingLeft="@dimen/dp_25"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_page_check_update" />
+
+        <Button
+            android:id="@+id/btn_page_problems"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginTop="@dimen/dp_12"
+            android:background="@drawable/bg_recyclerview_item"
+            android:text="@string/problems"
+            android:textColor="@color/common_white_transparent_80"
+            android:textSize="@dimen/sp_15"
+            android:gravity="start|center_vertical"
+            android:paddingLeft="@dimen/dp_25"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_page_feed_back" />
+
+        <Button
+            android:id="@+id/btn_page_about"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginTop="@dimen/dp_12"
+            android:background="@drawable/bg_recyclerview_item"
+            android:text="@string/about_us"
+            android:textColor="@color/common_white_transparent_80"
+            android:textSize="@dimen/sp_15"
+            android:gravity="start|center_vertical"
+            android:paddingLeft="@dimen/dp_25"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_page_problems" />
+
+        <Button
+            android:id="@+id/btn_page_check_network"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginTop="@dimen/dp_12"
+            android:background="@drawable/bg_recyclerview_item"
+            android:text="@string/check_network"
+            android:textColor="@color/common_white_transparent_80"
+            android:textSize="@dimen/sp_15"
+            android:gravity="start|center_vertical"
+            android:paddingLeft="@dimen/dp_25"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_page_about" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/me_group_content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/layout_settings_menu"
+        android:background="@drawable/bg_me_group_content"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

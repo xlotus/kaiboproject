@@ -101,9 +101,7 @@ public class MeGroupFragment extends BaseStackFragment<FragmentMeGroupBinding> i
     public void onClick(View v) {
         int id = v.getId();
         if (id == subBinding.btnGoHome.getId()) {
-            Bundle bundle = new Bundle();
-            bundle.putString("page", "goHome");
-            getParentFragmentManager().setFragmentResult("menu", bundle);
+            goHome();
         } else if (id == subBinding.btnPageFollow.getId()) {
             showFollow();
         } else if (id == subBinding.btnPageHistory.getId()) {

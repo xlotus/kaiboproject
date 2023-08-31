@@ -22,9 +22,27 @@ public class MeFragment extends BaseStackFragment<FragmentMeBinding> implements 
     @Override
     protected void initView() {
         super.initView();
+        subBinding.btnLogout.setOnClickListener(this);
         subBinding.btnMyFollow.setOnClickListener(this);
         subBinding.btnMyHistory.setOnClickListener(this);
+        subBinding.layoutSettings.setOnClickListener(this);
 
+        subBinding.layoutOrderNeedPay.setOnClickListener(this);
+        subBinding.layoutOrderNeedSend.setOnClickListener(this);
+        subBinding.layoutOrderNeedReceive.setOnClickListener(this);
+        subBinding.layoutOrderFinished.setOnClickListener(this);
+        subBinding.layoutOrderService.setOnClickListener(this);
+
+        updateView();
+    }
+
+    @Override
+    protected void initData() {
+
+    }
+
+    @Override
+    protected void updateView() {
         if (UserManager.getInstance().isLogin()) {
             subBinding.groupLoginYes.setVisibility(View.VISIBLE);
             subBinding.groupLoginNo.setVisibility(View.GONE);
@@ -53,16 +71,6 @@ public class MeFragment extends BaseStackFragment<FragmentMeBinding> implements 
     }
 
     @Override
-    protected void initData() {
-
-    }
-
-    @Override
-    protected void updateView() {
-
-    }
-
-    @Override
     public void requestFocus() {
         super.requestFocus();
 
@@ -72,13 +80,24 @@ public class MeFragment extends BaseStackFragment<FragmentMeBinding> implements 
     public void onClick(View v) {
         int id = v.getId();
         if (id == subBinding.btnMyFollow.getId()) {
-            Bundle bundle = new Bundle();
-            bundle.putString("page", "follow");
-            getParentFragmentManager().setFragmentResult("menu", bundle);
+            openPage("follow", 0);
         } else if (id == subBinding.btnMyHistory.getId()) {
-            Bundle bundle = new Bundle();
-            bundle.putString("page", "history");
-            getParentFragmentManager().setFragmentResult("menu", bundle);
+            openPage("history", 0);
+        } else if (id == subBinding.btnLogout.getId()) {
+            UserManager.getInstance().clear();
+            updateView();
+        } else if (id == subBinding.layoutSettings.getId()) {
+            openPage("settings", 0);
+        } else if (id == subBinding.layoutOrderNeedPay.getId()) {
+            openPage("orders", 0);
+        } else if (id == subBinding.layoutOrderNeedSend.getId()) {
+            openPage("orders", 1);
+        } else if (id == subBinding.layoutOrderNeedReceive.getId()) {
+            openPage("orders", 2);
+        } else if (id == subBinding.layoutOrderFinished.getId()) {
+            openPage("orders", 3);
+        } else if (id == subBinding.layoutOrderService.getId()) {
+            openPage("orders", 4);
         }
     }
 }
