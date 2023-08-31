@@ -29,3 +29,18 @@
 
 -keep class cn.cibn.kaibo.model.** { *;}
 
+
+##################### wx login ####################
+-keep class com.tencent.mm.opensdk.** {
+    *;
+}
+
+-keep class com.tencent.wxop.** {
+    *;
+}
+
+-keep class com.tencent.mm.sdk.** {
+    *;
+}
+##################### wx login ####################
+

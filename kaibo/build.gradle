@@ -40,6 +40,6 @@ dependencies {
     implementation "androidx.room:room-runtime:2.4.0"
     annotationProcessor "androidx.room:room-compiler:2.4.0"
 
-
+    api 'com.tencent.mm.opensdk:wechat-sdk-android:6.8.24'
     api 'com.meituan.android.walle:library:1.1.7'
 }

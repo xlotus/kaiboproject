@@ -33,4 +33,16 @@
 
     <string name="search_history">历史搜索</string>
     <string name="search_guess">猜你想搜</string>
+
+    <string name="login_tip">微信扫一扫，立即登录</string>
+    <string name="logout">退出</string>
+    <string name="history_record">历史记录</string>
+    <string name="my_orders">我的订单</string>
+    <string name="order_need_pay">待付款</string>
+    <string name="order_need_send">待发货</string>
+    <string name="order_need_receive">待收货</string>
+    <string name="order_finished">已完成</string>
+    <string name="order_service">售后</string>
+    <string name="other_function">其他功能</string>
+    <string name="settings">设置</string>
 </resources>

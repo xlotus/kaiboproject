@@ -1,57 +1,405 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout_menu"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_me_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#60000000"
-    app:focusOutEnd="false"
-    app:focusOutSideStart="false"
-    app:layout_constraintLeft_toLeftOf="parent">
+    android:layout_height="match_parent">
 
-    <View
-        android:id="@+id/layout_user_info"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/dp_180"
-        android:layout_marginTop="@dimen/dp_10"
-        android:background="@drawable/bg_recyclerview_item"
-        android:focusable="false"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/btn_my_follow"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btn_my_follow"
-        android:layout_width="@dimen/dp_180"
-        android:layout_height="@dimen/dp_180"
-        android:layout_marginLeft="@dimen/dp_10"
-        android:background="@drawable/menu_item_bg"
-        android:focusable="true"
-        android:nextFocusLeft="@id/btn_my_follow"
-        android:nextFocusDown="@id/btn_my_follow"
-        android:text="我的关注"
-        android:textColor="@color/black"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="@dimen/dp_227"
+        android:layout_height="match_parent"
+        android:background="#99161823"
         app:focusOutEnd="false"
         app:focusOutSideStart="false"
-        app:layout_constraintLeft_toRightOf="@id/layout_user_info"
-        app:layout_constraintRight_toLeftOf="@+id/btn_history"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintLeft_toLeftOf="parent">
 
-    <Button
-        android:id="@+id/btn_history"
-        android:layout_width="@dimen/dp_180"
-        android:layout_height="@dimen/dp_180"
-        android:layout_marginLeft="@dimen/dp_10"
-        android:background="@drawable/menu_item_bg"
-        android:focusable="true"
-        android:nextFocusDown="@id/btn_history"
-        android:text="历史记录"
-        android:textColor="@color/black"
-        app:layout_constraintLeft_toRightOf="@id/btn_my_follow"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        <ImageView
+            android:id="@+id/iv_login_qrcode"
+            android:layout_width="@dimen/dp_165"
+            android:layout_height="@dimen/dp_165"
+            android:background="@color/white"
+            android:padding="@dimen/dp_7"
+            android:focusable="true"
+            android:nextFocusLeft="@id/iv_login_qrcode"
+            android:nextFocusDown="@id/iv_login_qrcode"
+            android:nextFocusUp="@id/iv_login_qrcode"
+            app:layout_constraintBottom_toTopOf="@id/tv_login_tip"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/tv_login_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_20"
+            android:text="@string/login_tip"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_login_qrcode" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_login_no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:constraint_referenced_ids="iv_login_qrcode, tv_login_tip" />
+
+        <ImageView
+            android:id="@+id/iv_user_head"
+            android:layout_width="@dimen/dp_50"
+            android:layout_height="@dimen/dp_50"
+            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_25"
+            android:background="@drawable/shaple_circle_ffffff"
+            android:focusable="false"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_anchor_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_8"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxLines="1"
+            android:textColor="@color/common_white_transparent_80"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintBottom_toTopOf="@id/tv_anchor_id"
+            app:layout_constraintLeft_toRightOf="@id/iv_user_head"
+            app:layout_constraintRight_toLeftOf="@id/btn_logout"
+            app:layout_constraintTop_toTopOf="@id/iv_user_head"
+            tools:text="\@主播主播主播主播主播主播主播主播主播主播主播" />
+
+        <TextView
+            android:id="@+id/tv_anchor_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxWidth="@dimen/dp_140"
+            android:maxLines="1"
+            android:textColor="@color/common_white_transparent_80"
+            android:textSize="@dimen/sp_10"
+            app:layout_constraintBottom_toBottomOf="@id/iv_user_head"
+            app:layout_constraintLeft_toLeftOf="@id/tv_anchor_name"
+            app:layout_constraintRight_toLeftOf="@id/btn_logout"
+            app:layout_constraintTop_toBottomOf="@id/tv_anchor_name"
+            tools:text="主播主播主播主播主播主播主播主播主播主播主播" />
+
+        <Button
+            android:id="@+id/btn_logout"
+            android:layout_width="@dimen/dp_51"
+            android:layout_height="@dimen/dp_28"
+            android:layout_marginRight="@dimen/dp_16"
+            android:background="@drawable/bg_video_operate_selector"
+            android:text="@string/logout"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_13"
+            android:nextFocusUp="@id/btn_logout"
+            android:nextFocusLeft="@id/btn_logout"
+            android:nextFocusRight="@id/btn_logout"
+            app:layout_constraintBottom_toBottomOf="@id/iv_user_head"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_user_head" />
+
+        <LinearLayout
+            android:id="@+id/btn_my_follow"
+            android:layout_width="@dimen/dp_98"
+            android:layout_height="@dimen/dp_82"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="@drawable/bg_me_btn_selector"
+            android:focusable="true"
+            android:nextFocusLeft="@id/btn_my_follow"
+            android:nextFocusDown="@id/layout_order_need_pay"
+            android:orientation="vertical"
+            app:focusOutEnd="false"
+            app:focusOutSideStart="false"
+            app:layout_constraintLeft_toLeftOf="@id/iv_user_head"
+            app:layout_constraintTop_toBottomOf="@id/iv_user_head"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:gravity="center">
+            <View
+                android:layout_width="@dimen/dp_50"
+                android:layout_height="@dimen/dp_50"
+                android:background="@drawable/me_follow_star"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/follow"
+                android:textSize="@dimen/sp_10"
+                android:textColor="@color/white"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_my_history"
+            android:layout_width="@dimen/dp_98"
+            android:layout_height="@dimen/dp_82"
+            android:background="@drawable/bg_me_btn_selector"
+            android:focusable="true"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:nextFocusDown="@id/layout_order_need_pay"
+            app:layout_constraintLeft_toRightOf="@id/btn_my_follow"
+            app:layout_constraintTop_toTopOf="@id/btn_my_follow"
+            app:layout_constraintVertical_chainStyle="packed" >
+            <View
+                android:layout_width="@dimen/dp_50"
+                android:layout_height="@dimen/dp_50"
+                android:background="@drawable/me_video_history"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/history_record"
+                android:textSize="@dimen/sp_10"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_my_orders"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/my_orders"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintTop_toBottomOf="@id/btn_my_follow"
+            app:layout_constraintLeft_toLeftOf="@id/btn_my_follow"
+            android:layout_marginTop="@dimen/dp_20"/>
+        
+        <RelativeLayout
+            android:id="@+id/layout_order_need_pay"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_31"
+            android:layout_marginTop="@dimen/dp_8"
+            android:layout_marginLeft="@dimen/dp_8"
+            android:layout_marginRight="@dimen/dp_8"
+            android:paddingLeft="@dimen/dp_8"
+            android:paddingRight="@dimen/dp_8"
+            android:nextFocusLeft="@id/layout_order_need_pay"
+            android:background="@drawable/bg_recyclerview_item"
+            android:focusable="true"
+            app:layout_constraintTop_toBottomOf="@id/tv_my_orders">
+
+            <View
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:background="@drawable/me_order_need_pay"
+                android:layout_centerVertical="true"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/order_need_pay"
+                android:layout_marginLeft="@dimen/dp_32"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/sp_14"
+                android:textColor="@color/common_white_transparent_80"/>
+            <View
+                android:layout_width="@dimen/dp_18"
+                android:layout_height="@dimen/dp_18"
+                android:background="@drawable/me_arrowright"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_order_need_send"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_31"
+            android:layout_marginTop="@dimen/dp_8"
+            android:layout_marginLeft="@dimen/dp_8"
+            android:layout_marginRight="@dimen/dp_8"
+            android:paddingLeft="@dimen/dp_8"
+            android:paddingRight="@dimen/dp_8"
+            android:nextFocusLeft="@id/layout_order_need_send"
+            android:background="@drawable/bg_recyclerview_item"
+            android:focusable="true"
+            app:layout_constraintTop_toBottomOf="@id/layout_order_need_pay">
+
+            <View
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:background="@drawable/me_order_need_send"
+                android:layout_centerVertical="true"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/order_need_send"
+                android:layout_marginLeft="@dimen/dp_32"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/sp_14"
+                android:textColor="@color/common_white_transparent_80"/>
+            <View
+                android:layout_width="@dimen/dp_18"
+                android:layout_height="@dimen/dp_18"
+                android:background="@drawable/me_arrowright"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_order_need_receive"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_31"
+            android:layout_marginTop="@dimen/dp_8"
+            android:layout_marginLeft="@dimen/dp_8"
+            android:layout_marginRight="@dimen/dp_8"
+            android:paddingLeft="@dimen/dp_8"
+            android:paddingRight="@dimen/dp_8"
+            android:nextFocusLeft="@id/layout_order_need_receive"
+            android:background="@drawable/bg_recyclerview_item"
+            android:focusable="true"
+            app:layout_constraintTop_toBottomOf="@id/layout_order_need_send">
+
+            <View
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:background="@drawable/me_order_need_receive"
+                android:layout_centerVertical="true"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/order_need_receive"
+                android:layout_marginLeft="@dimen/dp_32"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/sp_14"
+                android:textColor="@color/common_white_transparent_80"/>
+            <View
+                android:layout_width="@dimen/dp_18"
+                android:layout_height="@dimen/dp_18"
+                android:background="@drawable/me_arrowright"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_order_finished"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_31"
+            android:layout_marginTop="@dimen/dp_8"
+            android:layout_marginLeft="@dimen/dp_8"
+            android:layout_marginRight="@dimen/dp_8"
+            android:paddingLeft="@dimen/dp_8"
+            android:paddingRight="@dimen/dp_8"
+            android:nextFocusLeft="@id/layout_order_finished"
+            android:background="@drawable/bg_recyclerview_item"
+            android:focusable="true"
+            app:layout_constraintTop_toBottomOf="@id/layout_order_need_receive">
+
+            <View
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:background="@drawable/me_order_finished"
+                android:layout_centerVertical="true"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/order_finished"
+                android:layout_marginLeft="@dimen/dp_32"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/sp_14"
+                android:textColor="@color/common_white_transparent_80"/>
+            <View
+                android:layout_width="@dimen/dp_18"
+                android:layout_height="@dimen/dp_18"
+                android:background="@drawable/me_arrowright"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_order_service"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_31"
+            android:layout_marginTop="@dimen/dp_8"
+            android:layout_marginLeft="@dimen/dp_8"
+            android:layout_marginRight="@dimen/dp_8"
+            android:paddingLeft="@dimen/dp_8"
+            android:paddingRight="@dimen/dp_8"
+            android:nextFocusLeft="@id/layout_order_service"
+            android:background="@drawable/bg_recyclerview_item"
+            android:focusable="true"
+            app:layout_constraintTop_toBottomOf="@id/layout_order_finished">
+
+            <View
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:background="@drawable/me_order_service"
+                android:layout_centerVertical="true"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/order_service"
+                android:layout_marginLeft="@dimen/dp_32"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/sp_14"
+                android:textColor="@color/common_white_transparent_80"/>
+            <View
+                android:layout_width="@dimen/dp_18"
+                android:layout_height="@dimen/dp_18"
+                android:background="@drawable/me_arrowright"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_other_function"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/other_function"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            app:layout_constraintTop_toBottomOf="@id/layout_order_service"
+            app:layout_constraintLeft_toLeftOf="@id/btn_my_follow"
+            android:layout_marginTop="@dimen/dp_20"/>
+
+        <RelativeLayout
+            android:id="@+id/layout_settings"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_31"
+            android:layout_marginTop="@dimen/dp_8"
+            android:layout_marginLeft="@dimen/dp_8"
+            android:layout_marginRight="@dimen/dp_8"
+            android:paddingLeft="@dimen/dp_8"
+            android:paddingRight="@dimen/dp_8"
+            android:nextFocusLeft="@id/layout_settings"
+            android:background="@drawable/bg_recyclerview_item"
+            android:focusable="true"
+            app:layout_constraintTop_toBottomOf="@id/tv_other_function">
+
+            <View
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:background="@drawable/me_setting"
+                android:layout_centerVertical="true"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings"
+                android:layout_marginLeft="@dimen/dp_32"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/sp_14"
+                android:textColor="@color/common_white_transparent_80"/>
+            <View
+                android:layout_width="@dimen/dp_18"
+                android:layout_height="@dimen/dp_18"
+                android:background="@drawable/me_arrowright"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_login_yes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="iv_user_head, btn_logout, btn_my_follow, btn_my_history, tv_my_orders, layout_order_need_pay, layout_order_need_send, layout_order_need_receive, layout_order_finished, layout_order_service, tv_other_function, layout_settings" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
