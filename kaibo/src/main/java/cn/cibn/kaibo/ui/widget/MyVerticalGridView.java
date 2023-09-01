@@ -85,12 +85,12 @@ public class MyVerticalGridView extends VerticalGridView {
         int p = getChildAdapterPosition(focused);
         switch (direction) {
             case View.FOCUS_RIGHT:
-                if (p < getAdapter().getItemCount() - 1) {
+                if (numColumns > 1 && p < getAdapter().getItemCount() - 1) {
                     return getChildAt(p + 1);
                 }
                 break;
             case View.FOCUS_LEFT:
-                if (p > 0) {
+                if (numColumns > 1 && p > 0) {
                     return getChildAt(p - 1);
                 }
                 break;

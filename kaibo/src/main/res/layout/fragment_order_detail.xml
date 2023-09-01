@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_goods_detail_root"
+        android:id="@+id/layout_order_detail_root"
         android:layout_width="@dimen/drawer_menu_width"
         android:layout_height="match_parent"
         android:background="@color/drawer_first_bg"
@@ -25,7 +25,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_goods_detail_title"
+            android:id="@+id/tv_order_detail_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_16"
@@ -44,6 +44,7 @@
             android:layout_marginEnd="@dimen/dp_16"
             android:layout_marginBottom="@dimen/dp_3"
             android:orientation="horizontal"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/bg_detail_title"
             app:layout_constraintRight_toRightOf="@+id/bg_detail_title" />
 
@@ -114,23 +115,45 @@
             android:textSize="@dimen/sp_10"
             app:layout_constraintBaseline_toBaselineOf="@id/tv_goods_price"
             app:layout_constraintRight_toRightOf="@id/iv_goods_cover"
-            tools:text="库存：99999" />
+            tools:text="x2" />
 
-        <ImageView
-            android:id="@+id/iv_goods_qrcode"
+        <View
+            android:id="@+id/bg_order_qrcode"
             android:layout_width="@dimen/dp_150"
             android:layout_height="@dimen/dp_175"
-            android:background="@drawable/bg_qrcode_goods"
-            android:paddingLeft="@dimen/dp_10"
-            android:paddingTop="@dimen/dp_10"
-            android:paddingRight="@dimen/dp_10"
-            android:paddingBottom="@dimen/dp_35"
-            android:scaleType="fitXY"
+            android:background="@drawable/bg_shop_qrcode"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_goods_price"
+            app:layout_constraintTop_toBottomOf="@id/tv_goods_price"/>
+
+        <ImageView
+            android:id="@+id/iv_order_qrcode"
+            android:layout_width="@dimen/dp_132"
+            android:layout_height="@dimen/dp_132"
+            android:background="@color/white"
+            android:padding="@dimen/dp_3"
+            android:scaleType="fitXY"
+            android:layout_marginTop="@dimen/dp_10"
+            app:layout_constraintLeft_toLeftOf="@id/bg_order_qrcode"
+            app:layout_constraintRight_toRightOf="@id/bg_order_qrcode"
+            app:layout_constraintTop_toTopOf="@id/bg_order_qrcode"
             tools:src="@drawable/default_qrcode" />
+
+        <TextView
+            android:id="@+id/tv_qrcode_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintLeft_toLeftOf="@id/bg_order_qrcode"
+            app:layout_constraintRight_toRightOf="@id/bg_order_qrcode"
+            app:layout_constraintTop_toBottomOf="@id/iv_order_qrcode"
+            app:layout_constraintBottom_toBottomOf="@id/bg_order_qrcode"
+            tools:text="微信扫码查看物流" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

@@ -136,7 +136,7 @@
             android:layout_marginTop="@dimen/dp_58"
 
             android:scaleType="fitXY"
-            tools:src="@drawable/cover" />
+            tools:src="@drawable/default_qrcode" />
     </FrameLayout>
 
 

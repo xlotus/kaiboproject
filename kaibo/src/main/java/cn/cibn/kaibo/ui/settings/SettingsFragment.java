@@ -5,8 +5,15 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.tv.lib.frame.adapter.ListBindingAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.cibn.kaibo.R;
+import cn.cibn.kaibo.adapter.MenuAdapter;
 import cn.cibn.kaibo.databinding.FragmentSettingsBinding;
+import cn.cibn.kaibo.model.MenuItem;
 import cn.cibn.kaibo.ui.BaseStackFragment;
 import cn.cibn.kaibo.ui.KbBaseFragment;
 
@@ -19,6 +26,8 @@ public class SettingsFragment extends BaseStackFragment<FragmentSettingsBinding>
     private CheckNetworkFragment checkNetworkFragment;
 
     private KbBaseFragment<?> contentFragment;
+
+    private MenuAdapter menuAdapter;
 
     private int page = 0;
 
@@ -45,6 +54,16 @@ public class SettingsFragment extends BaseStackFragment<FragmentSettingsBinding>
         subBinding.btnPageAbout.setOnClickListener(this);
         subBinding.btnPageCheckNetwork.setOnClickListener(this);
 
+        menuAdapter = new MenuAdapter();
+        subBinding.recyclerSettingsMenu.setAdapter(menuAdapter);
+        menuAdapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<MenuItem>() {
+            @Override
+            public void onItemClick(MenuItem item) {
+                page = item.getId();
+                updateView();
+            }
+        });
+
         checkUpdateFragment = CheckUpdateFragment.createInstance();
         feedbackFragment = FeedbackFragment.createInstance();
         problemsFragment = ProblemsFragment.createInstance();
@@ -56,23 +75,41 @@ public class SettingsFragment extends BaseStackFragment<FragmentSettingsBinding>
         if (args != null) {
             page = args.getInt("page", 0);
         }
+        subBinding.recyclerSettingsMenu.post(new Runnable() {
+            @Override
+            public void run() {
+                if (subBinding.recyclerSettingsMenu.getChildCount() > page) {
+                    subBinding.recyclerSettingsMenu.getChildAt(page).requestFocus();
+                }
+            }
+        });
         updateView();
     }
 
     @Override
     protected void updateView() {
         if (page == 0) {
-            subBinding.btnPageCheckUpdate.requestFocus();
             showContent(checkUpdateFragment);
-        } else {
-            subBinding.btnPageFeedBack.requestFocus();
+        } else if (page == 1){
             showContent(feedbackFragment);
+        } else if (page == 2) {
+            showContent(problemsFragment);
+        } else if (page == 3) {
+            showContent(aboutFragment);
+        } else if (page == 4) {
+            showContent(checkNetworkFragment);
         }
     }
 
     @Override
     protected void initData() {
-
+        List<MenuItem> menus = new ArrayList<>();
+        menus.add(new MenuItem(0, getString(R.string.check_update)));
+        menus.add(new MenuItem(1, getString(R.string.feedback)));
+        menus.add(new MenuItem(2, getString(R.string.problems)));
+        menus.add(new MenuItem(3, getString(R.string.about_us)));
+        menus.add(new MenuItem(4, getString(R.string.check_network)));
+        menuAdapter.submitList(menus);
     }
 
     @Override
@@ -129,7 +166,7 @@ public class SettingsFragment extends BaseStackFragment<FragmentSettingsBinding>
 
     private void showContent(KbBaseFragment<?> contentFragment) {
         getChildFragmentManager().beginTransaction().replace(subBinding.settingsContent.getId(), contentFragment).commit();
-        this.contentFragment = problemsFragment;
+        this.contentFragment = contentFragment;
     }
 
     private void showAbout() {

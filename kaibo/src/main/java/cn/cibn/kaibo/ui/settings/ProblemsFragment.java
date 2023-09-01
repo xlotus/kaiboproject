@@ -103,7 +103,7 @@ public class ProblemsFragment extends KbBaseFragment<FragmentProblemsBinding> {
         }
 
         @Override
-        protected void onItemClick(ModelProblems.Item item) {
+        protected void onItemClick(View view, ModelProblems.Item item) {
             if (openedItem == item) {
                 openedItem = null;
             } else {

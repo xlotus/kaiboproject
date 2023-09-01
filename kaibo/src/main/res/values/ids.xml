@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item type="id" name="base_video_view"/>
+    <item type="id" name="tag_order_item"/>
+    <item type="id" name="tag_order_action"/>
 </resources>

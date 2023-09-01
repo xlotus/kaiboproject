@@ -35,7 +35,7 @@ public abstract class ListBindingAdapter<T, VB extends ViewBinding> extends List
             public void onClick(View v) {
                 Object tag = v.getTag();
                 if (tag != null) {
-                    onItemClick((T) v.getTag());
+                    onItemClick(v, (T) v.getTag());
                 }
             }
         });
@@ -60,7 +60,7 @@ public abstract class ListBindingAdapter<T, VB extends ViewBinding> extends List
         this.listener = listener;
     }
 
-    protected void onItemClick(T item) {
+    protected void onItemClick(View view, T item) {
         if (listener != null) {
             listener.onItemClick(item);
         }
