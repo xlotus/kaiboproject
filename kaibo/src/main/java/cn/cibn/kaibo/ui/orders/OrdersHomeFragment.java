@@ -186,8 +186,9 @@ public class OrdersHomeFragment extends BaseStackFragment<FragmentOrdersHomeBind
                 for (int i = 0; i < 10; i++) {
                     ModelOrder.Item item = new ModelOrder.Item();
                     item.setId("" + i);
-                    item.setName("name" + i);
+                    item.setName("namenamenamenamenamenamenamenamenamenamename" + i);
                     item.setPrice("100");
+                    item.setAttr("[{\"num\":2}]");
                     item.setCover_pic("https://img.cbnlive.cn/web/uploads/image/store_1/503630a36565cb688fc94bb7380fd1fe9fb99cf5.jpg");
                     orders.add(item);
                 }
