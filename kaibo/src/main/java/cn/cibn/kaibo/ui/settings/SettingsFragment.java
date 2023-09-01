@@ -5,10 +5,16 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.databinding.FragmentSettingsBinding;
 import cn.cibn.kaibo.ui.BaseStackFragment;
+import cn.cibn.kaibo.ui.KbBaseFragment;
 
 public class SettingsFragment extends BaseStackFragment<FragmentSettingsBinding> implements View.OnClickListener {
+
+    private CheckUpdateFragment checkUpdateFragment;
+
+    private KbBaseFragment<?> contentFragment;
 
     private int page = 0;
 
@@ -30,6 +36,7 @@ public class SettingsFragment extends BaseStackFragment<FragmentSettingsBinding>
         super.initView();
         subBinding.btnGoHome.setOnClickListener(this);
 
+        checkUpdateFragment = new CheckUpdateFragment();
 
         Bundle args = getArguments();
         if (args != null) {
@@ -78,6 +85,9 @@ public class SettingsFragment extends BaseStackFragment<FragmentSettingsBinding>
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (contentFragment != null && contentFragment.onKeyDown(keyCode, event)) {
+            return true;
+        }
         return super.onKeyDown(keyCode, event);
     }
 
@@ -88,7 +98,8 @@ public class SettingsFragment extends BaseStackFragment<FragmentSettingsBinding>
     }
 
     private void showCheckUpdate() {
-//        getChildFragmentManager().beginTransaction().replace(R.id.me_group_content, followFragment).commit();
+        getChildFragmentManager().beginTransaction().replace(subBinding.settingsContent.getId(), checkUpdateFragment).commit();
+        contentFragment = checkUpdateFragment;
     }
 
     private void showFeedback() {

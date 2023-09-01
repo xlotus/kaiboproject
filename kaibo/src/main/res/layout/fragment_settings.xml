@@ -101,7 +101,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout
-        android:id="@+id/me_group_content"
+        android:id="@+id/settings_content"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         app:layout_constraintRight_toRightOf="parent"

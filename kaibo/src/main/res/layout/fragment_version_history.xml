@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_content"
+    android:layout_width="@dimen/drawer_menu_width"
+    android:layout_height="match_parent"
+    android:background="@color/common_black_transparent_80">
+
+    <TextView
+        android:id="@+id/tv_version_history_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_22"
+        android:layout_marginTop="@dimen/dp_15"
+        android:text="@string/history_versions"
+        android:textColor="@color/common_white_transparent_80"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <cn.cibn.kaibo.ui.widget.MyVerticalGridView
+        android:id="@+id/recycler_version_history"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginLeft="@dimen/dp_8"
+        android:layout_marginRight="@dimen/dp_8"
+        app:focusOutFront="false"
+        app:focusOutSideStart="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_version_history_title" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
