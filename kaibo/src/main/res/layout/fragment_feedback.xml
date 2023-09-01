@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_me_group_content">
+
+    <TextView
+        android:id="@+id/tv_feedback_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_35"
+        android:layout_marginTop="@dimen/dp_44"
+        android:text="常见问题快速反馈"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_18"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_feedback_title_sub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_12"
+        android:text="选择以下常见问题，点击确认键提交反馈"
+        android:textColor="@color/common_white_transparent_80"
+        android:textSize="@dimen/sp_12"
+        app:layout_constraintLeft_toRightOf="@id/tv_feedback_title"
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_feedback_title" />
+
+    <cn.cibn.kaibo.ui.widget.MyVerticalGridView
+        android:id="@+id/recycler_feedback"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp_226"
+        android:paddingTop="@dimen/dp_15"
+        android:paddingBottom="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_15"
+        app:focusOutFront="false"
+        app:focusOutSideStart="true"
+        app:layout_constraintTop_toBottomOf="@id/tv_feedback_title"
+        app:layout_constraintLeft_toLeftOf="@id/tv_feedback_title"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+
+    <TextView
+        android:id="@+id/tv_device_info_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="设备信息"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_18"
+        app:layout_constraintLeft_toLeftOf="@id/tv_feedback_title"
+        app:layout_constraintTop_toBottomOf="@id/recycler_feedback" />
+
+
+    <TextView
+        android:id="@+id/tv_device_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="设备UUID：98234A5A5738B082BF1AF8BFSEF2A176\n设备型号 ：LCD-XOxBEL7A-C\nUTDID : ZCJJNwKbI+8DAAXLGSM6RiZ0\n应用版本：11.2.1.21"
+        android:textColor="@color/common_white_transparent_80"
+        android:textSize="@dimen/sp_14"
+        android:layout_marginTop="@dimen/dp_12"
+        app:layout_constraintLeft_toLeftOf="@id/tv_device_info_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_device_info_title" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

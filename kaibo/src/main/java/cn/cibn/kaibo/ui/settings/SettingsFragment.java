@@ -13,6 +13,10 @@ import cn.cibn.kaibo.ui.KbBaseFragment;
 public class SettingsFragment extends BaseStackFragment<FragmentSettingsBinding> implements View.OnClickListener {
 
     private CheckUpdateFragment checkUpdateFragment;
+    private FeedbackFragment feedbackFragment;
+    private ProblemsFragment problemsFragment;
+    private AboutFragment aboutFragment;
+    private CheckNetworkFragment checkNetworkFragment;
 
     private KbBaseFragment<?> contentFragment;
 
@@ -35,8 +39,18 @@ public class SettingsFragment extends BaseStackFragment<FragmentSettingsBinding>
     protected void initView() {
         super.initView();
         subBinding.btnGoHome.setOnClickListener(this);
+        subBinding.btnPageCheckUpdate.setOnClickListener(this);
+        subBinding.btnPageFeedBack.setOnClickListener(this);
+        subBinding.btnPageProblems.setOnClickListener(this);
+        subBinding.btnPageAbout.setOnClickListener(this);
+        subBinding.btnPageCheckNetwork.setOnClickListener(this);
 
-        checkUpdateFragment = new CheckUpdateFragment();
+        checkUpdateFragment = CheckUpdateFragment.createInstance();
+        feedbackFragment = FeedbackFragment.createInstance();
+        problemsFragment = ProblemsFragment.createInstance();
+        aboutFragment = AboutFragment.createInstance();
+        checkNetworkFragment = CheckNetworkFragment.createInstance();
+
 
         Bundle args = getArguments();
         if (args != null) {
@@ -49,10 +63,10 @@ public class SettingsFragment extends BaseStackFragment<FragmentSettingsBinding>
     protected void updateView() {
         if (page == 0) {
             subBinding.btnPageCheckUpdate.requestFocus();
-            showCheckUpdate();
+            showContent(checkUpdateFragment);
         } else {
             subBinding.btnPageFeedBack.requestFocus();
-            showFeedback();
+            showContent(feedbackFragment);
         }
     }
 
@@ -77,9 +91,15 @@ public class SettingsFragment extends BaseStackFragment<FragmentSettingsBinding>
         if (id == subBinding.btnGoHome.getId()) {
             goHome();
         } else if (id == subBinding.btnPageCheckUpdate.getId()) {
-            showCheckUpdate();
+            showContent(checkUpdateFragment);
         } else if (id == subBinding.btnPageFeedBack.getId()) {
-            showFeedback();
+            showContent(feedbackFragment);
+        } else if (id == subBinding.btnPageProblems.getId()) {
+            showContent(problemsFragment);
+        } else if (id == subBinding.btnPageAbout.getId()) {
+            showContent(aboutFragment);
+        } else if (id == subBinding.btnPageCheckNetwork.getId()) {
+            showContent(checkNetworkFragment);
         }
     }
 
@@ -103,6 +123,20 @@ public class SettingsFragment extends BaseStackFragment<FragmentSettingsBinding>
     }
 
     private void showFeedback() {
-//        getChildFragmentManager().beginTransaction().replace(R.id.me_group_content, historyFragment).commit();
+        getChildFragmentManager().beginTransaction().replace(subBinding.settingsContent.getId(), feedbackFragment).commit();
+        contentFragment = feedbackFragment;
+    }
+
+    private void showContent(KbBaseFragment<?> contentFragment) {
+        getChildFragmentManager().beginTransaction().replace(subBinding.settingsContent.getId(), contentFragment).commit();
+        this.contentFragment = problemsFragment;
+    }
+
+    private void showAbout() {
+
+    }
+
+    private void showCheckNetwork() {
+
     }
 }

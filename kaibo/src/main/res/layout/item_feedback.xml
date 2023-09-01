@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/dp_154"
+    android:layout_height="@dimen/dp_44"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/shape_4_1affffff_selector"
+    android:layout_marginBottom="@dimen/dp_13"
+    android:focusable="true">
+
+    <TextView
+        android:id="@+id/tv_feedback"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="@color/common_white_transparent_80"
+        android:textSize="@dimen/sp_12"
+        tools:text="播放时一直加载中"/>
+</FrameLayout>
