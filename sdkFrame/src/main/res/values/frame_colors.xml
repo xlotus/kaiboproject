@@ -17,6 +17,7 @@
     <color name="common_white_transparent_10">#1affffff</color>
     <color name="common_white_transparent_20">#33ffffff</color>
     <color name="common_white_transparent_34">#56ffffff</color>
+    <color name="common_white_transparent_40">#66ffffff</color>
     <color name="common_white_transparent_50">#7fffffff</color>
     <color name="common_white_transparent_60">#99ffffff</color>
     <color name="common_white_transparent_70">#b3ffffff</color>

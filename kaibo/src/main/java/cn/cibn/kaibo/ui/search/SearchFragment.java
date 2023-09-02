@@ -2,6 +2,7 @@ package cn.cibn.kaibo.ui.search;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -69,6 +70,14 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
     @Override
     protected void initView() {
         super.initView();
+        int size = getResources().getDimensionPixelSize(R.dimen.dp_16);
+        Drawable drawable = getResources().getDrawable(R.drawable.baseline_backspace_24);
+        drawable.setBounds(0, 0, size, size);
+        subBinding.btnDelete.setCompoundDrawables(drawable, null, null, null);
+        drawable = getResources().getDrawable(R.drawable.baseline_delete_24);
+        drawable.setBounds(0, 0, size, size);
+        subBinding.btnClear.setCompoundDrawables(drawable, null, null, null);
+
         subBinding.searchRoot.setSmoothScrollingEnabled(true);
         subBinding.btnClear.setOnClickListener(this);
         subBinding.btnDelete.setOnClickListener(this);
@@ -222,6 +231,7 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
     }
 
     private void reqSearch(String key) {
+        subBinding.tvResultTitleKey.setText("\"@" + key + "\"");
         TaskHelper.exec(new TaskHelper.Task() {
             @Override
             public void execute() throws Exception {
@@ -240,6 +250,10 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
                     list.add("LIST " + i);
                 }
                 resultAdapter.submitList(list);
+                subBinding.searchRoot.smoothScrollTo(Utils.getScreenWidth(ObjectStore.getContext()), 0);
+                subBinding.recyclerSearchResult.post(() -> {
+                    subBinding.recyclerSearchResult.requestFocus();
+                });
             }
         });
     }
@@ -258,6 +272,10 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
 //        middleFragment = historyFragment;
         subBinding.tvMiddleTitle.setText(R.string.search_history);
         subBinding.recyclerSearchMiddle.setAdapter(historyAdapter);
+        subBinding.recyclerSearchMiddle.setNumColumns(3);
+        ViewGroup.LayoutParams lp = subBinding.fflSearchMiddle.getLayoutParams();
+        lp.width = Utils.getScreenWidth(ObjectStore.getContext()) - ObjectStore.getContext().getResources().getDimensionPixelSize(R.dimen.drawer_menu_width);
+        subBinding.fflSearchMiddle.setLayoutParams(lp);
         TaskHelper.exec(new TaskHelper.Task() {
             List<String> historyList;
 
@@ -282,6 +300,10 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
     private void showGuess() {
         subBinding.tvMiddleTitle.setText(R.string.search_guess);
         subBinding.recyclerSearchMiddle.setAdapter(guessAdapter);
+        subBinding.recyclerSearchMiddle.setNumColumns(1);
+        ViewGroup.LayoutParams lp = subBinding.fflSearchMiddle.getLayoutParams();
+        lp.width = ObjectStore.getContext().getResources().getDimensionPixelSize(R.dimen.dp_279);
+        subBinding.fflSearchMiddle.setLayoutParams(lp);
     }
 
     private void showResult() {

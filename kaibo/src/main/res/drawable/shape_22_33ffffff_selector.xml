@@ -3,4 +3,5 @@
     <item android:drawable="@drawable/shape_22_p" android:state_focused="true" />
     <item android:drawable="@drawable/shape_22_p" android:state_selected="true" />
     <item android:drawable="@drawable/shape_22_p" android:state_pressed="true" />
+    <item android:drawable="@drawable/shape_22_33ffffff" />
 </selector>

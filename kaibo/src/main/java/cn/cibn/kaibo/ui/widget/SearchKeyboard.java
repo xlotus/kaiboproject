@@ -29,8 +29,8 @@ import cn.cibn.kaibo.databinding.ItemKeyboardBinding;
  */
 public class SearchKeyboard extends FrameLayout {
     private static final String TAG = "SearchKeyboard";
-    private VerticalGridView mRecyclerView;
-    private List<String> keys = Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0");
+    private MyVerticalGridView mRecyclerView;
+    private List<String> keys = Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
     private List<Keyboard> keyboardList = new ArrayList<>();
     private OnSearchKeyListener searchKeyListener;
     private OnFocusChangeListener focusChangeListener = new OnFocusChangeListener() {
@@ -57,7 +57,7 @@ public class SearchKeyboard extends FrameLayout {
 
     private void initView() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_keyborad, this);
-        mRecyclerView = view.findViewById(R.id.mRecyclerView);
+        mRecyclerView = view.findViewById(R.id.recycler_keyboard);
         mRecyclerView.setNumColumns(6);
 //        GridLayoutManager manager = new GridLayoutManager(getContext(), 6);
 //        mRecyclerView.setLayoutManager(manager);
@@ -74,6 +74,8 @@ public class SearchKeyboard extends FrameLayout {
 
             }
         });
+        mRecyclerView.setNextFocusUpId(getNextFocusUpId());
+
         int size = keys.size();
         for (int i = 0; i < size; i++) {
             keyboardList.add(new Keyboard(1, keys.get(i)));

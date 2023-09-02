@@ -25,6 +25,8 @@ public class MyVerticalGridView extends VerticalGridView {
     //最后一次聚焦的位置
     private int mLastFocusPosition = 0;
     private View mLastFocusView = null;
+    //焦点移出recyclerview的事件监听
+    private FocusLostListener mFocusLostListener;
 
     private OnChildViewHolderSelectedListener myListener = new OnChildViewHolderSelectedListener() {
         @Override
@@ -68,6 +70,8 @@ public class MyVerticalGridView extends VerticalGridView {
 
     @Override
     public View focusSearch(View focused, int direction) {
+        View realNextFocus = super.focusSearch(focused, direction);
+        View nextFocus = FocusFinder.getInstance().findNextFocus(this, focused, direction);
 //        View nextFocusView = FocusFinder.getInstance().findNextFocus(this, focused, direction);
 //        if (nextFocusView == null && lastFocusPos != -1 && lastFocusPos < getAdapter().getItemCount() - 1) {
 //            switch (direction) {
@@ -95,6 +99,20 @@ public class MyVerticalGridView extends VerticalGridView {
 //                }
 //                break;
 //        }
+        switch (direction) {
+            case FOCUS_UP:
+                if (nextFocus == null && !canScrollVertically(-1)) {
+                    //滑动到顶部
+                    if (mFocusLostListener != null) {
+                        mFocusLostListener.onFocusLost(focused, direction);
+                    }
+                    if (getNextFocusUpId() != View.NO_ID) {
+                        return getRootView().findViewById(getNextFocusUpId());
+                    }
+                    return realNextFocus;
+                }
+                break;
+        }
         return super.focusSearch(focused, direction);
     }
 
@@ -187,6 +205,17 @@ public class MyVerticalGridView extends VerticalGridView {
             views.add(getLayoutManager().findViewByPosition(mLastFocusPosition));
             Logger.i(TAG, "views.add(lastFocusView)");
         }
+    }
+
+    /**
+     * 设置焦点丢失监听
+     */
+    public void setFocusLostListener(FocusLostListener focusLostListener) {
+        this.mFocusLostListener = focusLostListener;
+    }
+
+    public interface FocusLostListener {
+        void onFocusLost(View lastFocusChild, int direction);
     }
 }
 

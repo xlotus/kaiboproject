@@ -7,10 +7,10 @@
     android:layout_marginRight="@dimen/dp_4">
 
     <cn.cibn.kaibo.ui.widget.MyVerticalGridView
-        android:id="@+id/mRecyclerView"
+        android:id="@+id/recycler_keyboard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:focusOutEnd="false"
+        app:focusOutEnd="true"
         app:focusOutFront="true"
         app:focusOutSideStart="false"
         app:focusOutSideEnd="true"/>
