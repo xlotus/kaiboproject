@@ -59,6 +59,9 @@ public class CheckUpdateFragment extends KbBaseFragment<FragmentCheckUpdateBindi
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (binding.drawerVersionHistory.isDrawerOpen(GravityCompat.END)) {
+            if (versionHistoryFragment.onKeyDown(keyCode, event)) {
+                return true;
+            }
             if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_BACK) {
                 binding.drawerVersionHistory.closeDrawer(GravityCompat.END);
                 binding.btnHistoryVersions.requestFocus();

@@ -37,6 +37,10 @@ public class ModelVersion extends BaseModel implements Serializable {
         private String versionName;
         private String updateTime;
 
+        private String content;
+
+        private String size;
+
         public String getId() {
             return id;
         }
@@ -59,6 +63,22 @@ public class ModelVersion extends BaseModel implements Serializable {
 
         public void setUpdateTime(String updateTime) {
             this.updateTime = updateTime;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+
+        public String getSize() {
+            return size;
+        }
+
+        public void setSize(String size) {
+            this.size = size;
         }
     }
 }

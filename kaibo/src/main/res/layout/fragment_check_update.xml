@@ -192,6 +192,7 @@
             android:text="1.更人性化的操作界面\n界面全新设计，清新简洁，点划之问尽享愉悦的操作体验\n\n2.体验大有不同\n耳目一新的短视频，优惠商品、关注主播、热门点赞，你要找的商品，都在CIBN\n\n3.新增蝰蛇音效\n极致丽音，由蝰蛇(VIPER)专业打造的智能均衡环绕音。更有多种预设音效，让同短视频也有不同的味道"
             android:textColor="@color/common_white_transparent_60"
             android:textSize="@dimen/sp_12"
+            android:lineSpacingExtra="@dimen/dp_5"
             app:layout_constraintLeft_toLeftOf="@id/tv_update_detail_title"
             app:layout_constraintTop_toBottomOf="@id/tv_update_detail_title" />
 
@@ -199,7 +200,7 @@
 
     <FrameLayout
         android:id="@+id/version_history_container"
-        android:layout_width="@dimen/drawer_menu_width"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:background="@color/transparent" />
