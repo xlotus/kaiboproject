@@ -24,7 +24,7 @@
         android:layout_height="match_parent"
         android:layout_margin="@dimen/dp_6"
         android:visibility="visible"
-        android:background="@drawable/shape_6_33ffffff" />
+        android:background="@drawable/bg_home_anchor_selector" />
 
     <ImageView
         android:id="@+id/iv_anchor_cover"
