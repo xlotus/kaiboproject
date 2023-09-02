@@ -26,6 +26,10 @@ public class SubVideoPlayFragment extends BaseStackFragment<FragmentSubVideoPlay
 
     private PlayerViewModel playerViewModel;
 
+    public static SubVideoPlayFragment createInstance() {
+        return new SubVideoPlayFragment();
+    }
+
     @Override
     protected FragmentSubVideoPlayBinding createSubBinding(LayoutInflater inflater) {
         return FragmentSubVideoPlayBinding.inflate(inflater);
@@ -117,7 +121,8 @@ public class SubVideoPlayFragment extends BaseStackFragment<FragmentSubVideoPlay
                 return true;
             }
             ChangeListenerManager.getInstance().notifyChange(ChangedKeys.CHANGED_REQUEST_RESTORE_PLAY);
-            // 不要 return true;
+            goBack();
+            return true;
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
             VideoOperateDialog.show(getParentFragmentManager());
             return true;

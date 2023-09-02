@@ -21,9 +21,7 @@ public abstract class BaseStackFragment<T extends ViewBinding> extends KbBaseFra
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            Bundle bundle = new Bundle();
-            bundle.putString("page", "back");
-            getParentFragmentManager().setFragmentResult("menu", bundle);
+            goBack();
             return true;
         }
         return false;
@@ -45,16 +43,28 @@ public abstract class BaseStackFragment<T extends ViewBinding> extends KbBaseFra
     }
 
     protected void openPage(String page, int subPage) {
-        Bundle bundle = new Bundle();
-        bundle.putString("page", page);
-        bundle.putInt("subPage", subPage);
-        getParentFragmentManager().setFragmentResult("menu", bundle);
+        if (getActivity() != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("page", page);
+            bundle.putInt("subPage", subPage);
+            getActivity().getSupportFragmentManager().setFragmentResult("menu", bundle);
+        }
     }
 
     protected void goHome() {
-        Bundle bundle = new Bundle();
-        bundle.putString("page", "goHome");
-        getParentFragmentManager().setFragmentResult("menu", bundle);
+        if (getActivity() != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("page", "goHome");
+            getActivity().getSupportFragmentManager().setFragmentResult("menu", bundle);
+        }
+    }
+
+    protected void goBack() {
+        if (getActivity() != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("page", "back");
+            getActivity().getSupportFragmentManager().setFragmentResult("menu", bundle);
+        }
     }
 
     protected abstract T createSubBinding(LayoutInflater inflater);

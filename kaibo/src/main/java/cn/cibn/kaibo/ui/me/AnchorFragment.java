@@ -57,10 +57,12 @@ public class AnchorFragment extends KbBaseFragment<FragmentAnchorBinding> {
         adapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<ModelLive.Item>() {
             @Override
             public void onItemClick(ModelLive.Item item) {
-                ChangeListenerManager.getInstance().notifyChange(ChangedKeys.CHANGED_REQUEST_SUB_PLAY, item);
-                Bundle result = new Bundle();
-                result.putString("page", "subPlay");
-                getParentFragmentManager().setFragmentResult("menu", result);
+                if (getActivity() != null) {
+                    ChangeListenerManager.getInstance().notifyChange(ChangedKeys.CHANGED_REQUEST_SUB_PLAY, item);
+                    Bundle result = new Bundle();
+                    result.putString("page", "subPlay");
+                    getActivity().getSupportFragmentManager().setFragmentResult("menu", result);
+                }
             }
         });
         binding.recyclerAnchorVideoList.setAdapter(adapter);

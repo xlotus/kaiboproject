@@ -12,33 +12,30 @@ import java.util.Map;
 
 import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.data.ConfigModel;
-import cn.cibn.kaibo.databinding.ItemAnchorBinding;
+import cn.cibn.kaibo.databinding.ItemHomeAnchorBinding;
 import cn.cibn.kaibo.imageloader.ImageLoadHelper;
 import cn.cibn.kaibo.model.ModelAnchor;
 import cn.cibn.kaibo.utils.AnchorDiffCallback;
 
-public class AnchorAdapter extends ListBindingAdapter<ModelAnchor.Item, ItemAnchorBinding> {
+public class HomeAnchorAdapter extends ListBindingAdapter<ModelAnchor.Item, ItemHomeAnchorBinding> {
     private static final String TAG = "VideoListAdapter";
     private Map<Boolean, ModelAnchor.Item> map = new HashMap<>();
     private View lastSelectedView = null;
 
     private String playingVideoId;
 
-    public AnchorAdapter() {
+    public HomeAnchorAdapter() {
         super(new AnchorDiffCallback());
     }
 
     @Override
-    public ItemAnchorBinding createBinding(ViewGroup parent) {
+    public ItemHomeAnchorBinding createBinding(ViewGroup parent) {
         Logger.d(TAG, "createBinding");
-        return ItemAnchorBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return ItemHomeAnchorBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
     }
 
     @Override
-    public void onBindViewHolder(ModelAnchor.Item item, ItemAnchorBinding binding, int position) {
-        binding.bgFocusedAnchor.setBackgroundResource(ConfigModel.getInstance().isGrayMode() ?
-                R.drawable.bg_recyclerview_item_gray : R.drawable.bg_me_anchor_selector);
-
+    public void onBindViewHolder(ModelAnchor.Item item, ItemHomeAnchorBinding binding, int position) {
         String img = item.getCover_img();
         ImageLoadHelper.loadCircleImage(binding.ivAnchorCover, img, ConfigModel.getInstance().isGrayMode());
         binding.tvAnchorName.setText("@" + item.getTitle());
@@ -50,7 +47,7 @@ public class AnchorAdapter extends ListBindingAdapter<ModelAnchor.Item, ItemAnch
     }
 
     @Override
-    public void onItemFocusChanged(ItemAnchorBinding binding, boolean hasFocus) {
+    public void onItemFocusChanged(ItemHomeAnchorBinding binding, boolean hasFocus) {
         View itemView = binding.getRoot();
         ModelAnchor.Item item = (ModelAnchor.Item) itemView.getTag();
         map.put(hasFocus, item);
@@ -75,11 +72,13 @@ public class AnchorAdapter extends ListBindingAdapter<ModelAnchor.Item, ItemAnch
         }
     }
 
-    private void setStyle(ModelAnchor.Item data, ItemAnchorBinding binding, boolean hasFocus) {
+    private void setStyle(ModelAnchor.Item data, ItemHomeAnchorBinding binding, boolean hasFocus) {
         if (hasFocus) {
-            binding.bgFocusedAnchor.setSelected(true);
+            binding.bgHomeAnchorFocused.setVisibility(View.VISIBLE);
+            binding.bgHomeAnchorN.setVisibility(View.GONE);
         } else {
-            binding.bgFocusedAnchor.setSelected(false);
+            binding.bgHomeAnchorFocused.setVisibility(View.GONE);
+            binding.bgHomeAnchorN.setVisibility(View.VISIBLE);
         }
     }
 

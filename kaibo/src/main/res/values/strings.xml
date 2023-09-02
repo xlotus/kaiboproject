@@ -63,4 +63,11 @@
     <string name="history_versions">历史版本</string>
     <string name="clear_cache">清理缓存</string>
     <string name="update_detail">更新日志：</string>
+
+    <string name="login_to_view_more">登录后可以查看更多</string>
+    <string name="hd_play">高清播放</string>
+    <string name="easy_op">操作简单</string>
+    <string name="selected_goods">精选商品</string>
+    <string name="pay_security">支付安全</string>
+    <string name="follow_list_title">关注列表(%d)</string>
 </resources>

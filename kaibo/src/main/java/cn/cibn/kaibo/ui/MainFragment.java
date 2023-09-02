@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
@@ -36,6 +37,7 @@ import cn.cibn.kaibo.settings.LiveSettings;
 import cn.cibn.kaibo.stat.StatHelper;
 import cn.cibn.kaibo.ui.goods.GoodsDetailFragment;
 import cn.cibn.kaibo.ui.goods.GoodsListFragment;
+import cn.cibn.kaibo.ui.home.HomeFollowFragment;
 import cn.cibn.kaibo.ui.me.AnchorFragment;
 import cn.cibn.kaibo.ui.me.FollowFragment;
 import cn.cibn.kaibo.ui.me.MeFragment;
@@ -126,7 +128,8 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
             });
         }
 
-        getChildFragmentManager().setFragmentResultListener("menu", getViewLifecycleOwner(), new FragmentResultListener() {
+        FragmentManager fragmentManager = getActivity() != null ? getActivity().getSupportFragmentManager() : getChildFragmentManager();
+        fragmentManager.setFragmentResultListener("menu", getViewLifecycleOwner(), new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 String page = result.getString("page");
@@ -139,22 +142,21 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                 else if ("me".equals(page)) {
                     MeFragment f = new MeFragment();
                     openStack(f);
-                } else if ("follow".equals(page)) {
-                    binding.mainLiveDrawer.closeDrawer(GravityCompat.START);
-                    fragmentStack.clear();
-                    MeGroupFragment f = MeGroupFragment.createInstance(0);
+                } else if ("homeFollow".equals(page)) {
+                    HomeFollowFragment f = HomeFollowFragment.createInstance();
                     openStack(f);
-                } else if ("history".equals(page)) {
+                } else if ("meGroup".equals(page)) {
                     binding.mainLiveDrawer.closeDrawer(GravityCompat.START);
                     fragmentStack.clear();
-                    MeGroupFragment f = MeGroupFragment.createInstance(1);
+                    int subPage = result.getInt("subPage");
+                    MeGroupFragment f = MeGroupFragment.createInstance(subPage);
                     openStack(f);
                 }  else if ("back".equals(page)) {
                     backStack();
                 } else if ("goHome".equals(page)) {
                     showHome();
                 } else if ("subPlay".equals(page)) {
-                    SubVideoPlayFragment f = new SubVideoPlayFragment();
+                    SubVideoPlayFragment f = SubVideoPlayFragment.createInstance();
                     openStack(f);
                 } else if ("opFollow".equals(page)) {
 
@@ -198,6 +200,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        Logger.d(TAG, "onDestroyView");
         if (playerViewModel != null) {
             playerViewModel.isInPlay.removeObservers(getViewLifecycleOwner());
         }

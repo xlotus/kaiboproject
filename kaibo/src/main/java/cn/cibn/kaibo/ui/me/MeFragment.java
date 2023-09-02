@@ -80,9 +80,9 @@ public class MeFragment extends BaseStackFragment<FragmentMeBinding> implements 
     public void onClick(View v) {
         int id = v.getId();
         if (id == subBinding.btnMyFollow.getId()) {
-            openPage("follow", 0);
+            openPage("meGroup", 0);
         } else if (id == subBinding.btnMyHistory.getId()) {
-            openPage("history", 0);
+            openPage("meGroup", 1);
         } else if (id == subBinding.btnLogout.getId()) {
             UserManager.getInstance().clear();
             updateView();

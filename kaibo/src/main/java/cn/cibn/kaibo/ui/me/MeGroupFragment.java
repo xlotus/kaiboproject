@@ -9,7 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.FragmentResultListener;
 
+import java.util.ArrayList;
+
 import cn.cibn.kaibo.R;
+import cn.cibn.kaibo.change.ChangedKeys;
 import cn.cibn.kaibo.databinding.FragmentMeBinding;
 import cn.cibn.kaibo.databinding.FragmentMeGroupBinding;
 import cn.cibn.kaibo.model.ModelAnchor;
@@ -125,6 +128,23 @@ public class MeGroupFragment extends BaseStackFragment<FragmentMeGroupBinding> i
     public void onDestroyView() {
         super.onDestroyView();
         getChildFragmentManager().clearFragmentResultListener("meGroup");
+    }
+
+    @Override
+    protected void addChangedListenerKey(ArrayList<String> keys) {
+        super.addChangedListenerKey(keys);
+        keys.add(ChangedKeys.CHANGED_REQUEST_SUB_PLAY);
+    }
+
+    @Override
+    public void onListenerChange(String key, Object data) {
+        if (ChangedKeys.CHANGED_REQUEST_SUB_PLAY.equals(key)) {
+            if (subBinding != null) {
+                subBinding.drawerMeGroup.closeDrawer(GravityCompat.END);
+            }
+            return;
+        }
+        super.onListenerChange(key, data);
     }
 
     private void showFollow() {

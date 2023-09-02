@@ -47,7 +47,7 @@ public class FollowFragment extends KbBaseFragment<FragmentFollowBinding> {
     @Override
     protected void initData() {
         List<ModelAnchor.Item> list = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
             ModelAnchor.Item item = new ModelAnchor.Item();
             item.setTitle("anchor" + i);
             item.setCover_img("https://img.cbnlive.cn/web/uploads/image/store_1/bd3ecde03cc241c818fccccffeac9a3e3528809e.jpg");

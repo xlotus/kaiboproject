@@ -28,7 +28,6 @@ import cn.cibn.kaibo.player.VideoType;
 public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements View.OnClickListener {
     private static final String TAG = "MenuFragment";
 
-    private MenuFragment subFragment;
     private VideoListAdapter adapter;
 
     private View selectedView;
@@ -44,11 +43,6 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
 
     @Override
     protected void initView() {
-        if (grade == 1) {
-            subFragment = new MenuFragment();
-            subFragment.grade = 2;
-            getChildFragmentManager().beginTransaction().replace(R.id.sub_menu_container, subFragment).commit();
-        }
         adapter = new VideoListAdapter();
         adapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<ModelLive.Item>() {
             @Override
@@ -129,26 +123,20 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
         }
         int id = v.getId();
         if (id == binding.btnSearch.getId()) {
-//            binding.btnSearch.setSelected(true);
-            Bundle result = new Bundle();
-            result.putString("page", "search");
-//            selectedView = binding.btnSearch;
-            getParentFragmentManager().setFragmentResult("menu", result);
+            openPage("search");
         } else if (id == binding.btnRecommend.getId()) {
             if (grade == 1) {
-                binding.menuDrawer.openDrawer(GravityCompat.START);
                 binding.btnRecommend.setSelected(true);
                 selectedView = binding.btnRecommend;
-                subFragment.requestFocus();
             }
         } else if (id == binding.btnFollow.getId()) {
-
+            binding.btnFollow.setSelected(true);
+            selectedView = binding.btnFollow;
+            openPage("homeFollow");
         } else if (id == binding.btnMe.getId()) {
             binding.btnMe.setSelected(true);
-            Bundle result = new Bundle();
-            result.putString("page", "me");
             selectedView = binding.btnMe;
-            getParentFragmentManager().setFragmentResult("menu", result);
+            openPage("me");
         }
     }
 
@@ -175,5 +163,13 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
             }
         }
         return false;
+    }
+
+    private void openPage(String page) {
+        if (getActivity() != null) {
+            Bundle result = new Bundle();
+            result.putString("page", page);
+            getActivity().getSupportFragmentManager().setFragmentResult("menu", result);
+        }
     }
 }

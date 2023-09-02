@@ -82,19 +82,19 @@ public class MyVerticalGridView extends VerticalGridView {
         if (focused == null) {
             return getChildAt(lastFocusPos);
         }
-        int p = getChildAdapterPosition(focused);
-        switch (direction) {
-            case View.FOCUS_RIGHT:
-                if (numColumns > 1 && p < getAdapter().getItemCount() - 1) {
-                    return getChildAt(p + 1);
-                }
-                break;
-            case View.FOCUS_LEFT:
-                if (numColumns > 1 && p > 0) {
-                    return getChildAt(p - 1);
-                }
-                break;
-        }
+//        int p = getChildLayoutPosition(focused);
+//        switch (direction) {
+//            case View.FOCUS_RIGHT:
+//                if (numColumns > 1 && p < getChildCount() - 1) {
+//                    return getChildAt(p + 1);
+//                }
+//                break;
+//            case View.FOCUS_LEFT:
+//                if (numColumns > 1 && p > 0) {
+//                    return getChildAt(p - 1);
+//                }
+//                break;
+//        }
         return super.focusSearch(focused, direction);
     }
 
