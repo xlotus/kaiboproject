@@ -15,8 +15,11 @@ import android.view.animation.DecelerateInterpolator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.tv.lib.core.Logger;
+import com.tv.lib.core.change.ChangeListenerManager;
 import com.tv.lib.core.lang.ObjectStore;
 import com.tv.lib.core.lang.thread.TaskHelper;
 import com.tv.lib.core.utils.Utils;
@@ -28,12 +31,17 @@ import java.util.List;
 import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.adapter.SearchGuessAdapter;
 import cn.cibn.kaibo.adapter.SearchHistoryAdapter;
+import cn.cibn.kaibo.adapter.VideoGridAdapter;
+import cn.cibn.kaibo.change.ChangedKeys;
 import cn.cibn.kaibo.databinding.FragmentSearchBinding;
 import cn.cibn.kaibo.db.AppDatabase;
 import cn.cibn.kaibo.db.SearchHistory;
+import cn.cibn.kaibo.model.ModelLive;
 import cn.cibn.kaibo.ui.BaseStackFragment;
+import cn.cibn.kaibo.ui.video.VideoListDataSource;
 import cn.cibn.kaibo.ui.widget.FocusFrameLayout;
 import cn.cibn.kaibo.ui.widget.SearchKeyboard;
+import cn.cibn.kaibo.viewmodel.PlayerViewModel;
 
 public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> implements Handler.Callback, View.OnClickListener {
     private static final String TAG = "SearchFragment";
@@ -49,7 +57,9 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
 
     private SearchHistoryAdapter historyAdapter;
     private SearchGuessAdapter guessAdapter;
-    private SearchHistoryAdapter resultAdapter;
+    private VideoGridAdapter resultAdapter;
+    private PlayerViewModel playerViewModel;
+    private SearchVideoSource searchVideoSource;
 
     private Animator moveRightAnimator;
     private Animator moveLeftAnimator;
@@ -68,83 +78,48 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
     }
 
     @Override
+    protected void onActivityCreated() {
+        super.onActivityCreated();
+        if (getActivity() != null) {
+            playerViewModel = new ViewModelProvider(getActivity()).get(PlayerViewModel.class);
+        }
+    }
+
+    @Override
     protected void initView() {
         super.initView();
-        int size = getResources().getDimensionPixelSize(R.dimen.dp_16);
-        Drawable drawable = getResources().getDrawable(R.drawable.baseline_backspace_24);
-        drawable.setBounds(0, 0, size, size);
-        subBinding.btnDelete.setCompoundDrawables(drawable, null, null, null);
-        drawable = getResources().getDrawable(R.drawable.baseline_delete_24);
-        drawable.setBounds(0, 0, size, size);
-        subBinding.btnClear.setCompoundDrawables(drawable, null, null, null);
-
         subBinding.searchRoot.setSmoothScrollingEnabled(true);
-        subBinding.btnClear.setOnClickListener(this);
-        subBinding.btnDelete.setOnClickListener(this);
-        subBinding.searchKeyboard.setOnSearchKeyListener(new SearchKeyboard.OnSearchKeyListener() {
-            @Override
-            public void onSearchKey(String key) {
-                inputValue += key;
-                subBinding.etSearch.setText(inputValue);
-                subBinding.etSearch.setSelection(inputValue.length());
-                if (handler != null) {
-                    handler.removeCallbacksAndMessages(null);
-                    handler.sendEmptyMessageDelayed(WHAT_SEARCH, 500);
-                }
-                if (TextUtils.isEmpty(inputValue)) {
-                    showHistory();
-                } else {
-                    showGuess();
-                }
-            }
-        });
+        subBinding.btnSearchGoHome.setOnClickListener(this);
         initAnimator();
-
-        subBinding.fflSearchInput.setOnFocusChangeListener(new FocusFrameLayout.OnFocusChangeListener() {
-            @Override
-            public void onFocusEnter() {
-                Logger.d(TAG, "lastFocusPart = " + lastFocusPart);
-                subBinding.searchRoot.smoothScrollTo(0, 0);
-
-            }
-
-            @Override
-            public void onFocusLeave() {
-//                lastFocusPart = 1;
-            }
-        });
-
-        historyAdapter = new SearchHistoryAdapter();
-        guessAdapter = new SearchGuessAdapter();
-        resultAdapter = new SearchHistoryAdapter();
-        subBinding.recyclerSearchResult.setAdapter(resultAdapter);
-        subBinding.recyclerSearchResult.setNumColumns(4);
-        int w = Utils.getScreenWidth(ObjectStore.getContext());
-        ViewGroup.LayoutParams lp = subBinding.fflSearchResult.getLayoutParams();
-        lp.width = w;
-        subBinding.fflSearchResult.setLayoutParams(lp);
-
-
-        historyAdapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<String>() {
-            @Override
-            public void onItemClick(String item) {
-                reqSearch(item);
-            }
-        });
-        guessAdapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<String>() {
-            @Override
-            public void onItemClick(String item) {
-                reqSearch(item);
-            }
-        });
+        initKeyboardView();
+        initSearchHistoryView();
+        initSearchGuessView();
+        initSearchResultView();
 
         showHistory();
-        showResult();
+        hideResult();
     }
 
     @Override
     protected void initData() {
+        searchVideoSource = new SearchVideoSource();
+        searchVideoSource.setOnReadyListener(new VideoListDataSource.OnReadyListener() {
+            @Override
+            public void onSourceReady() {
+                if (resultAdapter != null) {
+                    resultAdapter.notifyDataSetChanged();
+                }
 
+                subBinding.searchRoot.smoothScrollTo(Utils.getScreenWidth(ObjectStore.getContext()), 0);
+                subBinding.recyclerSearchResult.post(() -> {
+                    subBinding.recyclerSearchResult.requestFocus();
+                });
+            }
+        });
+        if (playerViewModel != null) {
+            playerViewModel.videoListDataSource.setValue(searchVideoSource);
+        }
+        resultAdapter.submitList(searchVideoSource.getLiveList());
     }
 
     @Override
@@ -190,6 +165,8 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
             } else {
                 showGuess();
             }
+        } else if (id == subBinding.btnSearchGoHome.getId()) {
+            goHome();
         }
     }
 
@@ -198,8 +175,104 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
         return true;
     }
 
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         return super.onKeyDown(keyCode, event);
+    }
+
+    private void initKeyboardView() {
+        int size = getResources().getDimensionPixelSize(R.dimen.dp_16);
+        Drawable drawable = getResources().getDrawable(R.drawable.baseline_backspace_24);
+        drawable.setBounds(0, 0, size, size);
+        subBinding.btnDelete.setCompoundDrawables(drawable, null, null, null);
+        drawable = getResources().getDrawable(R.drawable.baseline_delete_24);
+        drawable.setBounds(0, 0, size, size);
+        subBinding.btnClear.setCompoundDrawables(drawable, null, null, null);
+        subBinding.btnClear.setOnClickListener(this);
+        subBinding.btnDelete.setOnClickListener(this);
+
+        subBinding.searchKeyboard.setOnSearchKeyListener(new SearchKeyboard.OnSearchKeyListener() {
+            @Override
+            public void onSearchKey(String key) {
+                inputValue += key;
+                subBinding.etSearch.setText(inputValue);
+                subBinding.etSearch.setSelection(inputValue.length());
+                if (handler != null) {
+                    handler.removeCallbacksAndMessages(null);
+                    handler.sendEmptyMessageDelayed(WHAT_SEARCH, 500);
+                }
+                if (TextUtils.isEmpty(inputValue)) {
+                    showHistory();
+                } else {
+                    showGuess();
+                }
+            }
+        });
+
+        subBinding.fflSearchInput.setOnFocusChangeListener(new FocusFrameLayout.OnFocusChangeListener() {
+            @Override
+            public void onFocusEnter() {
+                Logger.d(TAG, "lastFocusPart = " + lastFocusPart);
+                subBinding.searchRoot.smoothScrollTo(0, 0);
+
+            }
+
+            @Override
+            public void onFocusLeave() {
+//                lastFocusPart = 1;
+            }
+        });
+    }
+
+    private void initSearchHistoryView() {
+        historyAdapter = new SearchHistoryAdapter();
+        historyAdapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<String>() {
+            @Override
+            public void onItemClick(String item) {
+                reqSearch(item);
+            }
+        });
+    }
+
+    private void initSearchGuessView() {
+        guessAdapter = new SearchGuessAdapter();
+        guessAdapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<String>() {
+            @Override
+            public void onItemClick(String item) {
+                reqSearch(item);
+            }
+        });
+    }
+
+    private void initSearchResultView() {
+        int w = Utils.getScreenWidth(ObjectStore.getContext());
+        ViewGroup.LayoutParams lp = subBinding.fflSearchResult.getLayoutParams();
+        lp.width = w;
+        subBinding.fflSearchResult.setLayoutParams(lp);
+
+        resultAdapter = new VideoGridAdapter();
+        subBinding.recyclerSearchResult.setAdapter(resultAdapter);
+        subBinding.recyclerSearchResult.setNumColumns(4);
+        resultAdapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<ModelLive.Item>() {
+            @Override
+            public void onItemClick(ModelLive.Item item) {
+                if (getActivity() != null) {
+                    ChangeListenerManager.getInstance().notifyChange(ChangedKeys.CHANGED_REQUEST_SUB_PLAY, item);
+                    Bundle result = new Bundle();
+                    result.putString("page", "subPlay");
+                    getActivity().getSupportFragmentManager().setFragmentResult("menu", result);
+                }
+            }
+        });
+
+        if (playerViewModel != null) {
+            playerViewModel.playingVideo.observe(getViewLifecycleOwner(), new Observer<ModelLive.Item>() {
+                @Override
+                public void onChanged(ModelLive.Item item) {
+                    searchVideoSource.setCurLiveId(item.getId());
+                }
+            });
+        }
     }
 
     private void initAnimator() {
@@ -232,6 +305,9 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
 
     private void reqSearch(String key) {
         subBinding.tvResultTitleKey.setText("\"@" + key + "\"");
+        showResult();
+        searchVideoSource.setKey(key);
+        searchVideoSource.reqLiveList();
         TaskHelper.exec(new TaskHelper.Task() {
             @Override
             public void execute() throws Exception {
@@ -245,15 +321,7 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
 
             @Override
             public void callback(Exception e) {
-                List<String> list = new ArrayList<>();
-                for (int i = 0; i < 40; i++) {
-                    list.add("LIST " + i);
-                }
-                resultAdapter.submitList(list);
-                subBinding.searchRoot.smoothScrollTo(Utils.getScreenWidth(ObjectStore.getContext()), 0);
-                subBinding.recyclerSearchResult.post(() -> {
-                    subBinding.recyclerSearchResult.requestFocus();
-                });
+
             }
         });
     }
@@ -307,15 +375,47 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
     }
 
     private void showResult() {
-//        if (resultFragment == null) {
-//            resultFragment = new SearchResultFragment();
-//        }
-//        getChildFragmentManager().beginTransaction().replace(R.id.layout_search_result, resultFragment).commit();
+//        subBinding.fflSearchResult.setVisibility(View.VISIBLE);
+        subBinding.tvResultTitleTail.setVisibility(View.VISIBLE);
     }
 
-    private void hideKeyboard() {
-        moveLeftAnimator.start();
+    private void hideResult() {
+//        subBinding.fflSearchResult.setVisibility(View.GONE);
+        subBinding.tvResultTitleKey.setText("暂无搜索结果");
+        subBinding.tvResultTitleTail.setVisibility(View.GONE);
+    }
 
-//        binding.layoutSearchInput.setVisibility(View.GONE);
+    private static class SearchVideoSource extends VideoListDataSource {
+        private String key;
+
+        public void setKey(String key) {
+            this.key = key;
+        }
+
+        @Override
+        public void reqLiveList() {
+            ModelLive live = new ModelLive();
+            TaskHelper.exec(new TaskHelper.Task() {
+                @Override
+                public void execute() throws Exception {
+
+                    List<ModelLive.Item> list = new ArrayList<>();
+                    for (int i = 0; i < 10; i++) {
+                        ModelLive.Item item = new ModelLive.Item();
+                        item.setId("11");
+                        item.setTitle("Video " + i);
+                        item.setBack_img("https://img.cbnlive.cn/web/uploads/image/store_1/bd3ecde03cc241c818fccccffeac9a3e3528809e.jpg");
+                        item.setPlay_addr("http://1500005830.vod2.myqcloud.com/43843ec0vodtranscq1500005830/3afba03a387702294394228636/adp.10.m3u8");
+                        list.add(item);
+                    }
+                    live.setList(list);
+                }
+
+                @Override
+                public void callback(Exception e) {
+                    updateLiveList(live);
+                }
+            });
+        }
     }
 }

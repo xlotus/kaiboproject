@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="@dimen/dp_240"
+    android:layout_width="@dimen/dp_226"
     android:layout_height="@dimen/dp_168"
     android:paddingBottom="@dimen/dp_8"
     android:clickable="true"
@@ -13,21 +13,18 @@
         android:id="@+id/bg_focused_live"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/dp_3"
-        android:layout_marginTop="@dimen/dp_1"
-        android:layout_marginEnd="@dimen/dp_3"
-        android:layout_marginBottom="@dimen/dp_1"
         android:background="@drawable/bg_recyclerview_item" />
 
     <ImageView
         android:id="@+id/iv_live_cover"
         android:layout_width="@dimen/dp_214"
         android:layout_height="@dimen/dp_120"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
+        android:background="@null"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_6"
         tools:src="@drawable/cover" />
 
     <TextView
@@ -35,10 +32,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:layout_marginStart="@dimen/dp_5"
         android:ellipsize="end"
         android:lines="1"
-        android:maxWidth="@dimen/dp_90"
+        android:maxWidth="@dimen/dp_200"
         android:maxLines="1"
         android:textColor="@color/common_white_transparent_80"
         android:textSize="@dimen/sp_12"
@@ -46,7 +42,7 @@
         app:layout_constraintLeft_toLeftOf="@id/iv_live_cover"
         app:layout_constraintTop_toBottomOf="@id/iv_live_cover"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:text="livelivelivelivelivelivelivelivelive" />
+        tools:text="livelivelivelivelivelivelivelivelivelivelivelivelivelivelivelivelivelive" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

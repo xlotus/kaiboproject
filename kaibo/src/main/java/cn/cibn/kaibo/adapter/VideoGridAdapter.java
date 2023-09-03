@@ -44,7 +44,7 @@ public class VideoGridAdapter extends ListBindingAdapter<ModelLive.Item, ItemVid
                 R.drawable.bg_recyclerview_item_gray : R.drawable.bg_recyclerview_item);
 
         String img = item.getBack_img();
-        ImageLoadHelper.loadImage(binding.ivLiveCover, img, (int) binding.getRoot().getResources().getDimension(R.dimen.dp_2), ConfigModel.getInstance().isGrayMode());
+        ImageLoadHelper.loadImage(binding.ivLiveCover, img, (int) binding.getRoot().getResources().getDimension(R.dimen.dp_8), ConfigModel.getInstance().isGrayMode());
 //        ImageLoadHelper.loadCircleImage(binding.ivAnchorHead, item.getCover_img(), ConfigModel.getInstance().isGrayMode());
         binding.tvLiveName.setText(item.getTitle());
 //        binding.tvAnchorName.setText(item.getName());
