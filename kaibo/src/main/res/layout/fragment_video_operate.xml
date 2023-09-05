@@ -32,6 +32,7 @@
         app:layout_constraintLeft_toRightOf="@id/btn_play_follow"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/btn_play_follow"
+        android:visibility="visible"
         app:menu_icon="@drawable/like"
         app:menu_name="@string/like"
         app:name_color="@color/white" />

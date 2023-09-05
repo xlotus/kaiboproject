@@ -1,18 +1,24 @@
 package cn.cibn.kaibo.ui.me;
 
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.tencent.mm.opensdk.diffdev.OAuthErrCode;
-import com.tencent.mm.opensdk.diffdev.OAuthListener;
+import java.util.ArrayList;
 
 import cn.cibn.kaibo.UserManager;
+import cn.cibn.kaibo.change.ChangedKeys;
+import cn.cibn.kaibo.data.ConfigModel;
 import cn.cibn.kaibo.databinding.FragmentMeBinding;
+import cn.cibn.kaibo.imageloader.ImageLoadHelper;
+import cn.cibn.kaibo.model.ModelUser;
 import cn.cibn.kaibo.ui.BaseStackFragment;
-import cn.cibn.kaibo.utils.LoginHelper;
+import cn.cibn.kaibo.ui.widget.LoginView;
 
 public class MeFragment extends BaseStackFragment<FragmentMeBinding> implements View.OnClickListener {
+
+    private static final String TAG = "MeFragment";
+
+    private LoginView loginView;
 
     @Override
     protected FragmentMeBinding createSubBinding(LayoutInflater inflater) {
@@ -44,29 +50,55 @@ public class MeFragment extends BaseStackFragment<FragmentMeBinding> implements 
     @Override
     protected void updateView() {
         if (UserManager.getInstance().isLogin()) {
-            subBinding.groupLoginYes.setVisibility(View.VISIBLE);
-            subBinding.groupLoginNo.setVisibility(View.GONE);
+            subBinding.layoutUserContent.setVisibility(View.VISIBLE);
+            subBinding.stubLoginView.setVisibility(View.GONE);
             subBinding.btnMyFollow.requestFocus();
+            ModelUser user = UserManager.getInstance().getUserInfo();
+            if (user != null) {
+                subBinding.tvAnchorName.setText("@" + user.getNickname());
+                subBinding.tvAnchorId.setText("用户ID:" + user.getUser_key());
+                ImageLoadHelper.loadCircleImage(subBinding.ivUserHead, user.getAvatar_url(), ConfigModel.getInstance().isGrayMode());
+                if (user.getOrder_count().getStatus_0() > 0) {
+                    subBinding.tvCountNeedPay.setText(String.valueOf(user.getOrder_count().getStatus_0()));
+                    subBinding.tvCountNeedPay.setVisibility(View.VISIBLE);
+                } else {
+                    subBinding.tvCountNeedPay.setVisibility(View.GONE);
+                }
+                if (user.getOrder_count().getStatus_1() > 0) {
+                    subBinding.tvCountNeedSend.setText(String.valueOf(user.getOrder_count().getStatus_1()));
+                    subBinding.tvCountNeedSend.setVisibility(View.VISIBLE);
+                } else {
+                    subBinding.tvCountNeedSend.setVisibility(View.GONE);
+                }
+                if (user.getOrder_count().getStatus_2() > 0) {
+                    subBinding.tvCountNeedReceive.setText(String.valueOf(user.getOrder_count().getStatus_2()));
+                    subBinding.tvCountNeedReceive.setVisibility(View.VISIBLE);
+                } else {
+                    subBinding.tvCountNeedReceive.setVisibility(View.GONE);
+                }
+                if (user.getOrder_count().getStatus_3() > 0) {
+                    subBinding.tvCountFinished.setText(String.valueOf(user.getOrder_count().getStatus_3()));
+                    subBinding.tvCountFinished.setVisibility(View.VISIBLE);
+                } else {
+                    subBinding.tvCountFinished.setVisibility(View.GONE);
+                }
+                if (user.getOrder_count().getStatus_5() > 0) {
+                    subBinding.tvCountService.setText(String.valueOf(user.getOrder_count().getStatus_5()));
+                    subBinding.tvCountService.setVisibility(View.VISIBLE);
+                } else {
+                    subBinding.tvCountService.setVisibility(View.GONE);
+                }
+
+            }
         } else {
-            subBinding.groupLoginYes.setVisibility(View.GONE);
-            subBinding.groupLoginNo.setVisibility(View.VISIBLE);
-            subBinding.ivLoginQrcode.requestFocus();
-            LoginHelper.login(new OAuthListener() {
-                @Override
-                public void onAuthGotQrcode(String s, byte[] bytes) {
-
-                }
-
-                @Override
-                public void onQrcodeScanned() {
-
-                }
-
-                @Override
-                public void onAuthFinish(OAuthErrCode oAuthErrCode, String s) {
-
-                }
-            });
+            subBinding.layoutUserContent.setVisibility(View.GONE);
+            if (loginView == null) {
+                loginView = (LoginView) subBinding.stubLoginView.inflate();
+            }
+            subBinding.stubLoginView.setVisibility(View.VISIBLE);
+            if (loginView != null) {
+                loginView.login();
+            }
         }
     }
 
@@ -99,5 +131,20 @@ public class MeFragment extends BaseStackFragment<FragmentMeBinding> implements 
         } else if (id == subBinding.layoutOrderService.getId()) {
             openPage("orders", 4);
         }
+    }
+
+    @Override
+    protected void addChangedListenerKey(ArrayList<String> keys) {
+        super.addChangedListenerKey(keys);
+        keys.add(ChangedKeys.CHANGED_LOGIN_SUCCESS);
+    }
+
+    @Override
+    public void onListenerChange(String key, Object data) {
+        if (ChangedKeys.CHANGED_LOGIN_SUCCESS.equals(key)) {
+            updateView();
+            return;
+        }
+        super.onListenerChange(key, data);
     }
 }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cn.cibn.kaibo.ui.widget.LoginView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/login_view"
+    android:layout_width="@dimen/drawer_menu_width"
+    android:layout_height="match_parent" />

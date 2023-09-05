@@ -79,7 +79,7 @@ public class RecommendModel {
 
             @Override
             public void execute() throws Exception {
-                modelLive = LiveMethod.getInstance().getLiveList(page, 1);
+                modelLive = LiveMethod.getInstance().getRecommend(page, 1);
             }
 
             @Override

@@ -21,12 +21,15 @@ import cn.cibn.kaibo.databinding.FragmentHomeFollowBinding;
 import cn.cibn.kaibo.model.ModelAnchor;
 import cn.cibn.kaibo.ui.BaseStackFragment;
 import cn.cibn.kaibo.ui.me.AnchorFragment;
+import cn.cibn.kaibo.ui.widget.LoginView;
 
 public class HomeFollowFragment extends BaseStackFragment<FragmentHomeFollowBinding> {
 
     private HomeAnchorAdapter adapter;
 
     private AnchorFragment anchorFragment;
+
+    private LoginView loginView;
 
     public static HomeFollowFragment createInstance() {
         return new HomeFollowFragment();
@@ -54,18 +57,24 @@ public class HomeFollowFragment extends BaseStackFragment<FragmentHomeFollowBind
 
         anchorFragment = AnchorFragment.createInstance();
         getChildFragmentManager().beginTransaction().replace(subBinding.homeFollowContent.getId(), anchorFragment).commit();
+        updateView();
     }
 
     @Override
     protected void updateView() {
         if (UserManager.getInstance().isLogin()) {
             subBinding.layoutFollowHasLogin.setVisibility(View.VISIBLE);
-            subBinding.layoutFollowNotLogin.setVisibility(View.GONE);
+            subBinding.stubFollowLoginView.setVisibility(View.GONE);
             subBinding.layoutFollowHasLogin.requestFocus();
         } else {
+            if (loginView == null) {
+                loginView = (LoginView) subBinding.stubFollowLoginView.inflate();
+            }
             subBinding.layoutFollowHasLogin.setVisibility(View.GONE);
-            subBinding.layoutFollowNotLogin.setVisibility(View.VISIBLE);
-            subBinding.ivLoginQrcode.requestFocus();
+            subBinding.stubFollowLoginView.setVisibility(View.VISIBLE);
+            if (loginView != null) {
+                loginView.login();
+            }
         }
     }
 
@@ -99,7 +108,7 @@ public class HomeFollowFragment extends BaseStackFragment<FragmentHomeFollowBind
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (subBinding.drawerHomeFollow.isDrawerOpen(GravityCompat.START)) {
-            if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+            if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 subBinding.drawerHomeFollow.closeDrawer(GravityCompat.START);
                 requestFocus();
                 return true;
@@ -117,6 +126,7 @@ public class HomeFollowFragment extends BaseStackFragment<FragmentHomeFollowBind
     protected void addChangedListenerKey(ArrayList<String> keys) {
         super.addChangedListenerKey(keys);
         keys.add(ChangedKeys.CHANGED_REQUEST_SUB_PLAY);
+        keys.add(ChangedKeys.CHANGED_LOGIN_SUCCESS);
     }
 
     @Override
@@ -125,6 +135,10 @@ public class HomeFollowFragment extends BaseStackFragment<FragmentHomeFollowBind
             if (subBinding != null) {
                 subBinding.drawerHomeFollow.closeDrawer(GravityCompat.START);
             }
+            return;
+        }
+        if (ChangedKeys.CHANGED_LOGIN_SUCCESS.equals(key)) {
+            updateView();
             return;
         }
         super.onListenerChange(key, data);

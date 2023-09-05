@@ -1,6 +1,7 @@
 package cn.cibn.kaibo.ui;
 
 import android.animation.ObjectAnimator;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -28,10 +29,13 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 import cn.cibn.kaibo.R;
+import cn.cibn.kaibo.UserManager;
 import cn.cibn.kaibo.change.ChangedKeys;
 import cn.cibn.kaibo.data.RecommendModel;
 import cn.cibn.kaibo.databinding.FragmentMainBinding;
 import cn.cibn.kaibo.model.ModelLive;
+import cn.cibn.kaibo.model.ModelWrapper;
+import cn.cibn.kaibo.network.LiveMethod;
 import cn.cibn.kaibo.player.VideoType;
 import cn.cibn.kaibo.settings.LiveSettings;
 import cn.cibn.kaibo.stat.StatHelper;
@@ -68,6 +72,8 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
     private GoodsDetailFragment goodsDetailFragment;
     private KbBaseFragment<?> naviRightFragment;
 
+    private VideoOperateDialog operateDialog;
+
 
     private String intentLiveId;
 
@@ -89,6 +95,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
         if (getActivity() != null) {
             playerViewModel = new ViewModelProvider(getActivity()).get(PlayerViewModel.class);
         }
+        UserManager.getInstance().init();
     }
 
     @Override
@@ -159,9 +166,9 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                     SubVideoPlayFragment f = SubVideoPlayFragment.createInstance();
                     openStack(f);
                 } else if ("opFollow".equals(page)) {
-
+//                    reqFollowAnchor();
                 } else if ("opLike".equals(page)) {
-                    playLikeAnimation();
+//                    playLikeAnimation();
                 } else if ("settings".equals(page)) {
                     binding.mainLiveDrawer.closeDrawer(GravityCompat.START);
                     fragmentStack.clear();
@@ -203,6 +210,12 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
         Logger.d(TAG, "onDestroyView");
         if (playerViewModel != null) {
             playerViewModel.isInPlay.removeObservers(getViewLifecycleOwner());
+        }
+        if (operateDialog != null) {
+            operateDialog.dismiss();
+            operateDialog.setDismissListener(null);
+            operateDialog.setOpListener(null);
+            operateDialog = null;
         }
         stopLikeAnimation();
         getChildFragmentManager().clearFragmentResultListener("menu");
@@ -390,10 +403,28 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                 return true;
             }
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
-//            if (playerViewModel != null) {
-//                playerViewModel.setIsInPlay(true);
-//            }
-            VideoOperateDialog.show(getChildFragmentManager());
+            if (playerViewModel != null && playerViewModel.playingVideo.getValue() != null) {
+                operateDialog = VideoOperateDialog.show(getChildFragmentManager(), playerViewModel.playingVideo.getValue());
+                operateDialog.setDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        operateDialog.setOpListener(null);
+                        operateDialog.setDismissListener(null);
+                        operateDialog = null;
+                    }
+                });
+                operateDialog.setOpListener(new VideoOperateDialog.VideoOpListener() {
+                    @Override
+                    public void onFollowClick(ModelLive.Item item) {
+                        reqFollowAnchor(item);
+                    }
+
+                    @Override
+                    public void onGiveClick(ModelLive.Item item) {
+                        reqGiveVideo(item);
+                    }
+                });
+            }
             return true;
         }
         return false;
@@ -472,6 +503,44 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
     private void showHome() {
         fragmentStack.clear();
         binding.stackContainer.setVisibility(View.GONE);
+    }
+
+    private void reqFollowAnchor(ModelLive.Item item) {
+        TaskHelper.exec(new TaskHelper.Task() {
+            ModelWrapper<String> model;
+            @Override
+            public void execute() throws Exception {
+                if (playerViewModel.playingVideo.getValue() !=null) {
+                    model = LiveMethod.getInstance().reqFollow(item.getAnchor_id());
+                }
+            }
+
+            @Override
+            public void callback(Exception e) {
+                if (model != null && model.isSuccess()) {
+
+                }
+            }
+        });
+    }
+
+    private void reqGiveVideo(ModelLive.Item item) {
+        TaskHelper.exec(new TaskHelper.Task() {
+            ModelWrapper<String> model;
+            @Override
+            public void execute() throws Exception {
+                if (playerViewModel.playingVideo.getValue() !=null) {
+                    model = LiveMethod.getInstance().reqGive(item.getId(), item.getType());
+                }
+            }
+
+            @Override
+            public void callback(Exception e) {
+                if (model != null && model.isSuccess()) {
+                    playLikeAnimation();
+                }
+            }
+        });
     }
 
     private void playLikeAnimation() {

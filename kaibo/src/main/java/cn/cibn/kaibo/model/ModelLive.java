@@ -44,7 +44,7 @@ public class ModelLive extends BaseModel implements Serializable {
         private String anchor_id;
         private String play_addr;
         private String name;
-        private String header_bg;
+//        private String header_bg;
 
         private String certification_no;
 
@@ -106,13 +106,13 @@ public class ModelLive extends BaseModel implements Serializable {
             this.name = name;
         }
 
-        public String getHeader_bg() {
-            return header_bg;
-        }
-
-        public void setHeader_bg(String header_bg) {
-            this.header_bg = header_bg;
-        }
+//        public String getHeader_bg() {
+//            return header_bg;
+//        }
+//
+//        public void setHeader_bg(String header_bg) {
+//            this.header_bg = header_bg;
+//        }
 
         @Override
         public boolean equals(@Nullable Object obj) {
@@ -143,7 +143,6 @@ public class ModelLive extends BaseModel implements Serializable {
                     ", anchor_id='" + anchor_id + '\'' +
                     ", play_addr='" + play_addr + '\'' +
                     ", name='" + name + '\'' +
-                    ", header_bg='" + header_bg + '\'' +
                     ", certification_no='" + certification_no + '\'' +
                     '}';
         }

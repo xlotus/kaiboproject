@@ -1,7 +1,7 @@
 package cn.cibn.kaibo.player;
 
 public enum VideoType {
-    SHORT(1), COMBINED(2), LIVE(3);
+    LIVE(1), SHORT(2), COMBINED(2);
 
 
     final int value;

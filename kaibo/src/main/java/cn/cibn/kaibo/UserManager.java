@@ -6,12 +6,15 @@ import com.google.gson.Gson;
 import com.tv.lib.core.lang.thread.TaskHelper;
 
 import cn.cibn.kaibo.model.ModelUser;
+import cn.cibn.kaibo.model.ModelWrapper;
+import cn.cibn.kaibo.network.LiveMethod;
 import cn.cibn.kaibo.settings.LiveSettings;
 
 public class UserManager {
     private static UserManager instance = new UserManager();
 
-    private String token = "00";
+//    private String token = "rZPBiA1YmzNcKRIBWlUQY3pdG4cT84Qb";
+    private String token = "";
     private ModelUser userInfo;
 
     private UserManager() {
@@ -35,7 +38,7 @@ public class UserManager {
 
             @Override
             public void callback(Exception e) {
-
+                reqUserInfo();
             }
         });
     }
@@ -43,6 +46,10 @@ public class UserManager {
     public void setToken(String token) {
         this.token = token;
         saveToken();
+    }
+
+    public String getToken() {
+        return token;
     }
 
     public void setUserInfo(ModelUser userInfo) {
@@ -100,6 +107,28 @@ public class UserManager {
             @Override
             public void callback(Exception e) {
 
+            }
+        });
+    }
+
+    private void reqUserInfo() {
+        if (!isLogin()) {
+            return;
+        }
+        TaskHelper.exec(new TaskHelper.Task() {
+            private ModelWrapper<ModelUser> model;
+
+            @Override
+            public void execute() throws Exception {
+                model = LiveMethod.getInstance().getUserInfo();
+            }
+
+            @Override
+            public void callback(Exception e) {
+                if (model != null && model.isSuccess()) {
+                    userInfo = model.getData();
+                    saveUserInfo();
+                }
             }
         });
     }

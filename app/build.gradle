@@ -7,17 +7,24 @@ android {
     compileSdk rootProject.ext.COMPILE_SDK
 
     signingConfigs {
+//        config {
+//            storeFile file("../cibn.keystore")
+//            storePassword "123456"
+//            keyAlias "kaiboApp"
+//            keyPassword "123456"
+//        }
         config {
-            storeFile file("../cibn.keystore")
+            storeFile file("../ttshop2020.keystore")
             storePassword "123456"
-            keyAlias "kaiboApp"
+            keyAlias "ttshop2020.keystore"
             keyPassword "123456"
         }
     }
 
     defaultConfig {
 //        applicationId "cn.cibn.kaibo"
-        applicationId "cibn_text.alplay.com"
+//        applicationId "cibn_text.alplay.com"
+        applicationId "android.app.ttshop"
         minSdk rootProject.ext.MIN_SDK
         targetSdk rootProject.ext.TARGET_SDK
         versionCode project.VERSION_CODE as int

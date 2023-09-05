@@ -28,4 +28,6 @@ public class ChangedKeys {
     public static final String CHANGED_REQUEST_PLAY = "changed_request_play";
     public static final String CHANGED_REQUEST_SUB_PLAY = "changed_request_sub_play"; //子页面播放
     public static final String CHANGED_REQUEST_RESTORE_PLAY = "changed_request_restore_play"; //主页面恢复播放
+
+    public static final String CHANGED_LOGIN_SUCCESS = "changed_login_success";
 }

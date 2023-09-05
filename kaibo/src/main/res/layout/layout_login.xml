@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_follow_not_login"
+    android:layout_width="@dimen/drawer_menu_width"
+    android:layout_height="match_parent"
+    android:background="#e6161823"
+    android:visibility="visible"
+    app:focusOutEnd="false"
+    app:focusOutSideStart="false"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <TextView
+        android:id="@+id/tv_login_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_to_view_more"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_20"
+        app:layout_constraintBottom_toTopOf="@id/iv_hd_play"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <View
+        android:id="@+id/iv_hd_play"
+        android:layout_width="@dimen/dp_26"
+        android:layout_height="@dimen/dp_26"
+        android:layout_marginTop="@dimen/dp_8"
+        android:background="@drawable/home_follow_play"
+        app:layout_constraintBottom_toTopOf="@id/tv_hd_play"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/iv_easy_op"
+        app:layout_constraintTop_toBottomOf="@id/tv_login_title" />
+
+    <View
+        android:id="@+id/iv_easy_op"
+        android:layout_width="@dimen/dp_26"
+        android:layout_height="@dimen/dp_26"
+        android:layout_marginLeft="@dimen/dp_18"
+        android:background="@drawable/home_follow_op"
+        app:layout_constraintLeft_toRightOf="@id/iv_hd_play"
+        app:layout_constraintRight_toLeftOf="@id/iv_selected_goods"
+        app:layout_constraintTop_toTopOf="@id/iv_hd_play" />
+
+    <View
+        android:id="@+id/iv_selected_goods"
+        android:layout_width="@dimen/dp_26"
+        android:layout_height="@dimen/dp_26"
+        android:layout_marginLeft="@dimen/dp_18"
+        android:background="@drawable/home_follow_goods"
+        app:layout_constraintLeft_toRightOf="@id/iv_easy_op"
+        app:layout_constraintRight_toLeftOf="@id/iv_pay_security"
+        app:layout_constraintTop_toTopOf="@id/iv_hd_play" />
+
+    <View
+        android:id="@+id/iv_pay_security"
+        android:layout_width="@dimen/dp_26"
+        android:layout_height="@dimen/dp_26"
+        android:layout_marginLeft="@dimen/dp_18"
+        android:background="@drawable/home_follow_play"
+        app:layout_constraintLeft_toRightOf="@id/iv_selected_goods"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_hd_play" />
+
+    <TextView
+        android:id="@+id/tv_hd_play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_2"
+        android:text="@string/hd_play"
+        android:textColor="@color/common_white_transparent_60"
+        android:textSize="@dimen/sp_10"
+        app:layout_constraintBottom_toTopOf="@id/bg_follow_login_qrcode"
+        app:layout_constraintLeft_toLeftOf="@id/iv_hd_play"
+        app:layout_constraintRight_toRightOf="@id/iv_hd_play"
+        app:layout_constraintTop_toBottomOf="@id/iv_hd_play" />
+
+    <TextView
+        android:id="@+id/tv_easy_op"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/easy_op"
+        android:textColor="@color/common_white_transparent_60"
+        android:textSize="@dimen/sp_10"
+        app:layout_constraintLeft_toLeftOf="@id/iv_easy_op"
+        app:layout_constraintRight_toRightOf="@id/iv_easy_op"
+        app:layout_constraintTop_toTopOf="@id/tv_hd_play" />
+
+    <TextView
+        android:id="@+id/tv_selected_goods"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/selected_goods"
+        android:textColor="@color/common_white_transparent_60"
+        android:textSize="@dimen/sp_10"
+        app:layout_constraintLeft_toLeftOf="@id/iv_selected_goods"
+        app:layout_constraintRight_toRightOf="@id/iv_selected_goods"
+        app:layout_constraintTop_toTopOf="@id/tv_hd_play" />
+
+    <TextView
+        android:id="@+id/tv_pay_security"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pay_security"
+        android:textColor="@color/common_white_transparent_60"
+        android:textSize="@dimen/sp_10"
+        app:layout_constraintLeft_toLeftOf="@id/iv_pay_security"
+        app:layout_constraintRight_toRightOf="@id/iv_pay_security"
+        app:layout_constraintTop_toTopOf="@id/tv_hd_play" />
+
+    <View
+        android:id="@+id/bg_follow_login_qrcode"
+        android:layout_width="@dimen/dp_174"
+        android:layout_height="@dimen/dp_198"
+        android:layout_marginTop="@dimen/dp_24"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_hd_play" />
+
+    <ProgressBar
+        android:id="@+id/progress_load_qrcode"
+        android:layout_width="@dimen/dp_20"
+        android:layout_height="@dimen/dp_20"
+        android:layout_marginTop="@dimen/dp_10"
+        app:layout_constraintTop_toTopOf="@id/bg_follow_login_qrcode"
+        app:layout_constraintBottom_toBottomOf="@id/bg_follow_login_qrcode"
+        app:layout_constraintLeft_toLeftOf="@id/bg_follow_login_qrcode"
+        app:layout_constraintRight_toRightOf="@id/bg_follow_login_qrcode"/>
+
+    <ImageView
+        android:id="@+id/iv_login_qrcode"
+        android:layout_width="@dimen/dp_150"
+        android:layout_height="@dimen/dp_150"
+        android:layout_marginBottom="@dimen/dp_12"
+        android:focusable="true"
+        android:nextFocusLeft="@id/iv_login_qrcode"
+        android:nextFocusUp="@id/iv_login_qrcode"
+        android:nextFocusDown="@id/iv_login_qrcode"
+        app:layout_constraintBottom_toBottomOf="@id/bg_follow_login_qrcode"
+        app:layout_constraintLeft_toLeftOf="@id/bg_follow_login_qrcode"
+        app:layout_constraintRight_toRightOf="@id/bg_follow_login_qrcode" />
+
+    <TextView
+        android:id="@+id/tv_qrcode_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="打开手机微信“扫一扫”>扫码登录"
+        android:textColor="@color/common_black_transparent_60"
+        android:textSize="@dimen/sp_10"
+        app:layout_constraintBottom_toTopOf="@id/iv_login_qrcode"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/bg_follow_login_qrcode" />
+
+    <TextView
+        android:id="@+id/tv_has_scanned"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:background="@color/common_white_transparent_80"
+        android:text="已扫码"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sp_20"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/iv_login_qrcode"
+        app:layout_constraintLeft_toLeftOf="@id/iv_login_qrcode"
+        app:layout_constraintRight_toRightOf="@id/iv_login_qrcode"
+        app:layout_constraintTop_toTopOf="@id/iv_login_qrcode" />
+</merge>

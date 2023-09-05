@@ -46,9 +46,11 @@
             android:layout_width="@dimen/dp_43"
             android:layout_height="@dimen/dp_43"
             android:scaleType="fitXY"
+            android:background="@drawable/shaple_ring_99ffffff"
+            android:padding="@dimen/dp_2"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/cover" />
+            tools:src="@drawable/cover"/>
 
         <TextView
             android:id="@+id/tv_certification_no_title"

@@ -14,46 +14,23 @@ import java.net.UnknownHostException;
 import java.util.Map;
 
 public class Connection {
-    protected Object connect(String method, String url) throws ConnectionException {
+    public static final String GET = "GET";
+    public static final String POST = "POST";
+
+    protected Object connect(String method, String url, Map<String, String> params) throws ConnectionException {
         InputStream inputStream = null;
         ByteArrayOutputStream baos = null;
         try {
-//            URL u = new URL(url);
-//            URLConnection urlConnection = u.openConnection();
-//            HttpURLConnection connection = (HttpURLConnection) urlConnection;
-//            // 设置连接超时时间, 值必须大于0，设置为0表示不超时 单位为“毫秒”
-//            connection.setConnectTimeout(30000);
-//            // 设置读超时时间, 值必须大于0，设置为0表示不超时 单位毫秒
-//            connection.setReadTimeout(60000);
-//            connection.setRequestMethod(method);
-//            // 设置请求类型为 application/json
-//            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-//            // 设置可接受的数据类型
-//            connection.setRequestProperty("Accept", "*/*");
-//            // 设置保持长链接
-//            connection.setRequestProperty("Connection", "Keep-Alive");
-//
-//            connection.connect();
-//
-//            int code = connection.getResponseCode();
-//            if (code != 200) {
-//                throw new ConnectionException(code, "connection error");
-//            }
-//
-//            // 获取输入流
-//            inputStream = connection.getInputStream();
-//            // 定义一个临时字节输出流
-//            baos = new ByteArrayOutputStream();
-//            // 开始读取数据
-//            byte[] buffer = new byte[256];
-//            int len = 0;
-//            while ((len = inputStream.read(buffer)) > 0) {
-//                baos.write(buffer, 0, len);
-//            }
-//            String content = new String(baos.toByteArray(), StandardCharsets.UTF_8);
-//            String content = "{\"code\":0,\"data\":{\"list\":[{\"id\":\"3\",\"title\":\"直播间测试\",\"cover_img\":\"http://imgduoshanghu.oeob.net/web/uploads/image/store_1/872b8a80d1fad1e252db4ee8c207b7f27ea25b47.png\",\"back_img\":\"http://imgduoshanghu.oeob.net/web/uploads/image/store_1/872b8a80d1fad1e252db4ee8c207b7f27ea25b47.png\",\"anchor_id\":\"24\",\"play_addr\":\"http://ggplay.oeob.net/live/2384c09464e29cd7b28fb61161da5d6a.flv?txSecret=a9905e2c02acebdd2cfb435eea60a136&txTime=642BEB17\",\"name\":\"暗示法1\",\"header_bg\":\"\"}],\"row_count\":\"1\",\"page_count\":1}}";
-            UrlResponse response = HttpUtils.get(url, null, 30000, 30000);
-            if (response.getStatusCode() == Constants.CODE_SUCCESS && response.getContent() != null) {
+            UrlResponse response = null;
+            int connectTimeout = 30000;
+            int readTimeout = 30000;
+            if (GET.equals(method)) {
+                String fullUrl = buildParams(url, params);
+                response = HttpUtils.get(fullUrl, null, 30000, 30000);
+            } else if (POST.equalsIgnoreCase(method)) {
+                response = HttpUtils.posFormData(url, null, params, connectTimeout, readTimeout);
+            }
+            if (response != null && response.getStatusCode() == Constants.CODE_SUCCESS && response.getContent() != null) {
                 JSONObject jsonObject = new JSONObject(response.getContent());
                 int resCode = jsonObject.optInt("code");
                 if (resCode != 0) {

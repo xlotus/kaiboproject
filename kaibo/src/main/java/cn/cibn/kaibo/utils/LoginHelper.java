@@ -10,9 +10,13 @@ import com.tv.lib.core.algo.ShaUtil;
 import com.tv.lib.core.lang.StringUtils;
 import com.tv.lib.core.lang.thread.TaskHelper;
 
+import cn.cibn.kaibo.model.ModelTicket;
+import cn.cibn.kaibo.model.ModelWrapper;
+import cn.cibn.kaibo.network.LiveMethod;
+
 public class LoginHelper {
     private static final String TAG = "LoginHelper";
-    private static final String APP_ID = "abcd";
+    private static final String APP_ID = "wx32fc2e022e5e3c3b"; //android.app.ttshop
     private static final String SCOPE = "snsapi_userinfo";
 
     public static void login(OAuthListener oAuthListener) {
@@ -20,7 +24,10 @@ public class LoginHelper {
             String ticket = "";
             @Override
             public void execute() throws Exception {
-                ticket = "abcd";
+                ModelWrapper<ModelTicket> model = LiveMethod.getInstance().getTicket();
+                if (model.isSuccess()) {
+                    ticket = model.getData().getTicket();
+                }
             }
 
             @Override
@@ -37,6 +44,8 @@ public class LoginHelper {
     }
 
     private static void wxLogin(String ticket, OAuthListener oAuthListener) {
+//        stopAuth();
+
         String noncestr = StringUtils.randomString(16);
         String timestamp = String.valueOf(System.currentTimeMillis());
         String signature = getSignature(noncestr, timestamp, ticket);
@@ -57,5 +66,10 @@ public class LoginHelper {
             e.printStackTrace();
         }
         return signature;
+    }
+
+    public static void stopAuth() {
+        DiffDevOAuthFactory.getDiffDevOAuth().stopAuth();
+        DiffDevOAuthFactory.getDiffDevOAuth().removeAllListeners();
     }
 }

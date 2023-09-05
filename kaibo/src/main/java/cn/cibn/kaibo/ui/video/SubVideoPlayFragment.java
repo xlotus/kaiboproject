@@ -124,7 +124,9 @@ public class SubVideoPlayFragment extends BaseStackFragment<FragmentSubVideoPlay
             goBack();
             return true;
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
-            VideoOperateDialog.show(getParentFragmentManager());
+            if (playerViewModel != null && playerViewModel.playingVideo.getValue() != null) {
+                VideoOperateDialog.show(getParentFragmentManager(), playerViewModel.playingVideo.getValue());
+            }
             return true;
         }
         return super.onKeyDown(keyCode, event);

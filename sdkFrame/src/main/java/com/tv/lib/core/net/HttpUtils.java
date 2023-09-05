@@ -106,7 +106,11 @@ public final class HttpUtils {
             }
 
             response = new UrlResponse(conn);
-        } finally {
+        } catch (Exception e) {
+            Logger.d(TAG, e.getMessage(), e);
+            throw e;
+        }
+        finally {
             conn.disconnect();
         }
 
@@ -116,6 +120,63 @@ public final class HttpUtils {
 
     public static UrlResponse get(String urlStr, Map<String, String> params, int connectTimeout, int readTimeout) throws IOException {
         return get(urlStr, null, params, connectTimeout, readTimeout);
+    }
+
+    public static UrlResponse posFormData(String urlStr, Map<String, String> headers, Map<String, String> params, int connectTimeout, int readTimeout) throws IOException {
+        String boundary = "ZnGpCtePMx0KrHw_G0Xl9Yefer8JZlRJSXe";
+        final String RN = "\r\n";
+
+        Writer writer = null;
+        UrlResponse response = null;
+
+        Logger.d(TAG, "post url -> " + urlStr);
+        URL url = new URL(urlStr);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        try {
+            conn.setConnectTimeout(connectTimeout);
+            conn.setReadTimeout(readTimeout);
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setRequestMethod("POST");
+            // conn.setRequestProperty("Connection", "Keep-Alive");
+            conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+
+            boundary = "--" + boundary;
+            writer = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
+            conn.setInstanceFollowRedirects(true);
+            if (headers != null && headers.size() > 0) {
+                for (Map.Entry<String, String> entry : headers.entrySet()) {
+                    conn.setRequestProperty(entry.getKey(), entry.getValue());
+                }
+            }
+
+            if (params != null && params.size() > 0) {
+                for (Map.Entry<String, String> entry : params.entrySet()) {
+                    writer.append(boundary).append(RN);
+                    writer.append("Content-Disposition: form-data; name=\"");
+                    writer.append(entry.getKey());
+                    writer.append("\"\r\n\r\n");
+                    writer.append(entry.getValue());
+                    writer.append(RN);
+                    writer.flush();
+                }
+                writer.append(boundary).append(RN);
+                writer.flush();
+            }
+
+            response = new UrlResponse(conn);
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                }
+            }
+            conn.disconnect();
+        }
+
+        Logger.d(TAG, "response" + response.getContent());
+        return response;
     }
 
     public static UrlResponse post(String urlStr, Map<String, String> headers, Map<String, String> params, int connectTimeout, int readTimeout) throws IOException {
