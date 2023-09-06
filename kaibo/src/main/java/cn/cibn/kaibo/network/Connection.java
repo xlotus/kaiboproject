@@ -17,7 +17,7 @@ public class Connection {
     public static final String GET = "GET";
     public static final String POST = "POST";
 
-    protected Object connect(String method, String url, Map<String, String> params) throws ConnectionException {
+    protected Object connect(String method, String url, Map<String, String> params) throws Exception {
         InputStream inputStream = null;
         ByteArrayOutputStream baos = null;
         try {
@@ -36,16 +36,12 @@ public class Connection {
                 if (resCode != 0) {
                     throw new ConnectionException(resCode, jsonObject.optString("msg"));
                 }
-                return jsonObject.get("data").toString();
+                return jsonObject.has("data") ? jsonObject.get("data").toString() : "";
             }
         }
         catch (UnknownHostException e) {
 //            e.printStackTrace();
             throw new ConnectionException(Constants.CODE_FAIL, "no net work");
-        }
-        catch (Exception e) {
-//            e.printStackTrace();
-            throw new ConnectionException(Constants.CODE_FAIL, "unknown error");
         } finally {
             // 关闭输入、输出流
             CloseUtils.close(inputStream);

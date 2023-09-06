@@ -50,6 +50,9 @@ public class ModelLive extends BaseModel implements Serializable {
 
         private int type = VideoType.LIVE.getValue();
 
+        private int follow;
+        private int give;
+
         public String getId() {
             return id;
         }
@@ -153,6 +156,22 @@ public class ModelLive extends BaseModel implements Serializable {
 
         public void setType(int type) {
             this.type = type;
+        }
+
+        public int getFollow() {
+            return follow;
+        }
+
+        public void setFollow(int follow) {
+            this.follow = follow;
+        }
+
+        public int getGive() {
+            return give;
+        }
+
+        public void setGive(int give) {
+            this.give = give;
         }
     }
 }

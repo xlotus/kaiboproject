@@ -1,6 +1,7 @@
 package cn.cibn.kaibo.ui.video;
 
 import android.view.View;
+import android.widget.Button;
 
 import androidx.fragment.app.FragmentManager;
 
@@ -8,9 +9,12 @@ import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.model.ModelLive;
 import cn.cibn.kaibo.player.VideoType;
 import cn.cibn.kaibo.ui.base.BaseDialog;
+import cn.cibn.kaibo.ui.widget.MenuItemView;
 
 public class VideoOperateDialog extends BaseDialog implements View.OnClickListener {
 
+    private Button btnFollow;
+    private MenuItemView btnLike;
     private ModelLive.Item liveItem;
     private VideoOpListener opListener;
 
@@ -29,12 +33,11 @@ public class VideoOperateDialog extends BaseDialog implements View.OnClickListen
 
     @Override
     protected void initView(View parent) {
-        View btnLike = parent.findViewById(R.id.btn_like);
-        parent.findViewById(R.id.btn_play_follow).setOnClickListener(this);
+        btnFollow = parent.findViewById(R.id.btn_play_follow);
+        btnLike = parent.findViewById(R.id.btn_like);
+        btnFollow.setOnClickListener(this);
         btnLike.setOnClickListener(this);
-        if (liveItem != null && liveItem.getType() != VideoType.SHORT.getValue()) {
-            btnLike.setVisibility(View.GONE);
-        }
+        updateView();
     }
 
     @Override
@@ -73,6 +76,19 @@ public class VideoOperateDialog extends BaseDialog implements View.OnClickListen
                 dismiss();
             }
         }
+    }
+
+    private void updateView() {
+        if (liveItem == null) {
+            return;
+        }
+        if (liveItem.getType() != VideoType.SHORT.getValue()) {
+            btnLike.setVisibility(View.GONE);
+        } else {
+            btnLike.setVisibility(View.VISIBLE);
+            btnLike.setMenuName(liveItem.getGive() == 1 ? "已点赞" : "点赞");
+        }
+        btnFollow.setText(liveItem.getFollow() == 1 ? "已关注" : "关注");
     }
 
     public void setOpListener(VideoOpListener opListener) {

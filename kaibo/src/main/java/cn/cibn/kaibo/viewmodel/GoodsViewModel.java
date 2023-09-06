@@ -45,6 +45,7 @@ public class GoodsViewModel extends ViewModel {
         loadingPage = page;
         TaskHelper.exec(new TaskHelper.Task() {
             private ModelWrapper<ModelGoods> model;
+            private String sellingGoodsIdInner;
 
             @Override
             public void execute() throws Exception {
@@ -52,7 +53,7 @@ public class GoodsViewModel extends ViewModel {
                 if (model != null && model.isSuccess() && model.getData() != null) {
                     for (ModelGoods.Item item : model.getData().getList()) {
                         if (Objects.equals(item.getIs_sell(), "1")) {
-                            sellingGoodsId.setValue(item.getGoods_id());
+                            sellingGoodsIdInner = item.getGoods_id();
                             break;
                         }
                     }
@@ -74,6 +75,10 @@ public class GoodsViewModel extends ViewModel {
                     }
                     tempList.addAll(goods.getList());
                     goodsList.setValue(tempList);
+
+                    if (sellingGoodsIdInner != null) {
+                        sellingGoodsId.setValue(sellingGoodsIdInner);
+                    }
                 }
                 loadingPage = -1;
             }

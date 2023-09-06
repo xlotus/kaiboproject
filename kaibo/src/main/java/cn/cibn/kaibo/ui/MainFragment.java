@@ -416,12 +416,20 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                 operateDialog.setOpListener(new VideoOperateDialog.VideoOpListener() {
                     @Override
                     public void onFollowClick(ModelLive.Item item) {
-                        reqFollowAnchor(item);
+                        if (item.getFollow() == 1) {
+                            reqUnFollowAnchor(item);
+                        }else {
+                            reqFollowAnchor(item);
+                        }
                     }
 
                     @Override
                     public void onGiveClick(ModelLive.Item item) {
-                        reqGiveVideo(item);
+                        if (item.getGive() == 1) {
+                            reqCancelGiveVideo(item);
+                        } else {
+                            reqGiveVideo(item);
+                        }
                     }
                 });
             }
@@ -510,15 +518,30 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
             ModelWrapper<String> model;
             @Override
             public void execute() throws Exception {
-                if (playerViewModel.playingVideo.getValue() !=null) {
-                    model = LiveMethod.getInstance().reqFollow(item.getAnchor_id());
+                model = LiveMethod.getInstance().reqFollow(item.getAnchor_id());
+            }
+
+            @Override
+            public void callback(Exception e) {
+                if (model != null && (model.isSuccess() || model.getCode() == 1)) {
+                    item.setFollow(1);
                 }
+            }
+        });
+    }
+
+    private void reqUnFollowAnchor(ModelLive.Item item) {
+        TaskHelper.exec(new TaskHelper.Task() {
+            ModelWrapper<String> model;
+            @Override
+            public void execute() throws Exception {
+                model = LiveMethod.getInstance().reqUnFollow(item.getAnchor_id());
             }
 
             @Override
             public void callback(Exception e) {
                 if (model != null && model.isSuccess()) {
-
+                    item.setFollow(0);
                 }
             }
         });
@@ -529,15 +552,31 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
             ModelWrapper<String> model;
             @Override
             public void execute() throws Exception {
-                if (playerViewModel.playingVideo.getValue() !=null) {
-                    model = LiveMethod.getInstance().reqGive(item.getId(), item.getType());
-                }
+                model = LiveMethod.getInstance().reqGive(item.getId(), item.getType());
             }
 
             @Override
             public void callback(Exception e) {
                 if (model != null && model.isSuccess()) {
+                    item.setGive(1);
                     playLikeAnimation();
+                }
+            }
+        });
+    }
+
+    private void reqCancelGiveVideo(ModelLive.Item item) {
+        TaskHelper.exec(new TaskHelper.Task() {
+            ModelWrapper<String> model;
+            @Override
+            public void execute() throws Exception {
+                model = LiveMethod.getInstance().reqCancelGive(item.getId(), item.getType());
+            }
+
+            @Override
+            public void callback(Exception e) {
+                if (model != null && model.isSuccess()) {
+                    item.setGive(0);
                 }
             }
         });

@@ -74,8 +74,8 @@ public class LiveMethod extends Connection {
             wrapper.setCode(e.getCode());
             wrapper.setErrMsg(e.getMsg());
         } catch (Exception e) {
-            e.printStackTrace();
-            Logger.d(TAG, e.getMessage(), e);
+            wrapper.setCode(Constants.CODE_FAIL);
+            Logger.d(TAG, url, e);
         }
         return wrapper;
     }
@@ -157,7 +157,7 @@ public class LiveMethod extends Connection {
         params.put("access_token", UserManager.getInstance().getToken());
         params.put("id", id);
         params.put("type", String.valueOf(type));
-        return doPost(URL_REQ_GIVE, params, String.class);
+        return doGet(URL_REQ_GIVE, params, String.class);
     }
 
     public ModelWrapper<String> reqCancelGive(String id, int type) {
@@ -165,6 +165,6 @@ public class LiveMethod extends Connection {
         params.put("access_token", UserManager.getInstance().getToken());
         params.put("id", id);
         params.put("type", String.valueOf(type));
-        return doPost(URL_REQ_CANCEL_GIVE, params, String.class);
+        return doGet(URL_REQ_CANCEL_GIVE, params, String.class);
     }
 }
