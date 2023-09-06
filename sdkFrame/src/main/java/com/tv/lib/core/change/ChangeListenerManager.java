@@ -51,7 +51,7 @@ public class ChangeListenerManager {
                             try {
                                 listener.onListenerChange(key, value);
                             } catch (Exception e) {
-                                Logger.d("ChangeListenerManager", "onListenerChange : " + key + "   " + e.toString());
+                                Logger.d("ChangeListenerManager", "onListenerChange : " + key, e);
                             }
                         }
                     }

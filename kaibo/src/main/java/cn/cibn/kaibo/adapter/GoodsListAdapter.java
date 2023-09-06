@@ -45,7 +45,7 @@ public class GoodsListAdapter extends ListBindingAdapter<ModelGoods.Item, ItemGo
         } else {
             binding.bgFocusedGoods.setBackgroundResource(R.drawable.bg_recyclerview_item);
         }
-        ImageLoadHelper.loadImage(binding.ivGoodsCover, item.getCover_pic(), (int) itemView.getResources().getDimension(R.dimen.dp_2), ConfigModel.getInstance().isGrayMode());
+        ImageLoadHelper.loadImage(binding.ivGoodsCover, item.getCover_pic(), (int) itemView.getResources().getDimension(R.dimen.dp_4), ConfigModel.getInstance().isGrayMode());
         binding.tvGoodsName.setText(item.getName());
         binding.tvGoodsPrice.setText(item.getPrice());
         binding.tvGoodsNum.setText(binding.tvGoodsNum.getResources().getString(R.string.goods_num, item.getNum()));

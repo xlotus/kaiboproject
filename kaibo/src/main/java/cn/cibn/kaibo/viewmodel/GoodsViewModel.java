@@ -15,30 +15,36 @@ import cn.cibn.kaibo.network.Constants;
 import cn.cibn.kaibo.network.LiveMethod;
 
 public class GoodsViewModel extends ViewModel {
-    public MutableLiveData<List<ModelGoods.Item>> goodsList = new MutableLiveData<>();
-    public MutableLiveData<Integer> total = new MutableLiveData<>();
+    public MutableLiveData<ModelGoods> goodsLiveData = new MutableLiveData<>();
     public MutableLiveData<String> sellingGoodsId = new MutableLiveData<>();
 
     private int curPage = Constants.PAGE_FIRST;
     private int loadingPage = -1;
 
-    public void reqFirstPage(String liveId) {
+    public void reqFirstPage(String liveId, int type) {
         curPage = Constants.PAGE_FIRST;
-        List<ModelGoods.Item> goods = goodsList.getValue();
-        if (goods != null) {
-            goods.clear();
+        ModelGoods goods = goodsLiveData.getValue();
+        if (goods == null) {
+            goods = new ModelGoods();
+            goods.setList(new ArrayList<>());
         }
-        goodsList.setValue(goods);
-        total.setValue(0);
+        else if (goods.getList() != null) {
+            goods.getList().clear();
+        }
+        goodsLiveData.setValue(goods);
 
-        reqGoodsList(liveId, curPage);
+        reqGoodsList(liveId, type, curPage);
     }
 
-    public void reqNextPage(String liveId) {
-
+    public void reqNextPage(String liveId, int type) {
+        int page = curPage + 1;
+        if (page == loadingPage) {
+            return;
+        }
+        reqGoodsList(liveId, type, page);
     }
 
-    public void reqGoodsList(String liveId, int page) {
+    public void reqGoodsList(String liveId, int type, int page) {
         if (page == loadingPage) {
             return;
         }
@@ -49,7 +55,7 @@ public class GoodsViewModel extends ViewModel {
 
             @Override
             public void execute() throws Exception {
-                model = LiveMethod.getInstance().getGoodsList(liveId, page);
+                model = LiveMethod.getInstance().getGoodsList(liveId, type, page, 1);
                 if (model != null && model.isSuccess() && model.getData() != null) {
                     for (ModelGoods.Item item : model.getData().getList()) {
                         if (Objects.equals(item.getIs_sell(), "1")) {
@@ -64,17 +70,24 @@ public class GoodsViewModel extends ViewModel {
             public void callback(Exception e) {
                 if (model != null && model.isSuccess() && model.getData() != null) {
                     ModelGoods goods = model.getData();
-                    total.setValue(goods.getRow_count());
-                    curPage = goods.getPage_count();
+                    curPage = page;
 
-                    List<ModelGoods.Item> tempList = goodsList.getValue();
+                    ModelGoods tempGoods = goodsLiveData.getValue();
+                    if (tempGoods == null) {
+                        tempGoods = new ModelGoods();
+                    }
+                    List<ModelGoods.Item> tempList = tempGoods.getList();
                     if (tempList == null) {
                         tempList = new ArrayList<>();
                     } else if (curPage == Constants.PAGE_FIRST) {
                         tempList.clear();
                     }
                     tempList.addAll(goods.getList());
-                    goodsList.setValue(tempList);
+                    tempGoods.setList(tempList);
+                    tempGoods.setRow_count(goods.getRow_count());
+                    tempGoods.setMch_qrcode(goods.getMch_qrcode());
+                    tempGoods.setType(goods.getType());
+                    goodsLiveData.setValue(tempGoods);
 
                     if (sellingGoodsIdInner != null) {
                         sellingGoodsId.setValue(sellingGoodsIdInner);

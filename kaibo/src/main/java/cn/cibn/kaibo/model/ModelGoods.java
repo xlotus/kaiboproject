@@ -13,6 +13,9 @@ public class ModelGoods extends BaseModel {
     private int row_count;
     private int page_count;
 
+    private String mch_qrcode;
+    private int type;
+
     public List<Item> getList() {
         return list;
     }
@@ -37,16 +40,32 @@ public class ModelGoods extends BaseModel {
         this.page_count = page_count;
     }
 
+    public String getMch_qrcode() {
+        return mch_qrcode;
+    }
+
+    public void setMch_qrcode(String mch_qrcode) {
+        this.mch_qrcode = mch_qrcode;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
     public static class Item implements Serializable {
         private String id;
         private String is_sell;
         private String goods_id;
+        private String qrcode_url;
         private String name;
         private String cover_pic;
         private String price;
         private String attr;
         private String original_price;
-        private String qrcode;
 
         public String getId() {
             return id;
@@ -112,13 +131,6 @@ public class ModelGoods extends BaseModel {
             this.original_price = original_price;
         }
 
-        public String getQrcode() {
-            return qrcode;
-        }
-
-        public void setQrcode(String qrcode) {
-            this.qrcode = qrcode;
-        }
 
         public int getNum() {
             if (!TextUtils.isEmpty(attr)) {
@@ -131,6 +143,14 @@ public class ModelGoods extends BaseModel {
                 }
             }
             return 0;
+        }
+
+        public String getQrcode_url() {
+            return qrcode_url;
+        }
+
+        public void setQrcode_url(String qrcode_url) {
+            this.qrcode_url = qrcode_url;
         }
     }
 }

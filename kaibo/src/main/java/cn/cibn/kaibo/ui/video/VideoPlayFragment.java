@@ -205,7 +205,7 @@ public class VideoPlayFragment extends KbBaseFragment<FragmentVideoPlayBinding> 
         binding.ivQrCode.setImageResource(R.drawable.default_qrcode);
         reqQrCode();
         if (goodsViewModel != null) {
-            goodsViewModel.reqFirstPage(liveItem.getId());
+            goodsViewModel.reqFirstPage(liveItem.getId(), liveItem.getType());
         }
 
         updateView();

@@ -65,6 +65,7 @@
             android:layout_gravity="start"
             android:layout_marginTop="@dimen/dp_12"
             android:ellipsize="end"
+            android:lines="3"
             android:maxLines="3"
             android:textColor="@color/color_ffffff"
             android:textSize="@dimen/sp_15"

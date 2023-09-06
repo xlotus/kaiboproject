@@ -23,7 +23,7 @@ import cn.cibn.kaibo.model.ModelWrapper;
 public class LiveMethod extends BaseMethod {
 
     private static final String URL_LIVE_LIST = DOMAIN + "api/live/live-list?key=a6ab6f3bd1702115c865d1b9acc7d424&source=kumiao";
-    private static final String URL_GOODS_LIST = DOMAIN + "api/live/live-goods-list?key=a6ab6f3bd1702115c865d1b9acc7d424&source=kumiao";
+    private static final String URL_GOODS_LIST = DOMAIN_APP + "api/live/goods-info";
     private static final String URL_QRCODE = DOMAIN + "api/live/live-qrcode?key=a6ab6f3bd1702115c865d1b9acc7d424&source=kumiao";
     private static final String URL_GP_TIME_RANGE = DOMAIN + "api/default/gp-time-range?key=a6ab6f3bd1702115c865d1b9acc7d424";
 //    private static final String URL_GP_TIME_RANGE = "http://liveshop-admin.oeob.net/api/default/gp-time-range?key=a6ab6f3bd1702115c865d1b9acc7d424";
@@ -55,11 +55,13 @@ public class LiveMethod extends BaseMethod {
         return doGet(URL_LIVE_LIST, params, ModelLive.class);
     }
 
-    public ModelWrapper<ModelGoods> getGoodsList(String liveId, int page) {
+    public ModelWrapper<ModelGoods> getGoodsList(String liveId, int type, int page, int limit) {
         Map<String, String> params = new HashMap<>();
-        params.put("limit", "10");
+        params.put("id", liveId);
+        params.put("type", String.valueOf(type));
+        params.put("limit", String.valueOf(limit));
         params.put("page", String.valueOf(page));
-        params.put("live_id", liveId);
+        params.put("source", "kumiao");
         return doGet(URL_GOODS_LIST, params, ModelGoods.class);
     }
 

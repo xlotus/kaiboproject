@@ -19,6 +19,7 @@ import cn.cibn.kaibo.data.ConfigModel;
 import cn.cibn.kaibo.databinding.FragmentGoodsDetailBinding;
 import cn.cibn.kaibo.imageloader.ImageLoadHelper;
 import cn.cibn.kaibo.model.ModelGoods;
+import cn.cibn.kaibo.player.VideoType;
 import cn.cibn.kaibo.ui.KbBaseFragment;
 import cn.cibn.kaibo.viewmodel.GoodsViewModel;
 
@@ -57,11 +58,14 @@ public class GoodsDetailFragment extends KbBaseFragment<FragmentGoodsDetailBindi
             binding.layoutGoodsDetailRoot.setBackgroundColor(mContext.getResources().getColor(R.color.drawer_first_bg));
             binding.layoutPressBackToCloseGoodsDetail.getRoot().setVisibility(View.VISIBLE);
             if (goodsViewModel != null) {
-                goodsViewModel.goodsList.observe(getViewLifecycleOwner(), new Observer<List<ModelGoods.Item>>() {
+                goodsViewModel.goodsLiveData.observe(getViewLifecycleOwner(), new Observer<ModelGoods>() {
                     @Override
-                    public void onChanged(List<ModelGoods.Item> items) {
-                        if (items != null && items.size() > 0) {
-                            goods = items.get(0);
+                    public void onChanged(ModelGoods modelGoods) {
+                        if (modelGoods == null || modelGoods.getType() == VideoType.LIVE.getValue()) {
+                            return;
+                        }
+                        if (modelGoods.getList() != null && modelGoods.getList().size() > 0) {
+                            goods = modelGoods.getList().get(0);
                             updateView();
                         }
                     }
@@ -103,7 +107,9 @@ public class GoodsDetailFragment extends KbBaseFragment<FragmentGoodsDetailBindi
         if (goods != null) {
             binding.tvGoodsName.setText(goods.getName());
             binding.tvGoodsPrice.setText(goods.getPrice());
-            ImageLoadHelper.loadImage(binding.ivGoodsCover, goods.getCover_pic(), (int) mContext.getResources().getDimension(R.dimen.dp_2), ConfigModel.getInstance().isGrayMode());
+            binding.tvGoodsNum.setText(mContext.getString(R.string.goods_num, goods.getNum()));
+            ImageLoadHelper.loadImage(binding.ivGoodsCover, goods.getCover_pic(), (int) mContext.getResources().getDimension(R.dimen.dp_4), ConfigModel.getInstance().isGrayMode());
+            ImageLoadHelper.loadImage(binding.ivGoodsQrcode, goods.getQrcode_url(), false);
         }
     }
 
@@ -126,7 +132,7 @@ public class GoodsDetailFragment extends KbBaseFragment<FragmentGoodsDetailBindi
         getParentFragmentManager().clearFragmentResultListener("goods");
         getParentFragmentManager().clearFragmentResult("goods");
         if (goodsViewModel != null) {
-            goodsViewModel.goodsList.removeObservers(getViewLifecycleOwner());
+            goodsViewModel.goodsLiveData.removeObservers(getViewLifecycleOwner());
         }
     }
 

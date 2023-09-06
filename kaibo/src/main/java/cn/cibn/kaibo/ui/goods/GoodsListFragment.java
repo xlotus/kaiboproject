@@ -26,6 +26,7 @@ import cn.cibn.kaibo.databinding.FragmentGoodsListBinding;
 import cn.cibn.kaibo.imageloader.ImageLoadHelper;
 import cn.cibn.kaibo.model.ModelGoods;
 import cn.cibn.kaibo.model.ModelLive;
+import cn.cibn.kaibo.player.VideoType;
 import cn.cibn.kaibo.ui.KbBaseFragment;
 import cn.cibn.kaibo.viewmodel.GoodsViewModel;
 import cn.cibn.kaibo.viewmodel.PlayerViewModel;
@@ -68,7 +69,7 @@ public class GoodsListFragment extends KbBaseFragment<FragmentGoodsListBinding> 
             public void onChildViewHolderSelected(RecyclerView parent, RecyclerView.ViewHolder child, int position, int subposition) {
                 int count = adapter.getItemCount();
                 if (count - position < 4 && count < total && goodsViewModel != null) {
-                    goodsViewModel.reqNextPage(liveItem.getId());
+                    goodsViewModel.reqNextPage(liveItem.getId(), liveItem.getType());
                 }
             }
         });
@@ -84,17 +85,12 @@ public class GoodsListFragment extends KbBaseFragment<FragmentGoodsListBinding> 
             }
         });
         if (goodsViewModel != null) {
-            goodsViewModel.goodsList.observe(getViewLifecycleOwner(), new Observer<List<ModelGoods.Item>>() {
+            goodsViewModel.goodsLiveData.observe(getViewLifecycleOwner(), new Observer<ModelGoods>() {
                 @Override
-                public void onChanged(List<ModelGoods.Item> goods) {
-                    updateGoodsList(goods);
-                }
-            });
-            goodsViewModel.total.observe(getViewLifecycleOwner(), new Observer<Integer>() {
-                @Override
-                public void onChanged(Integer total) {
-                    GoodsListFragment.this.total = total;
-                    binding.tvGoodsListTitle.setText(mContext.getResources().getString(R.string.goods_list_title, total));
+                public void onChanged(ModelGoods goodsModel) {
+                    if (goodsModel.getType() == VideoType.LIVE.getValue()) {
+                        updateGoodsList(goodsModel);
+                    }
                 }
             });
         }
@@ -164,8 +160,7 @@ public class GoodsListFragment extends KbBaseFragment<FragmentGoodsListBinding> 
     public void onDestroyView() {
         super.onDestroyView();
         if (goodsViewModel != null) {
-            goodsViewModel.goodsList.removeObservers(getViewLifecycleOwner());
-            goodsViewModel.total.removeObservers(getViewLifecycleOwner());
+            goodsViewModel.goodsLiveData.removeObservers(getViewLifecycleOwner());
         }
         if (playerViewModel != null) {
             playerViewModel.playingVideo.removeObservers(getViewLifecycleOwner());
@@ -204,10 +199,15 @@ public class GoodsListFragment extends KbBaseFragment<FragmentGoodsListBinding> 
         this.liveItem = liveItem;
     }
 
-    private void updateGoodsList(List<ModelGoods.Item> goods) {
-        adapter.submitList(goods);
+    private void updateGoodsList(ModelGoods goodsModel) {
+        GoodsListFragment.this.total = goodsModel.getRow_count();
+        binding.tvGoodsListTitle.setText(mContext.getResources().getString(R.string.goods_list_title, total));
+        ImageLoadHelper.loadImage(binding.ivShopQrcode, goodsModel.getMch_qrcode(), false);
+
+        adapter.submitList(goodsModel.getList());
         adapter.notifyDataSetChanged();
         ChangeListenerManager.getInstance().notifyChange(ChangedKeys.CHANGED_GOODS_LIST_UPDATE);
+        requestFocus();
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
