@@ -13,6 +13,7 @@ import com.tv.lib.core.lang.ObjectStore;
 import com.tv.lib.core.lang.StringUtils;
 import com.tv.lib.core.utils.Utils;
 import com.tv.lib.core.utils.i18n.LocaleUtils;
+import com.ut.device.UTDevice;
 
 import org.json.JSONObject;
 
@@ -29,6 +30,7 @@ public class DeviceHelper {
     private static final String TAG = "DEVICEHelper";
 
     private static final String KEY_DEVICE_ID = "DEVICE_ID";
+    private static final String KEY_UTDID = "UTDID";
 
     public static enum IDType {
         IMEI('i'), SOC('s'), MAC('m'), UUID('u'), ANDROID('a'), BUILD('b'), UNKNOWN('u');
@@ -115,6 +117,22 @@ public class DeviceHelper {
         // save id and return
         settings.set(KEY_DEVICE_ID, id);
         return id;
+    }
+
+    private static String utdid = null;
+    public static String getUtdid(Context context) {
+        if (utdid == null) {
+            Settings settings = new Settings(context);
+            utdid = settings.get(KEY_UTDID);
+            if (!TextUtils.isEmpty(utdid)) {
+                return utdid;
+            }
+            utdid = UTDevice.getUtdid(context);
+            if (!TextUtils.isEmpty(utdid)) {
+                settings.set(KEY_UTDID, utdid);
+            }
+        }
+        return utdid;
     }
     
     private static String mMacAddress = null;

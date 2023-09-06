@@ -494,7 +494,8 @@ public final class Utils {
         }
     }
 
-    public static String getVersionName(Context context, String packageName) {
+    public static String getVersionName(Context context) {
+        String packageName = context.getPackageName();
         PackageManager pm = context.getPackageManager();
         try {
             return pm.getPackageInfo(packageName, 0).versionName;

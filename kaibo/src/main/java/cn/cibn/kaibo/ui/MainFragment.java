@@ -525,6 +525,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
             public void callback(Exception e) {
                 if (model != null && (model.isSuccess() || model.getCode() == 1)) {
                     item.setFollow(1);
+                    SafeToast.showToast("关注成功", Toast.LENGTH_SHORT);
                 }
             }
         });
@@ -542,6 +543,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
             public void callback(Exception e) {
                 if (model != null && model.isSuccess()) {
                     item.setFollow(0);
+                    SafeToast.showToast("取消关注成功", Toast.LENGTH_SHORT);
                 }
             }
         });
@@ -560,6 +562,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                 if (model != null && model.isSuccess()) {
                     item.setGive(1);
                     playLikeAnimation();
+                    SafeToast.showToast("点赞成功", Toast.LENGTH_SHORT);
                 }
             }
         });
@@ -577,6 +580,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
             public void callback(Exception e) {
                 if (model != null && model.isSuccess()) {
                     item.setGive(0);
+                    SafeToast.showToast("取消点赞成功", Toast.LENGTH_SHORT);
                 }
             }
         });

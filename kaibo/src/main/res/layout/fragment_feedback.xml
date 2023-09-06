@@ -59,7 +59,7 @@
         android:id="@+id/tv_device_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="设备UUID：98234A5A5738B082BF1AF8BFSEF2A176\n设备型号 ：LCD-XOxBEL7A-C\nUTDID : ZCJJNwKbI+8DAAXLGSM6RiZ0\n应用版本：11.2.1.21"
+        tools:text="设备UUID：98234A5A5738B082BF1AF8BFSEF2A176\n设备型号 ：LCD-XOxBEL7A-C\nUTDID : ZCJJNwKbI+8DAAXLGSM6RiZ0\n应用版本：11.2.1.21"
         android:textColor="@color/common_white_transparent_80"
         android:textSize="@dimen/sp_14"
         android:layout_marginTop="@dimen/dp_12"
