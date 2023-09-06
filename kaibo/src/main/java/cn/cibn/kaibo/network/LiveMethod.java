@@ -15,6 +15,7 @@ import cn.cibn.kaibo.model.ModelGoods;
 import cn.cibn.kaibo.model.ModelGpTimeRange;
 import cn.cibn.kaibo.model.ModelLive;
 import cn.cibn.kaibo.model.ModelLogin;
+import cn.cibn.kaibo.model.ModelQrcode;
 import cn.cibn.kaibo.model.ModelStatResponse;
 import cn.cibn.kaibo.model.ModelTicket;
 import cn.cibn.kaibo.model.ModelUser;
@@ -23,11 +24,11 @@ import cn.cibn.kaibo.model.ModelWrapper;
 public class LiveMethod extends BaseMethod {
 
     private static final String URL_LIVE_LIST = DOMAIN + "api/live/live-list?key=a6ab6f3bd1702115c865d1b9acc7d424&source=kumiao";
-    private static final String URL_GOODS_LIST = DOMAIN_APP + "api/live/goods-info";
-    private static final String URL_QRCODE = DOMAIN + "api/live/live-qrcode?key=a6ab6f3bd1702115c865d1b9acc7d424&source=kumiao";
+    private static final String URL_GOODS_LIST = DOMAIN_APP + "api/live/goods-info"; //商品列表
+    private static final String URL_QRCODE = DOMAIN_APP + "api/live/get-qrcode";//右下角二维码
     private static final String URL_GP_TIME_RANGE = DOMAIN + "api/default/gp-time-range?key=a6ab6f3bd1702115c865d1b9acc7d424";
 //    private static final String URL_GP_TIME_RANGE = "http://liveshop-admin.oeob.net/api/default/gp-time-range?key=a6ab6f3bd1702115c865d1b9acc7d424";
-    private static final String URL_STAT = "https://sta.cbnlive.cn?from=sdk";
+    private static final String URL_STAT = "https://sta.cbnlive.cn?from=sdk"; //统计上报
 
     private static final String URL_RECOMMEND = DOMAIN_APP + "api/apk/recomm/index";//推荐列表
     private static final String URL_USER_INFO = DOMAIN_APP + "api/user/get-user-info";//个人信息
@@ -35,8 +36,8 @@ public class LiveMethod extends BaseMethod {
     private static final String URL_LOGIN = DOMAIN_APP + "api/apk/empower/login";//登录
     private static final String URL_REQ_FOLLOW = DOMAIN_APP + "api/mch/index/shop-follow"; //关注
     private static final String URL_REQ_UN_FOLLOW = DOMAIN_APP + "api/mch/index/un-follow";//取消关注
-    private static final String URL_REQ_GIVE = DOMAIN_APP + "api/mch/index/give";
-    private static final String URL_REQ_CANCEL_GIVE = DOMAIN_APP + "api/mch/index/cancel-give";
+    private static final String URL_REQ_GIVE = DOMAIN_APP + "api/mch/index/give"; //点赞
+    private static final String URL_REQ_CANCEL_GIVE = DOMAIN_APP + "api/mch/index/cancel-give"; //取消点赞
 
     private static final LiveMethod instance = new LiveMethod();
 
@@ -48,11 +49,12 @@ public class LiveMethod extends BaseMethod {
         return instance;
     }
 
-    public ModelWrapper<ModelLive> getLiveList(int page, int size) {
+    public ModelWrapper<ModelQrcode> getQrCode(String liveId, int type) {
         Map<String, String> params = new HashMap<>();
-        params.put("limit", String.valueOf(size));
-        params.put("page", String.valueOf(page));
-        return doGet(URL_LIVE_LIST, params, ModelLive.class);
+        params.put("id", liveId);
+        params.put("type", String.valueOf(type));
+        params.put("source", SOURCE);
+        return doGet(URL_QRCODE, params, ModelQrcode.class);
     }
 
     public ModelWrapper<ModelGoods> getGoodsList(String liveId, int type, int page, int limit) {
@@ -61,7 +63,7 @@ public class LiveMethod extends BaseMethod {
         params.put("type", String.valueOf(type));
         params.put("limit", String.valueOf(limit));
         params.put("page", String.valueOf(page));
-        params.put("source", "kumiao");
+        params.put("source", SOURCE);
         return doGet(URL_GOODS_LIST, params, ModelGoods.class);
     }
 
