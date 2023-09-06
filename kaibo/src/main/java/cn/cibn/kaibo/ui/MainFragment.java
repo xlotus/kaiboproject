@@ -331,6 +331,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                 if (naviRightFragment.onKeyDown(keyCode, event)) {
                     return true;
                 }
+                goodsListFragment.setOpened(false);
                 binding.mainLiveDrawer.closeDrawer(GravityCompat.END);
             } else {
                 if (!isSubPlaying && !binding.mainLiveDrawer.isDrawerOpen(GravityCompat.START)) {
@@ -349,6 +350,9 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                 if (!binding.mainLiveDrawer.isDrawerOpen(GravityCompat.END)) {
                     binding.naviRightContainer.post(() -> {
                         naviRightFragment.requestFocus();
+                        if (naviRightFragment == goodsListFragment){
+                            goodsListFragment.setOpened(true);
+                        }
                         binding.mainLiveDrawer.openDrawer(GravityCompat.END);
                     });
                 }
@@ -387,6 +391,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                     return true;
                 }
                 binding.mainLiveDrawer.closeDrawer(GravityCompat.END);
+                goodsListFragment.setOpened(false);
                 return true;
             }
             if (lastBackTime == 0 || System.currentTimeMillis() - lastBackTime > MIN_BACK_DURATION) {

@@ -16,7 +16,6 @@ import com.tv.lib.core.change.ChangeListenerManager;
 import com.tv.lib.frame.adapter.ListBindingAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.adapter.GoodsListAdapter;
@@ -44,6 +43,8 @@ public class GoodsListFragment extends KbBaseFragment<FragmentGoodsListBinding> 
     private ModelLive.Item liveItem;
 
     private GoodsDetailFragment goodsDetailFragment;
+
+    private boolean isOpened;
 
     public static GoodsListFragment createInstance() {
         Logger.d(TAG, "createInstance");
@@ -207,9 +208,12 @@ public class GoodsListFragment extends KbBaseFragment<FragmentGoodsListBinding> 
         adapter.submitList(goodsModel.getList());
         adapter.notifyDataSetChanged();
         ChangeListenerManager.getInstance().notifyChange(ChangedKeys.CHANGED_GOODS_LIST_UPDATE);
-        requestFocus();
+        if (isOpened) {
+            requestFocus();
+        }
     }
 
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (binding.goodsDrawer.isDrawerOpen(GravityCompat.END)) {
@@ -223,5 +227,9 @@ public class GoodsListFragment extends KbBaseFragment<FragmentGoodsListBinding> 
             }
         }
         return false;
+    }
+
+    public void setOpened(boolean opened) {
+        isOpened = opened;
     }
 }
