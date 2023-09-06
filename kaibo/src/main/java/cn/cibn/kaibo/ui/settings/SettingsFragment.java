@@ -21,7 +21,7 @@ public class SettingsFragment extends BaseStackFragment<FragmentSettingsBinding>
 
     private CheckUpdateFragment checkUpdateFragment;
     private FeedbackFragment feedbackFragment;
-    private ProblemsFragment problemsFragment;
+    private QuestionsFragment questionsFragment;
     private AboutFragment aboutFragment;
     private CheckNetworkFragment checkNetworkFragment;
 
@@ -66,7 +66,7 @@ public class SettingsFragment extends BaseStackFragment<FragmentSettingsBinding>
 
         checkUpdateFragment = CheckUpdateFragment.createInstance();
         feedbackFragment = FeedbackFragment.createInstance();
-        problemsFragment = ProblemsFragment.createInstance();
+        questionsFragment = QuestionsFragment.createInstance();
         aboutFragment = AboutFragment.createInstance();
         checkNetworkFragment = CheckNetworkFragment.createInstance();
 
@@ -93,7 +93,7 @@ public class SettingsFragment extends BaseStackFragment<FragmentSettingsBinding>
         } else if (page == 1){
             showContent(feedbackFragment);
         } else if (page == 2) {
-            showContent(problemsFragment);
+            showContent(questionsFragment);
         } else if (page == 3) {
             showContent(aboutFragment);
         } else if (page == 4) {
@@ -132,7 +132,7 @@ public class SettingsFragment extends BaseStackFragment<FragmentSettingsBinding>
         } else if (id == subBinding.btnPageFeedBack.getId()) {
             showContent(feedbackFragment);
         } else if (id == subBinding.btnPageProblems.getId()) {
-            showContent(problemsFragment);
+            showContent(questionsFragment);
         } else if (id == subBinding.btnPageAbout.getId()) {
             showContent(aboutFragment);
         } else if (id == subBinding.btnPageCheckNetwork.getId()) {

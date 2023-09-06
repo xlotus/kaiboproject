@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import cn.cibn.kaibo.R;
+import cn.cibn.kaibo.data.ConfigModel;
 import cn.cibn.kaibo.ui.MainFragment;
 
 /*
@@ -43,6 +44,7 @@ public class MainActivity extends FragmentActivity {
         findViewById(R.id.btn_down).setOnClickListener(v -> {
             simulateKey(KeyEvent.KEYCODE_DPAD_DOWN);
         });
+        ConfigModel.getInstance().init();
     }
 
     @SuppressLint("MissingSuperCall")

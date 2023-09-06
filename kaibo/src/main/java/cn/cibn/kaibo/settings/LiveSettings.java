@@ -14,6 +14,7 @@ public class LiveSettings {
 
     private static final String KEY_TOKEN = "key_token";
     private static final String KEY_USER_INFO = "key_user_info";
+    private static final String KEY_SERVER_CONFIG = "key_server_config";
 
     private static Settings settings;
 
@@ -88,5 +89,13 @@ public class LiveSettings {
 
     public static String getUserInfo() {
         return getSettings().get(KEY_USER_INFO);
+    }
+
+    public static void setServerConfig(String config) {
+        getSettings().set(KEY_SERVER_CONFIG, config);
+    }
+
+    public static String getServerConfig() {
+        return getSettings().get(KEY_SERVER_CONFIG);
     }
 }
