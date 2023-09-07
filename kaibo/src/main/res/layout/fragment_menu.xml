@@ -95,16 +95,16 @@
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/menu_drawer"
-        android:layout_width="@dimen/drawer_menu_width"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        app:layout_constraintLeft_toRightOf="@id/layout_menu">
+        app:layout_constraintLeft_toRightOf="@id/layout_menu"
+        app:layout_constraintRight_toRightOf="parent">
 
         <FrameLayout
             android:id="@+id/sub_menu_container"
-            android:layout_width="@dimen/drawer_menu_width"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:background="@android:color/transparent" />
+            android:layout_gravity="start" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
 

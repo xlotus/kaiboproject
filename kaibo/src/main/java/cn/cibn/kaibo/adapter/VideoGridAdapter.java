@@ -1,6 +1,8 @@
 package cn.cibn.kaibo.adapter;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import java.util.Objects;
 
 import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.data.ConfigModel;
+import cn.cibn.kaibo.data.CoverManager;
 import cn.cibn.kaibo.databinding.ItemVideoGridBinding;
 import cn.cibn.kaibo.imageloader.ImageLoadHelper;
 import cn.cibn.kaibo.model.ModelLive;
@@ -44,7 +47,14 @@ public class VideoGridAdapter extends ListBindingAdapter<ModelLive.Item, ItemVid
                 R.drawable.bg_recyclerview_item_gray : R.drawable.bg_recyclerview_item);
 
         String img = item.getBack_img();
-        ImageLoadHelper.loadImage(binding.ivLiveCover, img, (int) binding.getRoot().getResources().getDimension(R.dimen.dp_8), ConfigModel.getInstance().isGrayMode());
+        if (TextUtils.isEmpty(img)) {
+            Bitmap bitmap = CoverManager.getInstance().getCover(item.getPlay_addr());
+            if (bitmap != null) {
+                binding.ivLiveCover.setImageBitmap(bitmap);
+            }
+        } else {
+            ImageLoadHelper.loadImage(binding.ivLiveCover, img, (int) binding.getRoot().getResources().getDimension(R.dimen.dp_8), ConfigModel.getInstance().isGrayMode());
+        }
 //        ImageLoadHelper.loadCircleImage(binding.ivAnchorHead, item.getCover_img(), ConfigModel.getInstance().isGrayMode());
         binding.tvLiveName.setText(item.getTitle());
 //        binding.tvAnchorName.setText(item.getName());

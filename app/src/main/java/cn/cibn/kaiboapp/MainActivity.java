@@ -20,9 +20,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.tencent.rtmp.ui.TXCloudVideoView;
 import com.tv.lib.core.Logger;
 import com.tv.lib.core.change.ChangeListenerManager;
 import com.tv.lib.core.change.ChangedListener;
@@ -32,6 +32,7 @@ import com.tv.lib.frame.activity.BaseActivity;
 import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.change.ChangedKeys;
 import cn.cibn.kaibo.data.ConfigModel;
+import cn.cibn.kaibo.data.CoverManager;
 import cn.cibn.kaibo.ui.MainFragment;
 import cn.cibn.kaibo.utils.ToastUtils;
 
@@ -50,6 +51,8 @@ public class MainActivity extends BaseActivity implements ChangedListener {
     private TextView tvToast;
     private float toastTranslationY;
     private ObjectAnimator toastShowAnimator, toastHideAnimator;
+
+    private TXCloudVideoView cloudVideoView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,6 +95,9 @@ public class MainActivity extends BaseActivity implements ChangedListener {
         ConfigModel.getInstance().init();
 
         registerNetworkListener();
+
+        cloudVideoView = findViewById(R.id.cloud_video_view);
+        CoverManager.getInstance().init(this, cloudVideoView);
     }
 
     @Override
@@ -110,6 +116,7 @@ public class MainActivity extends BaseActivity implements ChangedListener {
     protected void onDestroy() {
         unRegisterNetworkListener();
         ChangeListenerManager.getInstance().unregisterChangedListener(ChangedKeys.CHANGED_SHOW_TOAST, this);
+        CoverManager.getInstance().destroy();
         super.onDestroy();
     }
 

@@ -180,6 +180,23 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override
+    protected void addChangedListenerKey(ArrayList<String> keys) {
+        super.addChangedListenerKey(keys);
+        keys.add(ChangedKeys.CHANGED_COVER_UPDATE);
+    }
+
+    @Override
+    public void onListenerChange(String key, Object data) {
+        if (ChangedKeys.CHANGED_COVER_UPDATE.equals(key)) {
+            if (resultAdapter != null) {
+                resultAdapter.notifyDataSetChanged();
+            }
+            return;
+        }
+        super.onListenerChange(key, data);
+    }
+
     private void initKeyboardView() {
         int size = getResources().getDimensionPixelSize(R.dimen.dp_16);
         Drawable drawable = getResources().getDrawable(R.drawable.baseline_backspace_24);

@@ -2,7 +2,6 @@ package cn.cibn.kaibo.ui.me;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -15,15 +14,10 @@ import com.tv.lib.frame.adapter.ListBindingAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.cibn.kaibo.adapter.AnchorAdapter;
 import cn.cibn.kaibo.adapter.VideoGridAdapter;
-import cn.cibn.kaibo.adapter.VideoListAdapter;
 import cn.cibn.kaibo.change.ChangedKeys;
-import cn.cibn.kaibo.databinding.FragmentFollowBinding;
 import cn.cibn.kaibo.databinding.FragmentMeHistoryBinding;
-import cn.cibn.kaibo.model.ModelAnchor;
 import cn.cibn.kaibo.model.ModelLive;
-import cn.cibn.kaibo.ui.BaseStackFragment;
 import cn.cibn.kaibo.ui.KbBaseFragment;
 import cn.cibn.kaibo.ui.video.VideoListDataSource;
 import cn.cibn.kaibo.viewmodel.PlayerViewModel;
@@ -109,6 +103,23 @@ public class HistoryFragment extends KbBaseFragment<FragmentMeHistoryBinding> {
     public void onDestroyView() {
         super.onDestroyView();
         Logger.d(TAG, "onDestroyView");
+    }
+
+    @Override
+    protected void addChangedListenerKey(ArrayList<String> keys) {
+        super.addChangedListenerKey(keys);
+        keys.add(ChangedKeys.CHANGED_COVER_UPDATE);
+    }
+
+    @Override
+    public void onListenerChange(String key, Object data) {
+        if (ChangedKeys.CHANGED_COVER_UPDATE.equals(key)) {
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            }
+            return;
+        }
+        super.onListenerChange(key, data);
     }
 
     private static class HistoryVideoDataSource extends VideoListDataSource {

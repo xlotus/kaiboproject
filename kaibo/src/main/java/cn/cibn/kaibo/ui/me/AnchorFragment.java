@@ -145,6 +145,18 @@ public class AnchorFragment extends KbBaseFragment<FragmentAnchorBinding> {
     @Override
     protected void addChangedListenerKey(ArrayList<String> keys) {
         super.addChangedListenerKey(keys);
+        keys.add(ChangedKeys.CHANGED_COVER_UPDATE);
+    }
+
+    @Override
+    public void onListenerChange(String key, Object data) {
+        if (ChangedKeys.CHANGED_COVER_UPDATE.equals(key)) {
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            }
+            return;
+        }
+        super.onListenerChange(key, data);
     }
 
     public void setAnchor(ModelAnchor.Item anchor) {

@@ -95,6 +95,7 @@ public class VideoListFragment extends KbBaseFragment<FragmentVideoListBinding> 
         super.addChangedListenerKey(keys);
         keys.add(ChangedKeys.CHANGED_LIVE_LIST_UPDATE);
         keys.add(ChangedKeys.CHANGED_CURRENT_LIVE_UPDATE);
+        keys.add(ChangedKeys.CHANGED_COVER_UPDATE);
     }
 
     @Override
@@ -108,6 +109,12 @@ public class VideoListFragment extends KbBaseFragment<FragmentVideoListBinding> 
         if (ChangedKeys.CHANGED_CURRENT_LIVE_UPDATE.equals(key)) {
             binding.recyclerVideoList.scrollToPosition(DataManger.getInstance().getCurLivePosition());
             adapter.notifyDataSetChanged();
+            return;
+        }
+        if (ChangedKeys.CHANGED_COVER_UPDATE.equals(key)) {
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            }
             return;
         }
         super.onListenerChange(key, data);

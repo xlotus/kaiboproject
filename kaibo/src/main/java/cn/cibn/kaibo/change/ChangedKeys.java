@@ -30,4 +30,6 @@ public class ChangedKeys {
     public static final String CHANGED_REQUEST_RESTORE_PLAY = "changed_request_restore_play"; //主页面恢复播放
 
     public static final String CHANGED_LOGIN_SUCCESS = "changed_login_success";
+
+    public static final String CHANGED_COVER_UPDATE = "changed_cover_update";
 }

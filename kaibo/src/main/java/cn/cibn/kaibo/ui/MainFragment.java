@@ -147,9 +147,11 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                     openStack(f);
                 }
                 else if ("me".equals(page)) {
+                    fragmentStack.clear();
                     MeFragment f = new MeFragment();
                     openStack(f);
                 } else if ("homeFollow".equals(page)) {
+                    fragmentStack.clear();
                     HomeFollowFragment f = HomeFollowFragment.createInstance();
                     openStack(f);
                 } else if ("meGroup".equals(page)) {

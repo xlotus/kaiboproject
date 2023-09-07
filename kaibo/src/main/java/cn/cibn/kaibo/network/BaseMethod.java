@@ -17,8 +17,8 @@ public class BaseMethod extends Connection {
     protected static final String DOMAIN = "https://api.cbnlive.cn/";
 //    private static final String DOMAIN = "http://liveshop-admin.oeob.net/";
 
-    protected static final String DOMAIN_APP = "http://bd.cbnlive.net/";
-//    private static final String DOMAIN_APP = "http://liveshop-admin.oeob.net/";
+//    protected static final String DOMAIN_APP = "http://bd.cbnlive.net/";
+    protected static final String DOMAIN_APP = "http://liveshop-admin.oeob.net/";
 
 
     private <T> ModelWrapper<T> realConnect(String method, String url, Map<String, String> params, Type tType) {

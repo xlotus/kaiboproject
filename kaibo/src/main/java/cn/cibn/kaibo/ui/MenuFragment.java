@@ -167,6 +167,23 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
         return false;
     }
 
+    @Override
+    protected void addChangedListenerKey(ArrayList<String> keys) {
+        super.addChangedListenerKey(keys);
+        keys.add(ChangedKeys.CHANGED_COVER_UPDATE);
+    }
+
+    @Override
+    public void onListenerChange(String key, Object data) {
+        if (ChangedKeys.CHANGED_COVER_UPDATE.equals(key)) {
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            }
+            return;
+        }
+        super.onListenerChange(key, data);
+    }
+
     private void openPage(String page) {
         if (getActivity() != null) {
             Bundle result = new Bundle();

@@ -6,6 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.tencent.rtmp.ui.TXCloudVideoView
+        android:id="@+id/cloud_video_view"
+        android:layout_width="@dimen/dp_195"
+        android:layout_height="@dimen/dp_110"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <FrameLayout
         android:id="@+id/live_main_fragment"
         android:layout_width="match_parent"
