@@ -1,5 +1,6 @@
 package cn.cibn.kaibo.ui.home;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -58,6 +59,7 @@ public class HomeFollowFragment extends BaseStackFragment<FragmentHomeFollowBind
     protected void initView() {
         super.initView();
         subBinding.tvFollowListTitle.setText(getString(R.string.follow_list_title, total));
+        subBinding.drawerHomeFollow.setScrimColor(Color.TRANSPARENT);
         adapter = new HomeAnchorAdapter();
         subBinding.recyclerFollowAnchorList.setNumColumns(2);
         subBinding.recyclerFollowAnchorList.setAdapter(adapter);

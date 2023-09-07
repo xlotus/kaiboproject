@@ -58,6 +58,7 @@ dependencies {
 
     api project(':kaibo')
 
+    implementation 'com.android.support:multidex:1.0.3'
 }
 
 //walle {

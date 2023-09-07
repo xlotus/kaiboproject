@@ -1,5 +1,6 @@
 package cn.cibn.kaibo.ui.me;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -47,6 +48,7 @@ public class MeGroupFragment extends BaseStackFragment<FragmentMeGroupBinding> i
         subBinding.btnGoHome.setOnClickListener(this);
         subBinding.btnPageFollow.setOnClickListener(this);
         subBinding.btnPageHistory.setOnClickListener(this);
+        subBinding.drawerMeGroup.setScrimColor(Color.TRANSPARENT);
         followFragment = FollowFragment.createInstance();
         historyFragment = HistoryFragment.createInstance();
         anchorFragment = AnchorFragment.createInstance();

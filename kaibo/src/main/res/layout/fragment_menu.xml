@@ -4,6 +4,7 @@
     android:id="@+id/menu_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/transparent"
     android:focusable="false">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -103,7 +104,7 @@
             android:layout_width="@dimen/drawer_menu_width"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:background="@android:color/white" />
+            android:background="@android:color/transparent" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
 

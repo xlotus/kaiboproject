@@ -2,6 +2,7 @@ package cn.cibn.kaibo.ui;
 
 import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -119,6 +120,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
         transaction.replace(R.id.player_fragment_container, playerFragment);
         transaction.replace(R.id.navi_right_container, goodsListFragment);
         transaction.commit();
+        binding.mainLiveDrawer.setScrimColor(Color.TRANSPARENT);
         naviRightFragment = goodsListFragment;
         exitToastTranslationY = mContext.getResources().getDimension(R.dimen.dp_140);
         binding.layoutPressBackToClose.setTranslationY(exitToastTranslationY);

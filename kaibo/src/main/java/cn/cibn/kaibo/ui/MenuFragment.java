@@ -1,5 +1,6 @@
 package cn.cibn.kaibo.ui;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -43,6 +44,7 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
 
     @Override
     protected void initView() {
+        binding.menuDrawer.setScrimColor(Color.TRANSPARENT);
         adapter = new VideoListAdapter();
         adapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<ModelLive.Item>() {
             @Override

@@ -1,5 +1,6 @@
 package cn.cibn.kaibo.ui.settings;
 
+import android.graphics.Color;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ public class CheckUpdateFragment extends KbBaseFragment<FragmentCheckUpdateBindi
         binding.btnUpdateNow.setOnClickListener(this);
         binding.btnHistoryVersions.setOnClickListener(this);
         binding.btnClearCache.setOnClickListener(this);
+        binding.drawerVersionHistory.setScrimColor(Color.TRANSPARENT);
 
         versionHistoryFragment = VersionHistoryFragment.createInstance();
         getChildFragmentManager().beginTransaction().replace(R.id.version_history_container, versionHistoryFragment).commit();
