@@ -114,7 +114,7 @@ public final class HttpUtils {
             conn.disconnect();
         }
 
-        Logger.d(TAG, "response" + response.getContent());
+        Logger.d(TAG, "response(" + urlStr + ") " + response.getContent());
         return response;
     }
 
@@ -175,7 +175,7 @@ public final class HttpUtils {
             conn.disconnect();
         }
 
-        Logger.d(TAG, "response" + response.getContent());
+        Logger.d(TAG, "response(" + urlStr + ") " + response.getContent());
         return response;
     }
 
@@ -231,7 +231,7 @@ public final class HttpUtils {
             conn.disconnect();
         }
 
-        Logger.d(TAG, "response" + response.getContent());
+        Logger.d(TAG, "response(" + urlStr + ") " + response.getContent());
         return response;
     }
 

@@ -18,6 +18,8 @@ import cn.cibn.kaibo.adapter.VideoGridAdapter;
 import cn.cibn.kaibo.change.ChangedKeys;
 import cn.cibn.kaibo.databinding.FragmentMeHistoryBinding;
 import cn.cibn.kaibo.model.ModelLive;
+import cn.cibn.kaibo.model.ModelWrapper;
+import cn.cibn.kaibo.network.UserMethod;
 import cn.cibn.kaibo.ui.KbBaseFragment;
 import cn.cibn.kaibo.ui.video.VideoListDataSource;
 import cn.cibn.kaibo.viewmodel.PlayerViewModel;
@@ -126,26 +128,19 @@ public class HistoryFragment extends KbBaseFragment<FragmentMeHistoryBinding> {
 
         @Override
         public void reqLiveList() {
-            ModelLive live = new ModelLive();
             TaskHelper.exec(new TaskHelper.Task() {
+                ModelWrapper<ModelLive> model;
+
                 @Override
                 public void execute() throws Exception {
-
-                    List<ModelLive.Item> list = new ArrayList<>();
-                    for (int i = 0; i < 10; i++) {
-                        ModelLive.Item item = new ModelLive.Item();
-                        item.setId("11");
-                        item.setTitle("Video " + i);
-                        item.setBack_img("https://img.cbnlive.cn/web/uploads/image/store_1/bd3ecde03cc241c818fccccffeac9a3e3528809e.jpg");
-                        item.setPlay_addr("http://1500005830.vod2.myqcloud.com/43843ec0vodtranscq1500005830/3afba03a387702294394228636/adp.10.m3u8");
-                        list.add(item);
-                    }
-                    live.setList(list);
+                    model = UserMethod.getInstance().getHistoryRecord(1, 10);
                 }
 
                 @Override
                 public void callback(Exception e) {
-                    updateLiveList(live);
+                    if (model != null && model.isSuccess() && model.getData() != null) {
+                        updateLiveList(model.getData());
+                    }
                 }
             });
         }

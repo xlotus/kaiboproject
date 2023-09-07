@@ -33,6 +33,7 @@ import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.change.ChangedKeys;
 import cn.cibn.kaibo.data.ConfigModel;
 import cn.cibn.kaibo.data.CoverManager;
+import cn.cibn.kaibo.data.VideoHistoryManager;
 import cn.cibn.kaibo.ui.MainFragment;
 import cn.cibn.kaibo.utils.ToastUtils;
 
@@ -98,6 +99,7 @@ public class MainActivity extends BaseActivity implements ChangedListener {
 
         cloudVideoView = findViewById(R.id.cloud_video_view);
         CoverManager.getInstance().init(this, cloudVideoView);
+        VideoHistoryManager.getInstance().init(this);
     }
 
     @Override

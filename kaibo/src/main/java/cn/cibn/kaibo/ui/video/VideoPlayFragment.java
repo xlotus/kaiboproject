@@ -23,6 +23,7 @@ import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.change.ChangedKeys;
 import cn.cibn.kaibo.data.ConfigModel;
 import cn.cibn.kaibo.data.RecommendModel;
+import cn.cibn.kaibo.data.VideoHistoryManager;
 import cn.cibn.kaibo.databinding.FragmentVideoPlayBinding;
 import cn.cibn.kaibo.imageloader.ImageLoadHelper;
 import cn.cibn.kaibo.model.ModelGoods;
@@ -216,6 +217,7 @@ public class VideoPlayFragment extends KbBaseFragment<FragmentVideoPlayBinding> 
         if (liveItem == item) {
             return;
         }
+        VideoHistoryManager.getInstance().addHistory(item);
         if (liveItem != null) {
             StatHelper.statExitLiveRoom(liveItem);
         }
