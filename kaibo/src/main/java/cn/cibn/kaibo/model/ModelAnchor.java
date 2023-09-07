@@ -4,8 +4,7 @@ import androidx.annotation.Nullable;
 
 import java.io.Serializable;
 import java.util.List;
-
-import cn.cibn.kaibo.player.VideoType;
+import java.util.Objects;
 
 public class ModelAnchor extends BaseModel implements Serializable {
     private List<Item> list;
@@ -37,27 +36,18 @@ public class ModelAnchor extends BaseModel implements Serializable {
     }
 
     public static class Item implements Serializable {
-        private String id;
-        private String title;
-        private String cover_img;
-        private String anchor_id;
+        private String anchor_id;//主播id
+        private String cover_img;//直播间头像
+        private String name;//主播名称
+        private String certification_no;//认证编号
+        private int fans;//粉丝数量
 
-        private int type = VideoType.LIVE.getValue();
-
-        public String getId() {
-            return id;
+        public String getAnchor_id() {
+            return anchor_id;
         }
 
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
+        public void setAnchor_id(String anchor_id) {
+            this.anchor_id = anchor_id;
         }
 
         public String getCover_img() {
@@ -68,32 +58,41 @@ public class ModelAnchor extends BaseModel implements Serializable {
             this.cover_img = cover_img;
         }
 
-        public boolean equals(@Nullable Object obj) {
-            if (this == obj) {
-                return true;
-            }
-            if (obj instanceof Item && ((Item) obj).id.equals(id)) {
-                return true;
-            }
-            return false;
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getCertification_no() {
+            return certification_no;
+        }
+
+        public void setCertification_no(String certification_no) {
+            this.certification_no = certification_no;
+        }
+
+        public int getFans() {
+            return fans;
+        }
+
+        public void setFans(int fans) {
+            this.fans = fans;
         }
 
         @Override
-        public String toString() {
-            return "Item{" +
-                    "id='" + id + '\'' +
-                    ", title='" + title + '\'' +
-                    ", cover_img='" + cover_img + '\'' +
-                    ", anchor_id='" + anchor_id + '\'' +
-                    '}';
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Item item = (Item) o;
+            return Objects.equals(anchor_id, item.anchor_id);
         }
 
-        public int getType() {
-            return type;
-        }
-
-        public void setType(int type) {
-            this.type = type;
+        @Override
+        public int hashCode() {
+            return Objects.hash(anchor_id);
         }
     }
 }

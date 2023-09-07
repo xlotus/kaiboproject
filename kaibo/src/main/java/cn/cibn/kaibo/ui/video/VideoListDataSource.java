@@ -13,6 +13,7 @@ public abstract class VideoListDataSource implements Serializable {
     public static final int PAGE_FIRST = 1;
 
     protected List<ModelLive.Item> liveList = new ArrayList<>();
+    private int total;
     private String curLiveId = null;
     //    private int pageCount = PAGE_FIRST;
     private int requestingPage = -1;
@@ -79,13 +80,20 @@ public abstract class VideoListDataSource implements Serializable {
 
     protected final void updateLiveList(ModelLive modelLive) {
         liveList.clear();
-        liveList.addAll(modelLive.getList());
+        if (modelLive != null) {
+            liveList.addAll(modelLive.getList());
+            total = modelLive.getRow_count();
+        }
         if (onReadyListener != null) {
             onReadyListener.onSourceReady();
         }
     }
 
     public abstract void reqLiveList();
+
+    public int getTotal() {
+        return total;
+    }
 
     public interface OnReadyListener {
         void onSourceReady();

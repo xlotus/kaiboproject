@@ -8,28 +8,42 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.FragmentResultListener;
+import androidx.leanback.widget.OnChildViewHolderSelectedListener;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.tv.lib.core.lang.thread.TaskHelper;
 import com.tv.lib.frame.adapter.ListBindingAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.UserManager;
 import cn.cibn.kaibo.adapter.HomeAnchorAdapter;
 import cn.cibn.kaibo.change.ChangedKeys;
 import cn.cibn.kaibo.databinding.FragmentHomeFollowBinding;
 import cn.cibn.kaibo.model.ModelAnchor;
+import cn.cibn.kaibo.model.ModelWrapper;
+import cn.cibn.kaibo.network.UserMethod;
 import cn.cibn.kaibo.ui.BaseStackFragment;
 import cn.cibn.kaibo.ui.me.AnchorFragment;
 import cn.cibn.kaibo.ui.widget.LoginView;
 
 public class HomeFollowFragment extends BaseStackFragment<FragmentHomeFollowBinding> {
+    private static final String TAG = "HomeFollowFragment";
+
+    private static final int PAGE_FIRST = 1;
 
     private HomeAnchorAdapter adapter;
 
     private AnchorFragment anchorFragment;
 
     private LoginView loginView;
+
+    private List<ModelAnchor.Item> followList = new ArrayList<>();
+    private int total = 0;
+    private int curPage;
+    private int loadingPage = -1;
 
     public static HomeFollowFragment createInstance() {
         return new HomeFollowFragment();
@@ -43,6 +57,7 @@ public class HomeFollowFragment extends BaseStackFragment<FragmentHomeFollowBind
     @Override
     protected void initView() {
         super.initView();
+        subBinding.tvFollowListTitle.setText(getString(R.string.follow_list_title, total));
         adapter = new HomeAnchorAdapter();
         subBinding.recyclerFollowAnchorList.setNumColumns(2);
         subBinding.recyclerFollowAnchorList.setAdapter(adapter);
@@ -52,8 +67,10 @@ public class HomeFollowFragment extends BaseStackFragment<FragmentHomeFollowBind
                 subBinding.drawerHomeFollow.openDrawer(GravityCompat.START);
                 anchorFragment.setAnchor(item);
                 anchorFragment.requestFocus();
+                anchorFragment.setOpen(true);
             }
         });
+        subBinding.recyclerFollowAnchorList.addOnChildViewHolderSelectedListener(onChildViewHolderSelectedListener);
 
         anchorFragment = AnchorFragment.createInstance();
         getChildFragmentManager().beginTransaction().replace(subBinding.homeFollowContent.getId(), anchorFragment).commit();
@@ -80,15 +97,7 @@ public class HomeFollowFragment extends BaseStackFragment<FragmentHomeFollowBind
 
     @Override
     protected void initData() {
-        List<ModelAnchor.Item> list = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            ModelAnchor.Item item = new ModelAnchor.Item();
-            item.setTitle("anchor" + i);
-            item.setCover_img("https://img.cbnlive.cn/web/uploads/image/store_1/bd3ecde03cc241c818fccccffeac9a3e3528809e.jpg");
-            list.add(item);
-        }
-        adapter.submitList(list);
-        requestFocus();
+        reqFollowList(PAGE_FIRST);
     }
 
     @Override
@@ -97,8 +106,6 @@ public class HomeFollowFragment extends BaseStackFragment<FragmentHomeFollowBind
             subBinding.recyclerFollowAnchorList.post(new Runnable() {
                 @Override
                 public void run() {
-//                    subBinding.recyclerFollowAnchorList.requestChildFocus(null, null);
-//                    subBinding.recyclerFollowAnchorList.getChildAt(0).requestFocus();
                     adapter.requestFocus();
                 }
             });
@@ -111,6 +118,7 @@ public class HomeFollowFragment extends BaseStackFragment<FragmentHomeFollowBind
             if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 subBinding.drawerHomeFollow.closeDrawer(GravityCompat.START);
                 requestFocus();
+                anchorFragment.setOpen(false);
                 return true;
             }
         }
@@ -120,6 +128,12 @@ public class HomeFollowFragment extends BaseStackFragment<FragmentHomeFollowBind
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (subBinding != null) {
+            subBinding.recyclerFollowAnchorList.removeOnChildViewHolderSelectedListener(onChildViewHolderSelectedListener);
+        }
+        if (adapter != null) {
+            adapter.setOnItemClickListener(null);
+        }
     }
 
     @Override
@@ -143,4 +157,46 @@ public class HomeFollowFragment extends BaseStackFragment<FragmentHomeFollowBind
         }
         super.onListenerChange(key, data);
     }
+
+    private void reqFollowList(int page) {
+        if (page == loadingPage) {
+            return;
+        }
+        loadingPage = page;
+        TaskHelper.exec(new TaskHelper.Task() {
+            ModelWrapper<ModelAnchor> model;
+
+            @Override
+            public void execute() throws Exception {
+                model = UserMethod.getInstance().getFollowList(page, 10);
+            }
+
+            @Override
+            public void callback(Exception e) {
+                if (model != null && model.isSuccess() && model.getData() != null) {
+                    curPage = loadingPage;
+                    total = model.getData().getRow_count();
+                    if (loadingPage == PAGE_FIRST) {
+                        followList.clear();
+                        subBinding.tvFollowListTitle.setText(getString(R.string.follow_list_title, total));
+                    }
+                    if (model.getData().getList() != null) {
+                        followList.addAll(model.getData().getList());
+                    }
+                    adapter.submitList(followList);
+                    requestFocus();
+                }
+            }
+        });
+    }
+
+    private OnChildViewHolderSelectedListener onChildViewHolderSelectedListener = new OnChildViewHolderSelectedListener() {
+        @Override
+        public void onChildViewHolderSelected(RecyclerView parent, RecyclerView.ViewHolder child, int position, int subposition) {
+            int count = adapter.getItemCount();
+            if (count - position < 6 && count < total) {
+                reqFollowList(curPage + 1);
+            }
+        }
+    };
 }

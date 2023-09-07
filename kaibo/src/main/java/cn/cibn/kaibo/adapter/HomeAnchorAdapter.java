@@ -18,7 +18,7 @@ import cn.cibn.kaibo.model.ModelAnchor;
 import cn.cibn.kaibo.utils.AnchorDiffCallback;
 
 public class HomeAnchorAdapter extends ListBindingAdapter<ModelAnchor.Item, ItemHomeAnchorBinding> {
-    private static final String TAG = "VideoListAdapter";
+    private static final String TAG = "HomeAnchorAdapter";
     private Map<Boolean, ModelAnchor.Item> map = new HashMap<>();
     private View lastSelectedView = null;
 
@@ -38,8 +38,8 @@ public class HomeAnchorAdapter extends ListBindingAdapter<ModelAnchor.Item, Item
     public void onBindViewHolder(ModelAnchor.Item item, ItemHomeAnchorBinding binding, int position) {
         String img = item.getCover_img();
         ImageLoadHelper.loadCircleImage(binding.ivAnchorCover, img, ConfigModel.getInstance().isGrayMode());
-        binding.tvAnchorName.setText("@" + item.getTitle());
-        binding.tvFansCount.setText("粉丝 110");
+        binding.tvAnchorName.setText("@" + item.getName());
+        binding.tvFansCount.setText("粉丝 " + item.getFans());
         setStyle(item, binding, binding.getRoot().hasFocus());
         if (position == 0) {
             lastSelectedView = binding.getRoot();
@@ -73,13 +73,7 @@ public class HomeAnchorAdapter extends ListBindingAdapter<ModelAnchor.Item, Item
     }
 
     private void setStyle(ModelAnchor.Item data, ItemHomeAnchorBinding binding, boolean hasFocus) {
-        if (hasFocus) {
-            binding.bgHomeAnchorFocused.setVisibility(View.VISIBLE);
-            binding.bgHomeAnchorN.setVisibility(View.GONE);
-        } else {
-            binding.bgHomeAnchorFocused.setVisibility(View.GONE);
-            binding.bgHomeAnchorN.setVisibility(View.VISIBLE);
-        }
+        Logger.d(TAG, "setStyle hasFocus = " + hasFocus + ", " + binding);
     }
 
     public void setLastSelectedView(View view) {

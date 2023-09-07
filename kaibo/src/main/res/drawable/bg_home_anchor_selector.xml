@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/shape_6_33ff1933" android:state_selected="true" />
-    <item android:drawable="@drawable/shape_6_33ff1933" android:state_pressed="true" />
-    <item android:drawable="@drawable/shape_6_33ffffff" />
+    <item android:drawable="@drawable/shape_6_p" android:state_focused="true" />
+    <item android:state_selected="true">
+        <layer-list>
+            <item android:bottom="@dimen/dp_5" android:drawable="@drawable/shape_6_33ff1933" android:left="@dimen/dp_5" android:right="@dimen/dp_5" android:top="@dimen/dp_5" />
+        </layer-list>
+
+    </item>
+
+    <item>
+        <layer-list>
+            <item android:bottom="@dimen/dp_5" android:drawable="@drawable/shape_6_33ffffff" android:left="@dimen/dp_5" android:right="@dimen/dp_5" android:top="@dimen/dp_5" />
+        </layer-list>
+    </item>
 </selector>

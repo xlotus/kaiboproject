@@ -61,6 +61,7 @@ public class MeGroupFragment extends BaseStackFragment<FragmentMeGroupBinding> i
                     subBinding.drawerMeGroup.openDrawer(GravityCompat.END);
                     anchorFragment.setAnchor(item);
                     anchorFragment.requestFocus();
+                    anchorFragment.setOpen(true);
                 } else if ("history".equals(type)) {
                     ModelLive.Item item = (ModelLive.Item) result.getSerializable("data");
                 }
@@ -118,6 +119,7 @@ public class MeGroupFragment extends BaseStackFragment<FragmentMeGroupBinding> i
             if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_BACK) {
                 subBinding.drawerMeGroup.closeDrawer(GravityCompat.END);
                 followFragment.requestFocus();
+                anchorFragment.setOpen(false);
                 return true;
             }
         }

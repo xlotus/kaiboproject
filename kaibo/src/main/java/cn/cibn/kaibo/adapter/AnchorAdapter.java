@@ -41,8 +41,8 @@ public class AnchorAdapter extends ListBindingAdapter<ModelAnchor.Item, ItemAnch
 
         String img = item.getCover_img();
         ImageLoadHelper.loadCircleImage(binding.ivAnchorCover, img, ConfigModel.getInstance().isGrayMode());
-        binding.tvAnchorName.setText("@" + item.getTitle());
-        binding.tvFansCount.setText("粉丝 110");
+        binding.tvAnchorName.setText("@" + item.getName());
+        binding.tvFansCount.setText("粉丝 " + item.getFans());
         setStyle(item, binding, binding.getRoot().hasFocus());
         if (position == 0) {
             lastSelectedView = binding.getRoot();

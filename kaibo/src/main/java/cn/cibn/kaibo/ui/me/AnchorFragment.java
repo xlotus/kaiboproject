@@ -12,8 +12,8 @@ import com.tv.lib.core.lang.thread.TaskHelper;
 import com.tv.lib.frame.adapter.ListBindingAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.adapter.VideoListAdapter;
 import cn.cibn.kaibo.change.ChangedKeys;
 import cn.cibn.kaibo.data.ConfigModel;
@@ -21,6 +21,8 @@ import cn.cibn.kaibo.databinding.FragmentAnchorBinding;
 import cn.cibn.kaibo.imageloader.ImageLoadHelper;
 import cn.cibn.kaibo.model.ModelAnchor;
 import cn.cibn.kaibo.model.ModelLive;
+import cn.cibn.kaibo.model.ModelWrapper;
+import cn.cibn.kaibo.network.UserMethod;
 import cn.cibn.kaibo.ui.KbBaseFragment;
 import cn.cibn.kaibo.ui.video.VideoListDataSource;
 import cn.cibn.kaibo.viewmodel.PlayerViewModel;
@@ -33,6 +35,8 @@ public class AnchorFragment extends KbBaseFragment<FragmentAnchorBinding> {
     private PlayerViewModel playerViewModel;
 
     private ModelAnchor.Item anchor;
+
+    private boolean isOpen = false;
 
     public static AnchorFragment createInstance() {
         return new AnchorFragment();
@@ -53,6 +57,7 @@ public class AnchorFragment extends KbBaseFragment<FragmentAnchorBinding> {
 
     @Override
     protected void initView() {
+        binding.tvAnchorVideoListTitle.setText(getString(R.string.anchor_video_list_title, 0));
         adapter = new VideoListAdapter();
         adapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<ModelLive.Item>() {
             @Override
@@ -83,10 +88,15 @@ public class AnchorFragment extends KbBaseFragment<FragmentAnchorBinding> {
         videoSource.setOnReadyListener(new VideoListDataSource.OnReadyListener() {
             @Override
             public void onSourceReady() {
+                if (videoSource != null && binding != null) {
+                    binding.tvAnchorVideoListTitle.setText(getString(R.string.anchor_video_list_title, videoSource.getTotal()));
+                }
                 if (adapter != null) {
                     adapter.notifyDataSetChanged();
                 }
-                requestFocus();
+                if (isOpen) {
+                    requestFocus();
+                }
             }
         });
         if (playerViewModel != null) {
@@ -98,8 +108,8 @@ public class AnchorFragment extends KbBaseFragment<FragmentAnchorBinding> {
     @Override
     protected void updateView() {
         if (this.anchor != null) {
-            binding.tvAnchorName.setText("@" + anchor.getTitle());
-            binding.tvAnchorId.setText("用户ID:" + anchor.getId());
+            binding.tvAnchorName.setText("@" + anchor.getName());
+            binding.tvAnchorId.setText("用户ID:" + anchor.getAnchor_id());
             ImageLoadHelper.loadCircleImage(binding.ivUserHead, anchor.getCover_img(), ConfigModel.getInstance().isGrayMode());
         }
     }
@@ -127,6 +137,9 @@ public class AnchorFragment extends KbBaseFragment<FragmentAnchorBinding> {
         if (playerViewModel != null) {
             playerViewModel.playingVideo.removeObservers(getViewLifecycleOwner());
         }
+        if (videoSource != null) {
+            videoSource.setOnReadyListener(null);
+        }
     }
 
     @Override
@@ -137,35 +150,48 @@ public class AnchorFragment extends KbBaseFragment<FragmentAnchorBinding> {
     public void setAnchor(ModelAnchor.Item anchor) {
         this.anchor = anchor;
         updateView();
-        if (videoSource != null) {
+        if (videoSource != null && anchor != null) {
+            videoSource.setAnchorId(anchor.getAnchor_id());
             videoSource.reqLiveList();
         }
     }
 
+    public void setOpen(boolean open) {
+        isOpen = open;
+    }
+
     private static class AnchorVideoDataSource extends VideoListDataSource {
+        private String anchorId;
+
+        public void setAnchorId(String anchorId) {
+            this.anchorId = anchorId;
+        }
 
         @Override
         public void reqLiveList() {
-            ModelLive live = new ModelLive();
             TaskHelper.exec(new TaskHelper.Task() {
+                ModelWrapper<ModelLive> model;
                 @Override
                 public void execute() throws Exception {
 
-                    List<ModelLive.Item> list = new ArrayList<>();
-                    for (int i = 0; i < 10; i++) {
-                        ModelLive.Item item = new ModelLive.Item();
-                        item.setId("11");
-                        item.setTitle("Video " + i);
-                        item.setBack_img("https://img.cbnlive.cn/web/uploads/image/store_1/bd3ecde03cc241c818fccccffeac9a3e3528809e.jpg");
-                        item.setPlay_addr("http://1500005830.vod2.myqcloud.com/43843ec0vodtranscq1500005830/3afba03a387702294394228636/adp.10.m3u8");
-                        list.add(item);
-                    }
-                    live.setList(list);
+//                    List<ModelLive.Item> list = new ArrayList<>();
+//                    for (int i = 0; i < 10; i++) {
+//                        ModelLive.Item item = new ModelLive.Item();
+//                        item.setId("11");
+//                        item.setTitle("Video " + i);
+//                        item.setBack_img("https://img.cbnlive.cn/web/uploads/image/store_1/bd3ecde03cc241c818fccccffeac9a3e3528809e.jpg");
+//                        item.setPlay_addr("http://1500005830.vod2.myqcloud.com/43843ec0vodtranscq1500005830/3afba03a387702294394228636/adp.10.m3u8");
+//                        list.add(item);
+//                    }
+//                    live.setList(list);
+                    model = UserMethod.getInstance().getAnchorInfo(anchorId, 1, 10);
                 }
 
                 @Override
                 public void callback(Exception e) {
-                    updateLiveList(live);
+                    if (model != null && model.isSuccess() && model.getData() != null) {
+                        updateLiveList(model.getData());
+                    }
                 }
             });
         }

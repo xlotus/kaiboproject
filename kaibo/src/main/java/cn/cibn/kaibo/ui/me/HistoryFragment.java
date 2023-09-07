@@ -7,6 +7,7 @@ import android.view.View;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.tv.lib.core.Logger;
 import com.tv.lib.core.change.ChangeListenerManager;
 import com.tv.lib.core.lang.thread.TaskHelper;
 import com.tv.lib.frame.adapter.ListBindingAdapter;
@@ -28,7 +29,7 @@ import cn.cibn.kaibo.ui.video.VideoListDataSource;
 import cn.cibn.kaibo.viewmodel.PlayerViewModel;
 
 public class HistoryFragment extends KbBaseFragment<FragmentMeHistoryBinding> {
-
+    private static final String TAG = "HistoryFragment";
     private VideoGridAdapter adapter;
     private HistoryVideoDataSource videoSource;
 
@@ -53,6 +54,7 @@ public class HistoryFragment extends KbBaseFragment<FragmentMeHistoryBinding> {
 
     @Override
     protected void initView() {
+        Logger.d(TAG, "initView");
         adapter = new VideoGridAdapter();
         adapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<ModelLive.Item>() {
             @Override
@@ -101,6 +103,12 @@ public class HistoryFragment extends KbBaseFragment<FragmentMeHistoryBinding> {
     @Override
     protected void updateView() {
 
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Logger.d(TAG, "onDestroyView");
     }
 
     private static class HistoryVideoDataSource extends VideoListDataSource {

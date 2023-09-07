@@ -42,8 +42,6 @@ import cn.cibn.kaibo.stat.StatHelper;
 import cn.cibn.kaibo.ui.goods.GoodsDetailFragment;
 import cn.cibn.kaibo.ui.goods.GoodsListFragment;
 import cn.cibn.kaibo.ui.home.HomeFollowFragment;
-import cn.cibn.kaibo.ui.me.AnchorFragment;
-import cn.cibn.kaibo.ui.me.FollowFragment;
 import cn.cibn.kaibo.ui.me.MeFragment;
 import cn.cibn.kaibo.ui.me.MeGroupFragment;
 import cn.cibn.kaibo.ui.orders.OrdersHomeFragment;
