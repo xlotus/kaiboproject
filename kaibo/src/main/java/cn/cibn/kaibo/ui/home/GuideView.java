@@ -46,6 +46,8 @@ public class GuideView extends RelativeLayout implements Handler.Callback, Chang
     private int rightShowInterval = DEFAULT_SHOW_INTERVAL;
     private int bottomShowInterval = DEFAULT_SHOW_INTERVAL;
 
+    private boolean opened = false;
+
     public GuideView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
@@ -56,6 +58,19 @@ public class GuideView extends RelativeLayout implements Handler.Callback, Chang
         binding = LayoutGuideBinding.inflate(LayoutInflater.from(context), this);
         initAnimator();
         updateConfig();
+        if (opened) {
+            showLeft();
+            showTop();
+            showRight();
+            showBottom();
+        }
+    }
+
+    public void open() {
+        opened = true;
+        if (binding == null) {
+            return;
+        }
         showLeft();
         showTop();
         showRight();

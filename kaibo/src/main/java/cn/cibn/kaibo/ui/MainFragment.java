@@ -80,6 +80,8 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
 
     private boolean isSubPlaying; //播放的子页面的视频
 
+    private boolean firstPlay = true;
+
     public static MainFragment createInstance(String intentLiveId) {
         Logger.d(TAG, "createInstance");
         Bundle args = new Bundle();
@@ -193,17 +195,6 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
         binding.mainLiveDrawer.post(() -> {
             RecommendModel.getInstance().getNext();
         });
-        TaskHelper.exec(new TaskHelper.Task() {
-            @Override
-            public void execute() throws Exception {
-
-            }
-
-            @Override
-            public void callback(Exception e) {
-                binding.tvSdkLoading.setVisibility(View.GONE);
-            }
-        }, 0, 2000);
     }
 
     @Override
@@ -256,6 +247,11 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
         }
         if (ChangedKeys.CHANGED_REQUEST_PLAY.equals(key)) {
             if (data instanceof ModelLive.Item) {
+                if (firstPlay) {
+                    firstPlay = false;
+                    binding.layoutGuideView.open();
+                }
+                hideLoading();
                 ModelLive.Item item = (ModelLive.Item) data;
                 RecommendModel.getInstance().addHistory(item, true);
                 reqUpdateLive(item);
