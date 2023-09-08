@@ -5,7 +5,6 @@
     android:id="@+id/search_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#e6161823"
     android:scrollbars="none"
     app:focusOutEnd="false"
     app:focusOutFront="false"
@@ -23,6 +22,7 @@
             android:id="@+id/ffl_search_input"
             android:layout_width="@dimen/drawer_menu_width"
             android:layout_height="match_parent"
+            android:background="#e6161823"
             app:layout_constraintLeft_toLeftOf="parent"
             app:specified_focus_id="@id/search_keyboard">
 

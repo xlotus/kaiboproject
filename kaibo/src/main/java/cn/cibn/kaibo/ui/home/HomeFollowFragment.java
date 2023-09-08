@@ -155,6 +155,7 @@ public class HomeFollowFragment extends BaseStackFragment<FragmentHomeFollowBind
         }
         if (ChangedKeys.CHANGED_LOGIN_SUCCESS.equals(key)) {
             updateView();
+            reqFollowList(PAGE_FIRST);
             return;
         }
         super.onListenerChange(key, data);

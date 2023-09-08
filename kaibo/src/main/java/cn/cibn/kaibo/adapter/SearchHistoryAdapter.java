@@ -11,13 +11,10 @@ import androidx.recyclerview.widget.DiffUtil;
 import com.tv.lib.core.Logger;
 import com.tv.lib.frame.adapter.ListBindingAdapter;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import cn.cibn.kaibo.databinding.ItemSearchHistoryBinding;
-import cn.cibn.kaibo.model.ModelAnchor;
+import cn.cibn.kaibo.db.SearchHistory;
 
-public class SearchHistoryAdapter extends ListBindingAdapter<String, ItemSearchHistoryBinding> {
+public class SearchHistoryAdapter extends ListBindingAdapter<SearchHistory, ItemSearchHistoryBinding> {
     private static final String TAG = "VideoListAdapter";
 
     private View lastSelectedView = null;
@@ -33,8 +30,8 @@ public class SearchHistoryAdapter extends ListBindingAdapter<String, ItemSearchH
     }
 
     @Override
-    public void onBindViewHolder(String item, ItemSearchHistoryBinding binding, int position) {
-        binding.tvSearchHistory.setText(item);
+    public void onBindViewHolder(SearchHistory item, ItemSearchHistoryBinding binding, int position) {
+        binding.tvSearchHistory.setText(item.getHistory());
         if (position == 0) {
             lastSelectedView = binding.getRoot();
         }
@@ -56,16 +53,16 @@ public class SearchHistoryAdapter extends ListBindingAdapter<String, ItemSearchH
         }
     }
 
-    private static class HistoryDiffCallback extends DiffUtil.ItemCallback<String> {
+    private static class HistoryDiffCallback extends DiffUtil.ItemCallback<SearchHistory> {
 
         @Override
-        public boolean areItemsTheSame(@NonNull String oldItem, @NonNull String newItem) {
+        public boolean areItemsTheSame(@NonNull SearchHistory oldItem, @NonNull SearchHistory newItem) {
             return oldItem == newItem;
         }
 
         @SuppressLint("DiffUtilEquals")
         @Override
-        public boolean areContentsTheSame(@NonNull String oldItem, @NonNull String newItem) {
+        public boolean areContentsTheSame(@NonNull SearchHistory oldItem, @NonNull SearchHistory newItem) {
             return oldItem.equals(newItem);
         }
     }

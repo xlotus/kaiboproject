@@ -131,4 +131,13 @@ public class LiveMethod extends BaseMethod {
         params.put("type", String.valueOf(type));
         return doGet(URL_REQ_CANCEL_GIVE, params, String.class);
     }
+
+    public ModelWrapper<ModelLive> reqSearch(String key, int page, int limit) {
+        Map<String, String> params = new HashMap<>();
+        params.put("access_token", UserManager.getInstance().getToken());
+        params.put("limit", String.valueOf(limit));
+        params.put("page", String.valueOf(page));;
+        params.put("keywork", key);
+        return doGet(URL_RECOMMEND, params, ModelLive.class);
+    }
 }

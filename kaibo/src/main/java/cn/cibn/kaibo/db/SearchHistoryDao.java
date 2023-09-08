@@ -9,7 +9,7 @@ import java.util.List;
 
 @Dao
 public interface SearchHistoryDao {
-    @Query("SELECT * from 'search_history'")
+    @Query("SELECT * from 'search_history' order by id DESC")
     List<SearchHistory> getAll();
 
     @Insert
@@ -23,4 +23,7 @@ public interface SearchHistoryDao {
 
     @Query("SELECT count(*) from search_history where history=:key")
     int existCount(String key);
+
+    @Query("delete from 'search_history' where history=:key")
+    void deleteByKey(String key);
 }

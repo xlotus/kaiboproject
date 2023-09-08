@@ -12,8 +12,9 @@ import com.tv.lib.core.Logger;
 import com.tv.lib.frame.adapter.ListBindingAdapter;
 
 import cn.cibn.kaibo.databinding.ItemSearchGuessBinding;
+import cn.cibn.kaibo.model.ModelGuess;
 
-public class SearchGuessAdapter extends ListBindingAdapter<String, ItemSearchGuessBinding> {
+public class SearchGuessAdapter extends ListBindingAdapter<ModelGuess.Item, ItemSearchGuessBinding> {
     private static final String TAG = "VideoListAdapter";
 
     private View lastSelectedView = null;
@@ -29,8 +30,8 @@ public class SearchGuessAdapter extends ListBindingAdapter<String, ItemSearchGue
     }
 
     @Override
-    public void onBindViewHolder(String item, ItemSearchGuessBinding binding, int position) {
-        binding.tvSearchGuess.setText(item);
+    public void onBindViewHolder(ModelGuess.Item item, ItemSearchGuessBinding binding, int position) {
+        binding.tvSearchGuess.setText(item.getKey());
         if (position == 0) {
             lastSelectedView = binding.getRoot();
         }
@@ -52,16 +53,16 @@ public class SearchGuessAdapter extends ListBindingAdapter<String, ItemSearchGue
         }
     }
 
-    private static class GuessDiffCallback extends DiffUtil.ItemCallback<String> {
+    private static class GuessDiffCallback extends DiffUtil.ItemCallback<ModelGuess.Item> {
 
         @Override
-        public boolean areItemsTheSame(@NonNull String oldItem, @NonNull String newItem) {
+        public boolean areItemsTheSame(@NonNull ModelGuess.Item oldItem, @NonNull ModelGuess.Item newItem) {
             return oldItem == newItem;
         }
 
         @SuppressLint("DiffUtilEquals")
         @Override
-        public boolean areContentsTheSame(@NonNull String oldItem, @NonNull String newItem) {
+        public boolean areContentsTheSame(@NonNull ModelGuess.Item oldItem, @NonNull ModelGuess.Item newItem) {
             return oldItem.equals(newItem);
         }
     }

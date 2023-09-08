@@ -36,7 +36,10 @@ import cn.cibn.kaibo.change.ChangedKeys;
 import cn.cibn.kaibo.databinding.FragmentSearchBinding;
 import cn.cibn.kaibo.db.AppDatabase;
 import cn.cibn.kaibo.db.SearchHistory;
+import cn.cibn.kaibo.model.ModelGuess;
 import cn.cibn.kaibo.model.ModelLive;
+import cn.cibn.kaibo.model.ModelWrapper;
+import cn.cibn.kaibo.network.LiveMethod;
 import cn.cibn.kaibo.ui.BaseStackFragment;
 import cn.cibn.kaibo.ui.video.VideoListDataSource;
 import cn.cibn.kaibo.ui.widget.FocusFrameLayout;
@@ -110,10 +113,10 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
                     resultAdapter.notifyDataSetChanged();
                 }
 
-                subBinding.searchRoot.smoothScrollTo(Utils.getScreenWidth(ObjectStore.getContext()), 0);
-                subBinding.recyclerSearchResult.post(() -> {
-                    subBinding.recyclerSearchResult.requestFocus();
-                });
+//                subBinding.searchRoot.smoothScrollTo(Utils.getScreenWidth(ObjectStore.getContext()), 0);
+//                subBinding.recyclerSearchResult.post(() -> {
+//                    subBinding.recyclerSearchResult.requestFocus();
+//                });
             }
         });
         if (playerViewModel != null) {
@@ -243,19 +246,22 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
 
     private void initSearchHistoryView() {
         historyAdapter = new SearchHistoryAdapter();
-        historyAdapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<String>() {
+        historyAdapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<SearchHistory>() {
             @Override
-            public void onItemClick(String item) {
-                reqSearch(item);
+            public void onItemClick(SearchHistory item) {
+                ModelGuess.Item key = new ModelGuess.Item();
+                key.setKey(item.getHistory());
+                key.setPinyin(item.getPinyin());
+                reqSearch(key);
             }
         });
     }
 
     private void initSearchGuessView() {
         guessAdapter = new SearchGuessAdapter();
-        guessAdapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<String>() {
+        guessAdapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<ModelGuess.Item>() {
             @Override
-            public void onItemClick(String item) {
+            public void onItemClick(ModelGuess.Item item) {
                 reqSearch(item);
             }
         });
@@ -304,6 +310,8 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
 
     private void reqSearchNames() {
         TaskHelper.exec(new TaskHelper.Task() {
+            ModelWrapper<ModelGuess> model;
+
             @Override
             public void execute() throws Exception {
 
@@ -311,34 +319,38 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
 
             @Override
             public void callback(Exception e) {
-                List<String> list = new ArrayList<>();
+                List<ModelGuess.Item> list = new ArrayList<>();
                 for (int i = 0; i < 40; i++) {
-                    list.add("Guess " + i);
+                    ModelGuess.Item item = new ModelGuess.Item();
+                    item.setKey("Guess" + i);
+                    item.setPinyin("sh");
+                    list.add(item);
                 }
                 guessAdapter.submitList(list);
+                reqSearch(list.get(0));
             }
         });
     }
 
-    private void reqSearch(String key) {
-        subBinding.tvResultTitleKey.setText("\"@" + key + "\"");
+    private void reqSearch(ModelGuess.Item key) {
+        subBinding.tvResultTitleKey.setText("\"@" + key.getKey() + "\"");
         showResult();
-        searchVideoSource.setKey(key);
+        searchVideoSource.setKey(key.getPinyin());
         searchVideoSource.reqLiveList();
         TaskHelper.exec(new TaskHelper.Task() {
             @Override
             public void execute() throws Exception {
-                int count = AppDatabase.getInstance(mContext).searchHistoryDao().existCount(key);
-                if (count < 1) {
-                    SearchHistory sh = new SearchHistory();
-                    sh.setHistory(key);
-                    AppDatabase.getInstance(mContext).searchHistoryDao().insert(sh);
-                }
+                AppDatabase.getInstance(mContext).searchHistoryDao().deleteByKey(key.getKey());
+
+                SearchHistory sh = new SearchHistory();
+                sh.setHistory(key.getKey());
+                sh.setPinyin(key.getPinyin());
+                AppDatabase.getInstance(mContext).searchHistoryDao().insert(sh);
             }
 
             @Override
             public void callback(Exception e) {
-
+                updateHistoryData();
             }
         });
     }
@@ -361,23 +373,23 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
         ViewGroup.LayoutParams lp = subBinding.fflSearchMiddle.getLayoutParams();
         lp.width = Utils.getScreenWidth(ObjectStore.getContext()) - ObjectStore.getContext().getResources().getDimensionPixelSize(R.dimen.drawer_menu_width);
         subBinding.fflSearchMiddle.setLayoutParams(lp);
+        updateHistoryData();
+    }
+
+    private void updateHistoryData() {
         TaskHelper.exec(new TaskHelper.Task() {
-            List<String> historyList;
+            List<SearchHistory> historyList;
 
             @Override
             public void execute() throws Exception {
-                historyList = new ArrayList<>();
-                List<SearchHistory> list = AppDatabase.getInstance(mContext).searchHistoryDao().getAll();
-                if (list != null && list.size() > 0) {
-                    for (int i = 0; i < list.size(); i++) {
-                        historyList.add(list.get(i).getHistory());
-                    }
-                }
+                historyList = AppDatabase.getInstance(mContext).searchHistoryDao().getAll();
             }
 
             @Override
             public void callback(Exception e) {
-                historyAdapter.submitList(historyList);
+                if (historyAdapter != null && historyList != null) {
+                    historyAdapter.submitList(historyList);
+                }
             }
         });
     }
@@ -411,26 +423,28 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
 
         @Override
         public void reqLiveList() {
-            ModelLive live = new ModelLive();
             TaskHelper.exec(new TaskHelper.Task() {
+                ModelWrapper<ModelLive> model;
                 @Override
                 public void execute() throws Exception {
-
-                    List<ModelLive.Item> list = new ArrayList<>();
-                    for (int i = 0; i < 10; i++) {
-                        ModelLive.Item item = new ModelLive.Item();
-                        item.setId("11");
-                        item.setTitle("Video " + i);
-                        item.setBack_img("https://img.cbnlive.cn/web/uploads/image/store_1/bd3ecde03cc241c818fccccffeac9a3e3528809e.jpg");
-                        item.setPlay_addr("http://1500005830.vod2.myqcloud.com/43843ec0vodtranscq1500005830/3afba03a387702294394228636/adp.10.m3u8");
-                        list.add(item);
-                    }
-                    live.setList(list);
+                    model = LiveMethod.getInstance().reqSearch(key, 1, 10);
+//                    List<ModelLive.Item> list = new ArrayList<>();
+//                    for (int i = 0; i < 10; i++) {
+//                        ModelLive.Item item = new ModelLive.Item();
+//                        item.setId("11");
+//                        item.setTitle("Video " + i);
+//                        item.setBack_img("https://img.cbnlive.cn/web/uploads/image/store_1/bd3ecde03cc241c818fccccffeac9a3e3528809e.jpg");
+//                        item.setPlay_addr("http://1500005830.vod2.myqcloud.com/43843ec0vodtranscq1500005830/3afba03a387702294394228636/adp.10.m3u8");
+//                        list.add(item);
+//                    }
+//                    live.setList(list);
                 }
 
                 @Override
                 public void callback(Exception e) {
-                    updateLiveList(live);
+                    if (model != null && model.isSuccess() && model.getData() != null) {
+                        updateLiveList(model.getData());
+                    }
                 }
             });
         }
