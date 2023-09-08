@@ -45,6 +45,7 @@ public class MenuItemView extends LinearLayout implements View.OnFocusChangeList
     }
 
     private void initView(Context context, AttributeSet attrs) {
+        setFocusable(true);
         setGravity(Gravity.CENTER);
         setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
         LayoutInflater.from(context).inflate(R.layout.layout_menu_item, this, true);

@@ -130,7 +130,7 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
                 public void run() {
                     binding.btnRecommend.requestFocus();
                 }
-            }, 10);
+            }, 100);
         }
 
         List<ModelLive.Item> itemList = new ArrayList<>();

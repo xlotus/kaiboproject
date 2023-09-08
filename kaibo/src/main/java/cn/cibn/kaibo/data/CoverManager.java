@@ -49,6 +49,7 @@ public class CoverManager implements Handler.Callback {
         this.handler = new Handler(this);
         player = new PlayerWrapper(context);
         player.setPlayerView(cloudVideoView);
+        player.getVodPlayer().setAudioPlayoutVolume(0);
     }
 
     public void destroy() {
