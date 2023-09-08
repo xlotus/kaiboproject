@@ -19,7 +19,12 @@
             tools:deviceIds="tv"
             tools:ignore="MergeRootFrame" />
 
-        <include layout="@layout/fragment_operate_guide"/>
+<!--        <include layout="@layout/fragment_operate_guide"/>-->
+
+        <cn.cibn.kaibo.ui.home.GuideView
+            android:id="@+id/layout_guide_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
         <FrameLayout
             android:id="@+id/menu_container"
