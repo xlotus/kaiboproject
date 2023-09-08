@@ -14,6 +14,8 @@ import com.tv.lib.frame.adapter.ListBindingAdapter;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.cibn.kaibo.R;
+import cn.cibn.kaibo.data.ConfigModel;
 import cn.cibn.kaibo.databinding.ItemVersionHistoryBinding;
 import cn.cibn.kaibo.model.ModelVersion;
 
@@ -70,6 +72,7 @@ public class VersionHistoryAdapter extends ListBindingAdapter<ModelVersion.Item,
 
     private void setStyle(ModelVersion.Item data, ItemVersionHistoryBinding binding, boolean hasFocus) {
         if (hasFocus) {
+            binding.bgVersionHistoryFocused.setBackgroundResource(ConfigModel.getInstance().isGrayMode() ? R.drawable.bg_recyclerview_focus_gray : R.drawable.bg_recyclerview_focus);
             binding.bgVersionHistoryFocused.setVisibility(View.VISIBLE);
             binding.bgVersionHistoryN.setVisibility(View.GONE);
         } else {

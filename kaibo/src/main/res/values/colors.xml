@@ -30,4 +30,6 @@
     <color name="menu_item_bg_p">#33FFB0B0</color>
     <color name="menu_item_border_n">#66FFFFFF</color>
     <color name="menu_item_border_p">#FFFF1933</color>
+
+    <color name="color_mode_gray">@color/color_cccccc</color>
 </resources>

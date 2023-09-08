@@ -6,6 +6,7 @@ import android.widget.Button;
 import androidx.fragment.app.FragmentManager;
 
 import cn.cibn.kaibo.R;
+import cn.cibn.kaibo.data.ConfigModel;
 import cn.cibn.kaibo.model.ModelLive;
 import cn.cibn.kaibo.player.VideoType;
 import cn.cibn.kaibo.ui.base.BaseDialog;
@@ -37,6 +38,13 @@ public class VideoOperateDialog extends BaseDialog implements View.OnClickListen
         btnLike = parent.findViewById(R.id.btn_like);
         btnFollow.setOnClickListener(this);
         btnLike.setOnClickListener(this);
+        if (ConfigModel.getInstance().isGrayMode()) {
+            btnFollow.setBackgroundResource(R.drawable.bg_video_operate_selector_gray);
+            btnLike.setBackgroundResource(R.drawable.bg_video_operate_selector_gray);
+        } else {
+            btnFollow.setBackgroundResource(R.drawable.bg_video_operate_selector);
+            btnLike.setBackgroundResource(R.drawable.bg_video_operate_selector);
+        }
         updateView();
     }
 

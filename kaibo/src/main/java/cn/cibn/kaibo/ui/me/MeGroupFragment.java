@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.change.ChangedKeys;
+import cn.cibn.kaibo.data.ConfigModel;
 import cn.cibn.kaibo.databinding.FragmentMeBinding;
 import cn.cibn.kaibo.databinding.FragmentMeGroupBinding;
 import cn.cibn.kaibo.model.ModelAnchor;
@@ -79,12 +80,24 @@ public class MeGroupFragment extends BaseStackFragment<FragmentMeGroupBinding> i
 
     @Override
     protected void updateView() {
+        if (subBinding == null) {
+            return;
+        }
         if (page == 0) {
             subBinding.btnPageFollow.requestFocus();
             showFollow();
         } else {
             subBinding.btnPageHistory.requestFocus();
             showHistory();
+        }
+        if (ConfigModel.getInstance().isGrayMode()) {
+            subBinding.btnGoHome.setBackgroundResource(R.drawable.bg_menu_item_search_selector_gray);
+            subBinding.btnPageFollow.setBackgroundResource(R.drawable.bg_recyclerview_item_gray);
+            subBinding.btnPageHistory.setBackgroundResource(R.drawable.bg_recyclerview_item_gray);
+        } else {
+            subBinding.btnGoHome.setBackgroundResource(R.drawable.bg_menu_item_search_selector);
+            subBinding.btnPageFollow.setBackgroundResource(R.drawable.bg_recyclerview_item);
+            subBinding.btnPageHistory.setBackgroundResource(R.drawable.bg_recyclerview_item);
         }
     }
 

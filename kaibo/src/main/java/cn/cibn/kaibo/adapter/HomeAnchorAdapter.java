@@ -36,6 +36,7 @@ public class HomeAnchorAdapter extends ListBindingAdapter<ModelAnchor.Item, Item
 
     @Override
     public void onBindViewHolder(ModelAnchor.Item item, ItemHomeAnchorBinding binding, int position) {
+        binding.getRoot().setBackgroundResource(ConfigModel.getInstance().isGrayMode() ? R.drawable.bg_home_anchor_selector_gray : R.drawable.bg_home_anchor_selector);
         String img = item.getCover_img();
         ImageLoadHelper.loadCircleImage(binding.ivAnchorCover, img, ConfigModel.getInstance().isGrayMode());
         binding.tvAnchorName.setText("@" + item.getName());

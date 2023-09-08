@@ -102,4 +102,16 @@ public class MenuItemView extends LinearLayout implements View.OnFocusChangeList
             tvName.setText(menuName);
         }
     }
+
+    public void setMenuNameColor(int colorRes) {
+        if (tvName != null) {
+            tvName.setTextColor(getResources().getColorStateList(colorRes));
+        }
+    }
+
+    public void setMenuIcon(int iconRes) {
+        if (viewIcon != null) {
+            viewIcon.setBackgroundResource(iconRes);
+        }
+    }
 }

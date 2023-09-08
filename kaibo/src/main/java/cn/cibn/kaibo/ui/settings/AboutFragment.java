@@ -4,6 +4,7 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 
+import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.data.ConfigModel;
 import cn.cibn.kaibo.databinding.FragmentAboutBinding;
 import cn.cibn.kaibo.model.ModelConfig;
@@ -33,6 +34,7 @@ public class AboutFragment extends KbBaseFragment<FragmentAboutBinding> {
         ModelConfig config = ConfigModel.getInstance().getModelConfig();
         binding.tvAboutInfo.setText(config != null && !TextUtils.isEmpty(config.getAbout()) ?
                 Html.fromHtml(config.getAbout()) : DEFAULT_ABOUT);
+        updateView();
     }
 
     @Override
@@ -42,7 +44,14 @@ public class AboutFragment extends KbBaseFragment<FragmentAboutBinding> {
 
     @Override
     protected void updateView() {
-
+        if (binding == null) {
+            return;
+        }
+        if (ConfigModel.getInstance().isGrayMode()) {
+            binding.ivLauncher.setImageResource(R.drawable.ic_launcher_210_gray);
+        } else {
+            binding.ivLauncher.setImageResource(R.drawable.ic_launcher_210);
+        }
     }
 
     @Override

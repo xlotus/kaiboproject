@@ -19,6 +19,8 @@ import com.tv.lib.frame.adapter.ListBindingAdapter;
 
 import java.util.List;
 
+import cn.cibn.kaibo.R;
+import cn.cibn.kaibo.data.ConfigModel;
 import cn.cibn.kaibo.databinding.FragmentFeedbackBinding;
 import cn.cibn.kaibo.databinding.ItemFeedbackBinding;
 import cn.cibn.kaibo.model.ModelOption;
@@ -152,6 +154,7 @@ public class FeedbackFragment extends KbBaseFragment<FragmentFeedbackBinding> {
 
         @Override
         public void onBindViewHolder(ModelOption data, ItemFeedbackBinding binding, int position) {
+            binding.getRoot().setBackgroundResource(ConfigModel.getInstance().isGrayMode() ? R.drawable.shape_14_1affffff_selector_gray : R.drawable.shape_4_1affffff_selector);
             binding.tvFeedback.setText(data.getTitle());
             if (position == 0) {
                 lastSelectedView = binding.getRoot();

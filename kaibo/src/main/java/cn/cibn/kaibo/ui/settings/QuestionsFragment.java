@@ -15,6 +15,7 @@ import com.tv.lib.frame.adapter.ListBindingAdapter;
 import java.util.List;
 
 import cn.cibn.kaibo.R;
+import cn.cibn.kaibo.data.ConfigModel;
 import cn.cibn.kaibo.databinding.FragmentQuestionsBinding;
 import cn.cibn.kaibo.databinding.ItemProblemBinding;
 import cn.cibn.kaibo.model.ModelQuestions;
@@ -147,7 +148,11 @@ public class QuestionsFragment extends KbBaseFragment<FragmentQuestionsBinding> 
 
         private void setStyle(ItemProblemBinding binding, boolean focus, boolean opened) {
             if (focus) {
-                binding.tvProblemTitle.setBackgroundResource(opened ? R.drawable.shape_top4_p : R.drawable.shape_4_p);
+                if (ConfigModel.getInstance().isGrayMode()) {
+                    binding.tvProblemTitle.setBackgroundResource(opened ? R.drawable.shape_top4_p_gray : R.drawable.shape_4_p_gray);
+                } else {
+                    binding.tvProblemTitle.setBackgroundResource(opened ? R.drawable.shape_top4_p : R.drawable.shape_4_p);
+                }
             } else {
                 binding.tvProblemTitle.setBackgroundColor(Color.TRANSPARENT);
             }

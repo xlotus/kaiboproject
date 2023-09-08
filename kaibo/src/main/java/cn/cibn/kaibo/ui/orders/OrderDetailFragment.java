@@ -26,7 +26,7 @@ public class OrderDetailFragment extends KbBaseFragment<FragmentOrderDetailBindi
 
     @Override
     protected void initView() {
-
+        updateView();
     }
 
     @Override
@@ -36,6 +36,9 @@ public class OrderDetailFragment extends KbBaseFragment<FragmentOrderDetailBindi
 
     @Override
     protected void updateView() {
+        if (binding == null) {
+            return;
+        }
         binding.tvOrderDetailTitle.setText(title);
         binding.tvQrcodeName.setText(qrcodeTitle);
         if (order != null) {
@@ -43,6 +46,15 @@ public class OrderDetailFragment extends KbBaseFragment<FragmentOrderDetailBindi
             binding.tvGoodsNum.setText("x" + order.getNum());
             binding.tvGoodsPrice.setText(order.getPrice());
             ImageLoadHelper.loadImage(binding.ivGoodsCover, order.getCover_pic(), (int) mContext.getResources().getDimension(R.dimen.dp_2), ConfigModel.getInstance().isGrayMode());
+        }
+        if (ConfigModel.getInstance().isGrayMode()) {
+            binding.tvGoodsPriceSign.setTextColor(getResources().getColor(R.color.color_mode_gray));
+            binding.tvGoodsPrice.setTextColor(getResources().getColor(R.color.color_mode_gray));
+            binding.bgOrderQrcode.setBackgroundResource(R.drawable.bg_shop_qrcode_gray);
+        } else {
+            binding.tvGoodsPriceSign.setTextColor(0xFF1933);
+            binding.tvGoodsPrice.setTextColor(0xFF1933);
+            binding.bgOrderQrcode.setBackgroundResource(R.drawable.bg_shop_qrcode);
         }
     }
 

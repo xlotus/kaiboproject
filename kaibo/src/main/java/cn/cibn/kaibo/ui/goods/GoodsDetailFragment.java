@@ -104,6 +104,20 @@ public class GoodsDetailFragment extends KbBaseFragment<FragmentGoodsDetailBindi
     @Override
     protected void updateView() {
         Logger.d(TAG, "updateView");
+        if (binding == null) {
+            return;
+        }
+        boolean isGrayMode = ConfigModel.getInstance().isGrayMode();
+        if (isGrayMode) {
+            binding.ivGoodsQrcode.setBackgroundResource(R.drawable.bg_qrcode_goods_gray);
+            binding.tvGoodsPrice.setTextColor(getResources().getColor(R.color.color_mode_gray));
+            binding.tvGoodsPriceSign.setTextColor(getResources().getColor(R.color.color_mode_gray));
+        } else {
+            binding.ivGoodsQrcode.setBackgroundResource(R.drawable.bg_qrcode_goods);
+            binding.tvGoodsPrice.setTextColor(0xFF1933);
+            binding.tvGoodsPriceSign.setTextColor(0xFF1933);
+        }
+
         if (goods != null) {
             binding.tvGoodsName.setText(goods.getName());
             binding.tvGoodsPrice.setText(goods.getPrice());

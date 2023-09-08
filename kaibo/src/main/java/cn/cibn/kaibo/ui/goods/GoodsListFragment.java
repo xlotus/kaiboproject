@@ -106,6 +106,7 @@ public class GoodsListFragment extends KbBaseFragment<FragmentGoodsListBinding> 
             playerViewModel.playingVideo.observe(getViewLifecycleOwner(), playingVideoObserver);
             updateLiveItem(playerViewModel.playingVideo.getValue());
         }
+        updateView();
     }
 
     @Override

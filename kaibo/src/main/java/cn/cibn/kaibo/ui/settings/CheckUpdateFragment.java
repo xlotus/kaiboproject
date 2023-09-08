@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.core.view.GravityCompat;
 
 import cn.cibn.kaibo.R;
+import cn.cibn.kaibo.data.ConfigModel;
 import cn.cibn.kaibo.databinding.FragmentCheckUpdateBinding;
 import cn.cibn.kaibo.ui.KbBaseFragment;
 
@@ -33,6 +34,7 @@ public class CheckUpdateFragment extends KbBaseFragment<FragmentCheckUpdateBindi
 
         versionHistoryFragment = VersionHistoryFragment.createInstance();
         getChildFragmentManager().beginTransaction().replace(R.id.version_history_container, versionHistoryFragment).commit();
+        updateView();
     }
 
     @Override
@@ -42,7 +44,20 @@ public class CheckUpdateFragment extends KbBaseFragment<FragmentCheckUpdateBindi
 
     @Override
     protected void updateView() {
-
+        if (binding == null) {
+            return;
+        }
+        if (ConfigModel.getInstance().isGrayMode()) {
+            binding.ivLauncher.setImageResource(R.drawable.ic_launcher_210_gray);
+            binding.btnUpdateNow.setBackgroundResource(R.drawable.shape_22_33ffffff_selector_gray);
+            binding.btnHistoryVersions.setBackgroundResource(R.drawable.shape_22_33ffffff_selector_gray);
+            binding.btnClearCache.setBackgroundResource(R.drawable.shape_22_33ffffff_selector_gray);
+        } else {
+            binding.ivLauncher.setImageResource(R.drawable.ic_launcher_210);
+            binding.btnUpdateNow.setBackgroundResource(R.drawable.shape_22_33ffffff_selector);
+            binding.btnHistoryVersions.setBackgroundResource(R.drawable.shape_22_33ffffff_selector);
+            binding.btnClearCache.setBackgroundResource(R.drawable.shape_22_33ffffff_selector);
+        }
     }
 
     @Override

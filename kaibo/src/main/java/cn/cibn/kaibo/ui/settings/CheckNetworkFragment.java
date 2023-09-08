@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import com.tv.lib.core.lang.thread.TaskHelper;
 
 import cn.cibn.kaibo.R;
+import cn.cibn.kaibo.data.ConfigModel;
 import cn.cibn.kaibo.databinding.FragmentCheckNetworkBinding;
 import cn.cibn.kaibo.ui.KbBaseFragment;
 
@@ -34,6 +35,7 @@ public class CheckNetworkFragment extends KbBaseFragment<FragmentCheckNetworkBin
     protected void initView() {
         handler = new Handler(this);
         binding.btnCheckNow.setOnClickListener(this);
+        updateView();
     }
 
     @Override
@@ -43,7 +45,14 @@ public class CheckNetworkFragment extends KbBaseFragment<FragmentCheckNetworkBin
 
     @Override
     protected void updateView() {
-
+        if (binding == null) {
+            return;
+        }
+        if (ConfigModel.getInstance().isGrayMode()) {
+            binding.btnCheckNow.setBackgroundResource(R.drawable.shape_14_1affffff_selector_gray);
+        } else {
+            binding.btnCheckNow.setBackgroundResource(R.drawable.shape_14_1affffff_selector);
+        }
     }
 
     @Override

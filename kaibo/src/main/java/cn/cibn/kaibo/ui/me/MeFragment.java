@@ -5,6 +5,7 @@ import android.view.View;
 
 import java.util.ArrayList;
 
+import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.UserManager;
 import cn.cibn.kaibo.change.ChangedKeys;
 import cn.cibn.kaibo.data.ConfigModel;
@@ -49,6 +50,9 @@ public class MeFragment extends BaseStackFragment<FragmentMeBinding> implements 
 
     @Override
     protected void updateView() {
+        if (binding == null) {
+            return;
+        }
         if (UserManager.getInstance().isLogin()) {
             subBinding.layoutUserContent.setVisibility(View.VISIBLE);
             subBinding.stubLoginView.setVisibility(View.GONE);
@@ -99,6 +103,32 @@ public class MeFragment extends BaseStackFragment<FragmentMeBinding> implements 
             if (loginView != null) {
                 loginView.login();
             }
+        }
+
+        if (ConfigModel.getInstance().isGrayMode()) {
+            subBinding.btnLogout.setBackgroundResource(R.drawable.bg_video_operate_selector_gray);
+            subBinding.btnMyFollow.setBackgroundResource(R.drawable.bg_me_btn_selector_gray);
+            subBinding.btnMyHistory.setBackgroundResource(R.drawable.bg_me_btn_selector_gray);
+            subBinding.viewIconFollow.setBackgroundResource(R.drawable.me_follow_star_gray);
+            subBinding.viewIconHistory.setBackgroundResource(R.drawable.me_video_history_gray);
+            subBinding.layoutOrderNeedPay.setBackgroundResource(R.drawable.bg_recyclerview_item_gray);
+            subBinding.layoutOrderNeedSend.setBackgroundResource(R.drawable.bg_recyclerview_item_gray);
+            subBinding.layoutOrderNeedReceive.setBackgroundResource(R.drawable.bg_recyclerview_item_gray);
+            subBinding.layoutOrderFinished.setBackgroundResource(R.drawable.bg_recyclerview_item_gray);
+            subBinding.layoutOrderService.setBackgroundResource(R.drawable.bg_recyclerview_item_gray);
+            subBinding.layoutSettings.setBackgroundResource(R.drawable.bg_recyclerview_item_gray);
+        } else {
+            subBinding.btnLogout.setBackgroundResource(R.drawable.bg_video_operate_selector);
+            subBinding.btnMyFollow.setBackgroundResource(R.drawable.bg_me_btn_selector);
+            subBinding.btnMyHistory.setBackgroundResource(R.drawable.bg_me_btn_selector);
+            subBinding.viewIconFollow.setBackgroundResource(R.drawable.me_follow_star);
+            subBinding.viewIconHistory.setBackgroundResource(R.drawable.me_video_history);
+            subBinding.layoutOrderNeedPay.setBackgroundResource(R.drawable.bg_recyclerview_item);
+            subBinding.layoutOrderNeedSend.setBackgroundResource(R.drawable.bg_recyclerview_item);
+            subBinding.layoutOrderNeedReceive.setBackgroundResource(R.drawable.bg_recyclerview_item);
+            subBinding.layoutOrderFinished.setBackgroundResource(R.drawable.bg_recyclerview_item);
+            subBinding.layoutOrderService.setBackgroundResource(R.drawable.bg_recyclerview_item);
+            subBinding.layoutSettings.setBackgroundResource(R.drawable.bg_recyclerview_item);
         }
     }
 

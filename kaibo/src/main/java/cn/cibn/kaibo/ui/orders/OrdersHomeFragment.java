@@ -16,6 +16,7 @@ import java.util.List;
 import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.adapter.MenuAdapter;
 import cn.cibn.kaibo.adapter.OrderAdapter;
+import cn.cibn.kaibo.data.ConfigModel;
 import cn.cibn.kaibo.databinding.FragmentOrdersHomeBinding;
 import cn.cibn.kaibo.model.MenuItem;
 import cn.cibn.kaibo.model.ModelOrder;
@@ -107,11 +108,19 @@ public class OrdersHomeFragment extends BaseStackFragment<FragmentOrdersHomeBind
                 }
             }
         });
+        updateView();
     }
 
     @Override
     protected void updateView() {
-
+        if (subBinding == null) {
+            return;
+        }
+        if (ConfigModel.getInstance().isGrayMode()) {
+            subBinding.btnGoHome.setBackgroundResource(R.drawable.bg_menu_item_search_selector_gray);
+        } else {
+            subBinding.btnGoHome.setBackgroundResource(R.drawable.bg_menu_item_search_selector);
+        }
     }
 
     @Override

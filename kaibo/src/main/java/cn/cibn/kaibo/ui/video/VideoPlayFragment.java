@@ -88,7 +88,7 @@ public class VideoPlayFragment extends KbBaseFragment<FragmentVideoPlayBinding> 
             return;
         }
         Logger.d(TAG, "updateView start");
-        ImageLoadHelper.loadResource(binding.ivQrCodeBg, ConfigModel.getInstance().isGrayMode() ? R.drawable.bg_qrcode_live : R.drawable.bg_qrcode_live);
+        ImageLoadHelper.loadResource(binding.ivQrCodeBg, ConfigModel.getInstance().isGrayMode() ? R.drawable.bg_qrcode_live_gray : R.drawable.bg_qrcode_live);
         ImageLoadHelper.loadResource(binding.ivLiveLoadingCover, ConfigModel.getInstance().isGrayMode() ? R.drawable.ggshop_live_loading_gray : R.drawable.ggshop_live_loading);
         if (liveItem == null) {
             binding.layoutLiveAnchorInfo.setVisibility(View.GONE);

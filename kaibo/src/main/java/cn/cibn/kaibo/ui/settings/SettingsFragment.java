@@ -12,6 +12,7 @@ import java.util.List;
 
 import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.adapter.MenuAdapter;
+import cn.cibn.kaibo.data.ConfigModel;
 import cn.cibn.kaibo.databinding.FragmentSettingsBinding;
 import cn.cibn.kaibo.model.MenuItem;
 import cn.cibn.kaibo.ui.BaseStackFragment;
@@ -88,6 +89,9 @@ public class SettingsFragment extends BaseStackFragment<FragmentSettingsBinding>
 
     @Override
     protected void updateView() {
+        if (subBinding == null) {
+            return;
+        }
         if (page == 0) {
             showContent(checkUpdateFragment);
         } else if (page == 1){
@@ -98,6 +102,12 @@ public class SettingsFragment extends BaseStackFragment<FragmentSettingsBinding>
             showContent(aboutFragment);
         } else if (page == 4) {
             showContent(checkNetworkFragment);
+        }
+
+        if (ConfigModel.getInstance().isGrayMode()) {
+            subBinding.btnGoHome.setBackgroundResource(R.drawable.bg_menu_item_search_selector_gray);
+        } else {
+            subBinding.btnGoHome.setBackgroundResource(R.drawable.bg_menu_item_search_selector);
         }
     }
 

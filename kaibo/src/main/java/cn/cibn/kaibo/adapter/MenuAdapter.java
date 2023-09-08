@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.DiffUtil;
 import com.tv.lib.core.Logger;
 import com.tv.lib.frame.adapter.ListBindingAdapter;
 
+import cn.cibn.kaibo.R;
+import cn.cibn.kaibo.data.ConfigModel;
 import cn.cibn.kaibo.databinding.ItemMenuBinding;
 import cn.cibn.kaibo.databinding.ItemSearchHistoryBinding;
 import cn.cibn.kaibo.model.MenuItem;
@@ -33,6 +35,7 @@ public class MenuAdapter extends ListBindingAdapter<MenuItem, ItemMenuBinding> {
 
     @Override
     public void onBindViewHolder(MenuItem item, ItemMenuBinding binding, int position) {
+        binding.tvMenuName.setBackgroundResource(ConfigModel.getInstance().isGrayMode() ? R.drawable.bg_recyclerview_item_gray : R.drawable.bg_recyclerview_item);
         binding.tvMenuName.setText(item.getMenuName());
     }
 

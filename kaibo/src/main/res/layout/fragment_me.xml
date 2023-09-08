@@ -99,6 +99,7 @@
             app:layout_constraintVertical_chainStyle="packed"
             android:gravity="center">
             <View
+                android:id="@+id/view_icon_follow"
                 android:layout_width="@dimen/dp_50"
                 android:layout_height="@dimen/dp_50"
                 android:background="@drawable/me_follow_star"/>
@@ -124,6 +125,7 @@
             app:layout_constraintTop_toTopOf="@id/btn_my_follow"
             app:layout_constraintVertical_chainStyle="packed" >
             <View
+                android:id="@+id/view_icon_history"
                 android:layout_width="@dimen/dp_50"
                 android:layout_height="@dimen/dp_50"
                 android:background="@drawable/me_video_history"/>

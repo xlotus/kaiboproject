@@ -1,6 +1,7 @@
 package cn.cibn.kaibo.adapter;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,19 @@ public class OrderAdapter extends ListBindingAdapter<ModelOrder.Item, ItemOrderB
     @Override
     public void onBindViewHolder(ModelOrder.Item item, ItemOrderBinding binding, int position) {
         View itemView = binding.getRoot();
+        if (ConfigModel.getInstance().isGrayMode()) {
+            binding.btnOrderLeft.setBackgroundResource(R.drawable.bg_order_item_btn_selector_gray);
+            binding.btnOrderRight.setBackgroundResource(R.drawable.bg_order_item_btn_selector_gray);
+            binding.btnOrderLeft.setTextColor(Color.WHITE);
+            binding.btnOrderRight.setTextColor(Color.WHITE);
+            binding.tvOrderStatus.setTextColor(Color.WHITE);
+        } else {
+            binding.btnOrderLeft.setBackgroundResource(R.drawable.bg_order_item_btn_selector);
+            binding.btnOrderRight.setBackgroundResource(R.drawable.bg_order_item_btn_selector);
+            binding.btnOrderLeft.setTextColor(itemView.getResources().getColorStateList(R.color.order_btn_selector));
+            binding.btnOrderRight.setTextColor(itemView.getResources().getColorStateList(R.color.order_btn_selector));
+            binding.tvOrderStatus.setTextColor(0xFFFF3C5B);
+        }
         ImageLoadHelper.loadImage(binding.ivGoodsCover, item.getCover_pic(), (int) itemView.getResources().getDimension(R.dimen.dp_2), ConfigModel.getInstance().isGrayMode());
         binding.tvGoodsName.setText(item.getName());
         binding.tvGoodsPrice.setText(item.getPrice());

@@ -22,6 +22,7 @@ import java.util.List;
 import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.adapter.VideoListAdapter;
 import cn.cibn.kaibo.change.ChangedKeys;
+import cn.cibn.kaibo.data.ConfigModel;
 import cn.cibn.kaibo.databinding.FragmentMenuBinding;
 import cn.cibn.kaibo.model.ModelLive;
 import cn.cibn.kaibo.player.VideoType;
@@ -71,6 +72,7 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
         binding.btnRecommend.setOnClickListener(this);
         binding.btnFollow.setOnClickListener(this);
         binding.btnMe.setOnClickListener(this);
+        updateView();
     }
 
     @Override
@@ -80,7 +82,34 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
 
     @Override
     protected void updateView() {
-
+        if (binding == null) {
+            return;
+        }
+        if (ConfigModel.getInstance().isGrayMode()) {
+            binding.btnSearch.setBackgroundResource(R.drawable.bg_menu_item_search_selector_gray);
+            binding.btnRecommend.setBackgroundResource(R.drawable.bg_menu_item_selector_gray);
+            binding.btnFollow.setBackgroundResource(R.drawable.bg_menu_item_selector_gray);
+            binding.btnMe.setBackgroundResource(R.drawable.bg_menu_item_selector_gray);
+            binding.btnSearch.setMenuNameColor(R.color.menu_item_selector_gray);
+            binding.btnRecommend.setMenuNameColor(R.color.menu_item_selector_gray);
+            binding.btnFollow.setMenuNameColor(R.color.menu_item_selector_gray);
+            binding.btnMe.setMenuNameColor(R.color.menu_item_selector_gray);
+            binding.btnRecommend.setMenuIcon(R.drawable.menu_recommend_n);
+            binding.btnFollow.setMenuIcon(R.drawable.menu_follow_n);
+            binding.btnMe.setMenuIcon(R.drawable.menu_me_n);
+        } else {
+            binding.btnSearch.setBackgroundResource(R.drawable.bg_menu_item_search_selector);
+            binding.btnRecommend.setBackgroundResource(R.drawable.bg_menu_item_selector);
+            binding.btnFollow.setBackgroundResource(R.drawable.bg_menu_item_selector);
+            binding.btnMe.setBackgroundResource(R.drawable.bg_menu_item_selector);
+            binding.btnSearch.setMenuNameColor(R.color.menu_item_selector);
+            binding.btnRecommend.setMenuNameColor(R.color.menu_item_selector);
+            binding.btnFollow.setMenuNameColor(R.color.menu_item_selector);
+            binding.btnMe.setMenuNameColor(R.color.menu_item_selector);
+            binding.btnRecommend.setMenuIcon(R.drawable.menu_recommend_selector);
+            binding.btnFollow.setMenuIcon(R.drawable.menu_follow_selector);
+            binding.btnMe.setMenuIcon(R.drawable.menu_me_selector);
+        }
     }
 
     @Override
