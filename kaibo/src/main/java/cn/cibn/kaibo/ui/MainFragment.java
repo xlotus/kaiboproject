@@ -127,6 +127,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
         exitToastTranslationY = mContext.getResources().getDimension(R.dimen.dp_140);
         binding.layoutPressBackToClose.setTranslationY(exitToastTranslationY);
         initAnimator();
+        showLoading();
 
         if (playerViewModel != null) {
             playerViewModel.isInPlay.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
@@ -363,7 +364,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                 if (item != null) {
                     reqUpdateLive(item);
                 } else {
-                    SafeToast.showToast("没有更多了", Toast.LENGTH_SHORT);
+                    SafeToast.showToast(R.string.no_more, Toast.LENGTH_SHORT);
                 }
                 return true;
             }
@@ -528,7 +529,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
             public void callback(Exception e) {
                 if (model != null && (model.isSuccess() || model.getCode() == 1)) {
                     item.setFollow(1);
-                    SafeToast.showToast("关注成功", Toast.LENGTH_SHORT);
+                    SafeToast.showToast(R.string.follow_success, Toast.LENGTH_SHORT);
                 }
             }
         });
@@ -546,7 +547,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
             public void callback(Exception e) {
                 if (model != null && model.isSuccess()) {
                     item.setFollow(0);
-                    SafeToast.showToast("取消关注成功", Toast.LENGTH_SHORT);
+                    SafeToast.showToast(R.string.unfollow_success, Toast.LENGTH_SHORT);
                 }
             }
         });
@@ -565,7 +566,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                 if (model != null && model.isSuccess()) {
                     item.setGive(1);
                     playLikeAnimation();
-                    SafeToast.showToast("点赞成功", Toast.LENGTH_SHORT);
+                    SafeToast.showToast(R.string.like_success, Toast.LENGTH_SHORT);
                 }
             }
         });
@@ -583,7 +584,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
             public void callback(Exception e) {
                 if (model != null && model.isSuccess()) {
                     item.setGive(0);
-                    SafeToast.showToast("取消点赞成功", Toast.LENGTH_SHORT);
+                    SafeToast.showToast(R.string.unlike_success, Toast.LENGTH_SHORT);
                 }
             }
         });

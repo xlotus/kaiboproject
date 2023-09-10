@@ -98,7 +98,9 @@ public class CheckNetworkFragment extends KbBaseFragment<FragmentCheckNetworkBin
         binding.ivWifiStatus.setVisibility(View.VISIBLE);
         binding.ivWifiStatus.setImageResource(R.drawable.settings_net_checking);
         binding.tvWifiStatus.setVisibility(View.VISIBLE);
-        binding.tvWifiStatus.setText("正在检查……");
+        binding.tvWifiStatus.setText(R.string.network_checking);
+        binding.progressTv2wifi.setProgress(0);
+        progress = 0;
         RotateAnimation animation = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f,Animation.RELATIVE_TO_SELF, 0.5f);
         animation.setDuration(1000);
         animation.setRepeatCount(Animation.INFINITE);
@@ -120,10 +122,10 @@ public class CheckNetworkFragment extends KbBaseFragment<FragmentCheckNetworkBin
                 if (netOk) {
                     binding.progressTv2wifi.setProgress(100);
                     binding.ivWifiStatus.setImageResource(R.drawable.settings_net_ok);
-                    binding.tvWifiStatus.setText("WIFI连接正常");
+                    binding.tvWifiStatus.setText(R.string.network_wifi_ok);
                 } else {
                     binding.ivWifiStatus.setImageResource(R.drawable.settings_net_error);
-                    binding.tvWifiStatus.setText("WIFI连接异常");
+                    binding.tvWifiStatus.setText(R.string.network_wifi_fail);
                     binding.progressTv2wifi.setProgress(0);
                     binding.progressTv2wifi.setSecondaryProgress(100);
                 }

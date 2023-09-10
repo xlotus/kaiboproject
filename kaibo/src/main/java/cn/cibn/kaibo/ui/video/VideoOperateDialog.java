@@ -94,9 +94,9 @@ public class VideoOperateDialog extends BaseDialog implements View.OnClickListen
             btnLike.setVisibility(View.GONE);
         } else {
             btnLike.setVisibility(View.VISIBLE);
-            btnLike.setMenuName(liveItem.getGive() == 1 ? "已点赞" : "点赞");
+            btnLike.setMenuName(getResources().getString(liveItem.getGive() == 1 ? R.string.cancel_like : R.string.like));
         }
-        btnFollow.setText(liveItem.getFollow() == 1 ? "已关注" : "关注");
+        btnFollow.setText(getResources().getString(liveItem.getFollow() == 1 ? R.string.cancel_follow : R.string.follow));
     }
 
     public void setOpListener(VideoOpListener opListener) {

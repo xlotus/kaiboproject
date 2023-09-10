@@ -41,6 +41,7 @@ public class ModelAnchor extends BaseModel implements Serializable {
         private String name;//主播名称
         private String certification_no;//认证编号
         private int fans;//粉丝数量
+        private int follow; //关注状态
 
         public String getAnchor_id() {
             return anchor_id;
@@ -93,6 +94,14 @@ public class ModelAnchor extends BaseModel implements Serializable {
         @Override
         public int hashCode() {
             return Objects.hash(anchor_id);
+        }
+
+        public int getFollow() {
+            return follow;
+        }
+
+        public void setFollow(int follow) {
+            this.follow = follow;
         }
     }
 }

@@ -3,12 +3,15 @@ package cn.cibn.kaibo.ui.me;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.tv.lib.core.change.ChangeListenerManager;
 import com.tv.lib.core.lang.thread.TaskHelper;
+import com.tv.lib.core.utils.ui.SafeToast;
 import com.tv.lib.frame.adapter.ListBindingAdapter;
 
 import java.util.ArrayList;
@@ -22,12 +25,13 @@ import cn.cibn.kaibo.imageloader.ImageLoadHelper;
 import cn.cibn.kaibo.model.ModelAnchor;
 import cn.cibn.kaibo.model.ModelLive;
 import cn.cibn.kaibo.model.ModelWrapper;
+import cn.cibn.kaibo.network.LiveMethod;
 import cn.cibn.kaibo.network.UserMethod;
 import cn.cibn.kaibo.ui.KbBaseFragment;
 import cn.cibn.kaibo.ui.video.VideoListDataSource;
 import cn.cibn.kaibo.viewmodel.PlayerViewModel;
 
-public class AnchorFragment extends KbBaseFragment<FragmentAnchorBinding> {
+public class AnchorFragment extends KbBaseFragment<FragmentAnchorBinding> implements View.OnClickListener {
 
     private VideoListAdapter adapter;
     private AnchorVideoDataSource videoSource;
@@ -58,6 +62,7 @@ public class AnchorFragment extends KbBaseFragment<FragmentAnchorBinding> {
     @Override
     protected void initView() {
         binding.tvAnchorVideoListTitle.setText(getString(R.string.anchor_video_list_title, 0));
+        binding.btnFollow.setOnClickListener(this);
         adapter = new VideoListAdapter();
         adapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<ModelLive.Item>() {
             @Override
@@ -110,6 +115,7 @@ public class AnchorFragment extends KbBaseFragment<FragmentAnchorBinding> {
         if (this.anchor != null) {
             binding.tvAnchorName.setText("@" + anchor.getName());
             binding.tvAnchorId.setText("用户ID:" + anchor.getAnchor_id());
+            binding.btnFollow.setText(anchor.getFollow() == 1? R.string.cancel_follow : R.string.follow);
             ImageLoadHelper.loadCircleImage(binding.ivUserHead, anchor.getCover_img(), ConfigModel.getInstance().isGrayMode());
         }
     }
@@ -159,6 +165,20 @@ public class AnchorFragment extends KbBaseFragment<FragmentAnchorBinding> {
         super.onListenerChange(key, data);
     }
 
+    @Override
+    public void onClick(View v) {
+        if (anchor == null) {
+            return;
+        }
+        if (v.getId() == binding.btnFollow.getId()) {
+            if (anchor.getFollow() == 1) {
+                reqUnFollowAnchor(anchor);
+            } else {
+                reqFollowAnchor(anchor);
+            }
+        }
+    }
+
     public void setAnchor(ModelAnchor.Item anchor) {
         this.anchor = anchor;
         updateView();
@@ -170,6 +190,44 @@ public class AnchorFragment extends KbBaseFragment<FragmentAnchorBinding> {
 
     public void setOpen(boolean open) {
         isOpen = open;
+    }
+
+    private void reqFollowAnchor(ModelAnchor.Item item) {
+        TaskHelper.exec(new TaskHelper.Task() {
+            ModelWrapper<String> model;
+            @Override
+            public void execute() throws Exception {
+                model = LiveMethod.getInstance().reqFollow(item.getAnchor_id());
+            }
+
+            @Override
+            public void callback(Exception e) {
+                if (model != null && (model.isSuccess() || model.getCode() == 1)) {
+                    item.setFollow(1);
+                    SafeToast.showToast(R.string.follow_success, Toast.LENGTH_SHORT);
+                    updateView();
+                }
+            }
+        });
+    }
+
+    private void reqUnFollowAnchor(ModelAnchor.Item item) {
+        TaskHelper.exec(new TaskHelper.Task() {
+            ModelWrapper<String> model;
+            @Override
+            public void execute() throws Exception {
+                model = LiveMethod.getInstance().reqUnFollow(item.getAnchor_id());
+            }
+
+            @Override
+            public void callback(Exception e) {
+                if (model != null && model.isSuccess()) {
+                    item.setFollow(0);
+                    SafeToast.showToast(R.string.unfollow_success, Toast.LENGTH_SHORT);
+                    updateView();
+                }
+            }
+        });
     }
 
     private static class AnchorVideoDataSource extends VideoListDataSource {

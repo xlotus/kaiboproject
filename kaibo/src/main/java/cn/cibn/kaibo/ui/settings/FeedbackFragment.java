@@ -134,7 +134,7 @@ public class FeedbackFragment extends KbBaseFragment<FragmentFeedbackBinding> {
             @Override
             public void callback(Exception e) {
                 if (model != null && model.isSuccess()) {
-                    SafeToast.showToast("提交成功", Toast.LENGTH_SHORT);
+                    SafeToast.showToast(R.string.submit_success, Toast.LENGTH_SHORT);
                 }
             }
         });

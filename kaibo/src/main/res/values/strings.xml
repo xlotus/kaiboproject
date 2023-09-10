@@ -3,7 +3,7 @@
 
 
     <string name="live_list_title">直播列表</string>
-
+    <string name="no_more">没有更多了</string>
 
     <string name="goods_detail_title">商品</string>
     <string name="goods_list_title">直播间商品(%d)</string>
@@ -26,11 +26,16 @@
     <string name="search">搜索</string>
     <string name="recommend">推荐</string>
     <string name="follow">关注</string>
-    <string name="cancel_follow">取消关注</string>
     <string name="me">我的</string>
     <string name="relative_recommend">相关推荐</string>
 
+    <string name="cancel_follow">取消关注</string>
     <string name="like">点赞</string>
+    <string name="cancel_like">取消点赞</string>
+    <string name="follow_success">关注成功</string>
+    <string name="unfollow_success">取消关注成功</string>
+    <string name="like_success">点赞成功</string>
+    <string name="unlike_success">取消点赞成功</string>
 
     <string name="search_history">历史搜索</string>
     <string name="search_guess">猜你想搜</string>
@@ -56,6 +61,11 @@
     <string name="problems">常见问题</string>
     <string name="about_us">关于我们</string>
     <string name="check_network">网络诊断</string>
+    <string name="submit_success">提交成功</string>
+
+    <string name="network_checking">正在检查……</string>
+    <string name="network_wifi_ok">WIFI连接正常</string>
+    <string name="network_wifi_fail">WIFI连接异常</string>
 
     <string name="safety_certification">安全认证</string>
     <string name="remote_control">遥控器</string>
