@@ -148,6 +148,12 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                     binding.mainLiveDrawer.closeDrawer(GravityCompat.START);
                     SearchFragment f = new SearchFragment();
                     openStack(f);
+                } else if ("recommend".equals(page)) {
+                    binding.mainLiveDrawer.closeDrawer(GravityCompat.START);
+                    fragmentStack.clear();
+                    RecommendModel.getInstance().clear();
+                    RecommendModel.getInstance().getNext();
+                    isSubPlaying = false;
                 }
                 else if ("me".equals(page)) {
                     fragmentStack.clear();
@@ -325,28 +331,31 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
         if (!fragmentStack.isEmpty()) {
             return fragmentStack.peek().onKeyDown(keyCode, event);
         }
+        if (firstPlay) {
+            return true;
+        }
         if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-            if (binding.mainLiveDrawer.isDrawerOpen(GravityCompat.END)) {
+            if (binding.mainLiveDrawer.isDrawerVisible(GravityCompat.END)) {
                 if (naviRightFragment.onKeyDown(keyCode, event)) {
                     return true;
                 }
                 goodsListFragment.setOpened(false);
                 binding.mainLiveDrawer.closeDrawer(GravityCompat.END);
             } else {
-                if (!isSubPlaying && !binding.mainLiveDrawer.isDrawerOpen(GravityCompat.START)) {
+                if (!isSubPlaying && !binding.mainLiveDrawer.isDrawerVisible(GravityCompat.START)) {
                     binding.mainLiveDrawer.openDrawer(GravityCompat.START);
                     menuFragment.requestFocus();
                 }
             }
             return true;
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            if (binding.mainLiveDrawer.isDrawerOpen(GravityCompat.START)) {
+            if (binding.mainLiveDrawer.isDrawerVisible(GravityCompat.START)) {
                 if (menuFragment.onKeyDown(keyCode, event)) {
                     return true;
                 }
                 binding.mainLiveDrawer.closeDrawer(GravityCompat.START);
             } else {
-                if (!binding.mainLiveDrawer.isDrawerOpen(GravityCompat.END)) {
+                if (!binding.mainLiveDrawer.isDrawerVisible(GravityCompat.END)) {
                     binding.naviRightContainer.post(() -> {
                         naviRightFragment.requestFocus();
                         if (naviRightFragment == goodsListFragment){
@@ -378,14 +387,14 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                 return true;
             }
         } else if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (binding.mainLiveDrawer.isDrawerOpen(GravityCompat.START)) {
+            if (binding.mainLiveDrawer.isDrawerVisible(GravityCompat.START)) {
                 if (menuFragment.onKeyDown(keyCode, event)) {
                     return true;
                 }
                 binding.mainLiveDrawer.closeDrawer(GravityCompat.START);
                 return true;
             }
-            if (binding.mainLiveDrawer.isDrawerOpen(GravityCompat.END)) {
+            if (binding.mainLiveDrawer.isDrawerVisible(GravityCompat.END)) {
                 if (naviRightFragment.onKeyDown(keyCode, event)) {
                     return true;
                 }
@@ -407,7 +416,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
                 return true;
             }
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
-            if (playerViewModel != null && playerViewModel.playingVideo.getValue() != null) {
+            if (isDrawClosed() && playerViewModel != null && playerViewModel.playingVideo.getValue() != null) {
                 operateDialog = VideoOperateDialog.show(getChildFragmentManager(), playerViewModel.playingVideo.getValue());
                 operateDialog.setDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
@@ -480,7 +489,7 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
     }
 
     private boolean isDrawClosed() {
-        return !binding.mainLiveDrawer.isDrawerOpen(GravityCompat.START) && !binding.mainLiveDrawer.isDrawerOpen(GravityCompat.END);
+        return !binding.mainLiveDrawer.isDrawerVisible(GravityCompat.START) && !binding.mainLiveDrawer.isDrawerVisible(GravityCompat.END);
     }
 
     private void openStack(BaseStackFragment<?> f) {
@@ -496,12 +505,12 @@ public class MainFragment extends KbBaseFragment<FragmentMainBinding> implements
             fragmentStack.pop();
             if (fragmentStack.isEmpty()) {
                 binding.stackContainer.setVisibility(View.GONE);
-                if (binding.mainLiveDrawer.isDrawerOpen(GravityCompat.START)) {
+                if (binding.mainLiveDrawer.isDrawerVisible(GravityCompat.START)) {
                     menuFragment.requestFocus();
                 }
             } else {
                 BaseStackFragment<?> prev = fragmentStack.peek();
-                if (!prev.isFullScreen() && !binding.mainLiveDrawer.isDrawerOpen(GravityCompat.START)) {
+                if (!prev.isFullScreen() && !binding.mainLiveDrawer.isDrawerVisible(GravityCompat.START)) {
                     binding.mainLiveDrawer.openDrawer(GravityCompat.START);
                 }
                 getChildFragmentManager().beginTransaction().replace(R.id.stack_container, prev).commit();

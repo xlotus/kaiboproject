@@ -156,10 +156,7 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
         if (id == binding.btnSearch.getId()) {
             openPage("search");
         } else if (id == binding.btnRecommend.getId()) {
-            if (grade == 1) {
-                binding.btnRecommend.setSelected(true);
-                selectedView = binding.btnRecommend;
-            }
+            openPage("recommend");
         } else if (id == binding.btnFollow.getId()) {
             binding.btnFollow.setSelected(true);
             selectedView = binding.btnFollow;

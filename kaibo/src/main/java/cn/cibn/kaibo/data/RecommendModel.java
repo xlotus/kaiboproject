@@ -42,7 +42,7 @@ public class RecommendModel {
     }
 
     public ModelLive.Item getPrev() {
-        if (historyStack.size() == 1) {
+        if (historyStack.size() <= 1) {
             return null;
         }
         backupStack.push(historyStack.pop());
@@ -54,6 +54,12 @@ public class RecommendModel {
             return historyStack.peek();
         }
         return null;
+    }
+
+    public void clear() {
+        historyStack.clear();
+        backupStack.clear();
+        requestingPage = -1;
     }
 
     public void addHistory(ModelLive.Item item, boolean push) {
