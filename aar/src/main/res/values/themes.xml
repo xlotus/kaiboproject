@@ -1,0 +1,6 @@
+<resources>
+
+    <style name="Theme.CIBNApp" parent="@style/Theme.Leanback" >
+        <item name="android:windowFullscreen">true</item>
+    </style>
+</resources>

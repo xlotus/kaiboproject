@@ -24,7 +24,8 @@ dependencyResolutionManagement {
         maven { url 'https://jitpack.io' }
     }
 }
-rootProject.name = "kaibo"
+rootProject.name = "kaiboproject"
 include ':app'
 include ':sdkFrame'
 include ':kaibo'
+include ':aar'
