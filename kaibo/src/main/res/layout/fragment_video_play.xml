@@ -78,12 +78,12 @@
             android:lines="1"
             android:maxLines="1"
             android:textColor="@color/white"
-            android:textSize="@dimen/sp_15"
+            android:textSize="@dimen/sp_13"
             app:layout_constraintBottom_toBottomOf="@id/view_bg_live_anchor_info"
             app:layout_constraintLeft_toLeftOf="@id/tv_certification_no_title"
             app:layout_constraintRight_toRightOf="@id/view_bg_live_anchor_info"
             app:layout_constraintTop_toBottomOf="@id/tv_certification_no_title"
-            tools:text="123456123456123456123456123456" />
+            tools:text="1-23456123456123456123456123456" />
 
         <TextView
             android:id="@+id/tv_live_anchor_name"

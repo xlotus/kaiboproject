@@ -9,33 +9,33 @@
 
     <ImageView
         android:id="@+id/iv_guide_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/dp_50"
+        android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/guide_left"/>
+        android:src="@drawable/guide_view_left"/>
 
     <ImageView
         android:id="@+id/iv_guide_top"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/guide_up"/>
+        android:src="@drawable/guide_view_top"/>
 
     <ImageView
         android:id="@+id/iv_guide_right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/dp_50"
+        android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/guide_right"/>
+        android:src="@drawable/guide_view_right"/>
 
     <ImageView
         android:id="@+id/iv_guide_bottoom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_68"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/guide_down"/>
+        android:src="@drawable/guide_view_bottom"/>
 </merge>

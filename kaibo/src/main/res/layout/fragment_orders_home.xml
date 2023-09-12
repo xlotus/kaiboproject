@@ -19,13 +19,15 @@
 
             <cn.cibn.kaibo.ui.widget.MenuItemView
                 android:id="@+id/btn_go_home"
-                android:layout_width="@dimen/dp_84"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/dp_28"
                 android:layout_marginLeft="@dimen/dp_16"
                 android:layout_marginTop="@dimen/dp_16"
                 android:background="@drawable/bg_menu_item_search_selector"
+                android:paddingLeft="@dimen/dp_16"
+                android:paddingRight="@dimen/dp_16"
                 app:font_size="@dimen/sp_9"
-                app:icon_padding="@dimen/dp_3"
+                app:icon_padding="@dimen/dp_1"
                 app:icon_size="@dimen/dp_15"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

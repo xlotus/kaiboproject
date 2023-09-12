@@ -202,10 +202,10 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
 
     private void initKeyboardView() {
         int size = getResources().getDimensionPixelSize(R.dimen.dp_16);
-        Drawable drawable = getResources().getDrawable(R.drawable.baseline_backspace_24);
+        Drawable drawable = getResources().getDrawable(R.drawable.svg_backspace);
         drawable.setBounds(0, 0, size, size);
         subBinding.btnDelete.setCompoundDrawables(drawable, null, null, null);
-        drawable = getResources().getDrawable(R.drawable.baseline_delete_24);
+        drawable = getResources().getDrawable(R.drawable.svg_delete);
         drawable.setBounds(0, 0, size, size);
         subBinding.btnClear.setCompoundDrawables(drawable, null, null, null);
         subBinding.btnClear.setOnClickListener(this);
