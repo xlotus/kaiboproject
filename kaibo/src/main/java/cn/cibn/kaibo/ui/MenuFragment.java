@@ -9,9 +9,12 @@ import android.widget.Toast;
 
 import androidx.core.view.GravityCompat;
 import androidx.leanback.widget.BaseGridView;
+import androidx.leanback.widget.OnChildViewHolderSelectedListener;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.tv.lib.core.Logger;
 import com.tv.lib.core.change.ChangeListenerManager;
+import com.tv.lib.core.lang.thread.TaskHelper;
 import com.tv.lib.core.utils.ui.SafeToast;
 import com.tv.lib.frame.adapter.ListBindingAdapter;
 
@@ -25,14 +28,23 @@ import cn.cibn.kaibo.change.ChangedKeys;
 import cn.cibn.kaibo.data.ConfigModel;
 import cn.cibn.kaibo.databinding.FragmentMenuBinding;
 import cn.cibn.kaibo.model.ModelLive;
+import cn.cibn.kaibo.model.ModelWrapper;
+import cn.cibn.kaibo.network.Constants;
+import cn.cibn.kaibo.network.LiveMethod;
 import cn.cibn.kaibo.player.VideoType;
 
 public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements View.OnClickListener {
     private static final String TAG = "MenuFragment";
+    public static final int PAGE_FIRST = 1;
 
     private VideoListAdapter adapter;
 
     private View selectedView;
+
+    private List<ModelLive.Item> videoList = new ArrayList<>();
+    private int total;
+    private int curPage = Constants.PAGE_FIRST;
+    private int loadingPage = -1;
 
     public static MenuFragment createInstance() {
         return new MenuFragment();
@@ -67,6 +79,15 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
                 return false;
             }
         });
+        binding.recyclerVideoList.addOnChildViewHolderSelectedListener(new OnChildViewHolderSelectedListener() {
+            @Override
+            public void onChildViewHolderSelected(RecyclerView parent, RecyclerView.ViewHolder child, int position, int subposition) {
+                int count = adapter.getItemCount();
+                if (count - position < 4 && count < total) {
+                    reqRelatedRecommend(curPage + 1);
+                }
+            }
+        });
         adapter.submitList(Collections.emptyList());
         binding.btnSearch.setOnClickListener(this);
         binding.btnRecommend.setOnClickListener(this);
@@ -77,7 +98,7 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
 
     @Override
     protected void initData() {
-
+        reqRelatedRecommend(PAGE_FIRST);
     }
 
     @Override
@@ -132,19 +153,6 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
                 }
             }, 100);
         }
-
-        List<ModelLive.Item> itemList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            ModelLive.Item item = new ModelLive.Item();
-            item.setPlay_addr("http://1500005830.vod2.myqcloud.com/43843ec0vodtranscq1500005830/3afba03a387702294394228636/adp.10.m3u8");
-            item.setTitle("VideoVideoVideoVideoVideoVideoVideoVideoVideoVideo");
-            item.setId(String.valueOf(i));
-            item.setBack_img("https://img.cbnlive.cn/web/uploads/image/store_1/503630a36565cb688fc94bb7380fd1fe9fb99cf5.jpg");
-            item.setType(VideoType.SHORT.getValue());
-            item.setId("300");
-            itemList.add(item);
-        }
-        adapter.submitList(itemList);
     }
 
     @Override
@@ -216,5 +224,36 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
             result.putString("page", page);
             getActivity().getSupportFragmentManager().setFragmentResult("menu", result);
         }
+    }
+
+    private void reqRelatedRecommend(int page) {
+        if (loadingPage == page) {
+            return;
+        }
+        loadingPage = page;
+        TaskHelper.exec(new TaskHelper.Task() {
+            ModelWrapper<ModelLive> model;
+
+            @Override
+            public void execute() throws Exception {
+                model = LiveMethod.getInstance().getRelatedRecommend(page, 10);
+            }
+
+            @Override
+            public void callback(Exception e) {
+                loadingPage = -1;
+                if (model != null && model.isSuccess() && model.getData() != null) {
+                    if (page == PAGE_FIRST) {
+                        videoList.clear();
+                    }
+                    total = model.getData().getRow_count();
+                    curPage = page;
+                    if (model.getData().getList() != null) {
+                        videoList.addAll(model.getData().getList());
+                    }
+                    adapter.submitList(videoList);
+                }
+            }
+        });
     }
 }

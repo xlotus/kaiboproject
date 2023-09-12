@@ -31,6 +31,7 @@ public class LiveMethod extends BaseMethod {
     private static final String URL_STAT = "https://sta.cbnlive.cn?from=sdk"; //统计上报
 
     private static final String URL_RECOMMEND = DOMAIN_APP + "api/apk/recomm/index";//推荐列表
+    private static final String URL_RELATED_RECOMMEND = DOMAIN_APP + "api/apk/recomm/related";//推荐列表
     private static final String URL_USER_INFO = DOMAIN_APP + "api/user/get-user-info";//个人信息
     private static final String URL_GET_TICKET = DOMAIN_APP + "api/apk/empower/get-ticket"; //获取授权ticket
     private static final String URL_LOGIN = DOMAIN_APP + "api/apk/empower/login";//登录
@@ -80,9 +81,17 @@ public class LiveMethod extends BaseMethod {
         Map<String, String> params = new HashMap<>();
         params.put("access_token", UserManager.getInstance().getToken());
         params.put("limit", String.valueOf(limit));
-        params.put("page", String.valueOf(page));;
+        params.put("page", String.valueOf(page));
         params.put("keywork", "");
         return doGet(URL_RECOMMEND, params, ModelLive.class);
+    }
+
+    public ModelWrapper<ModelLive> getRelatedRecommend(int page, int limit) {
+        Map<String, String> params = new HashMap<>();
+        params.put("access_token", UserManager.getInstance().getToken());
+        params.put("limit", String.valueOf(limit));
+        params.put("page", String.valueOf(page));
+        return doGet(URL_RELATED_RECOMMEND, params, ModelLive.class);
     }
 
     public ModelWrapper<ModelUser> getUserInfo() {
