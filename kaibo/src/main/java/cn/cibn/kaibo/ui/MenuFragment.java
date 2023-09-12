@@ -79,15 +79,7 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
                 return false;
             }
         });
-        binding.recyclerVideoList.addOnChildViewHolderSelectedListener(new OnChildViewHolderSelectedListener() {
-            @Override
-            public void onChildViewHolderSelected(RecyclerView parent, RecyclerView.ViewHolder child, int position, int subposition) {
-                int count = adapter.getItemCount();
-                if (count - position < 4 && count < total) {
-                    reqRelatedRecommend(curPage + 1);
-                }
-            }
-        });
+        binding.recyclerVideoList.addOnChildViewHolderSelectedListener(onChildViewHolderSelectedListener);
         adapter.submitList(Collections.emptyList());
         binding.btnSearch.setOnClickListener(this);
         binding.btnRecommend.setOnClickListener(this);
@@ -176,6 +168,14 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (binding != null) {
+            binding.recyclerVideoList.removeOnChildViewHolderSelectedListener(onChildViewHolderSelectedListener);
+        }
+    }
+
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (binding.menuDrawer.isDrawerOpen(GravityCompat.START)) {
@@ -256,4 +256,14 @@ public class MenuFragment extends KbBaseFragment<FragmentMenuBinding> implements
             }
         });
     }
+
+    private OnChildViewHolderSelectedListener onChildViewHolderSelectedListener = new OnChildViewHolderSelectedListener() {
+        @Override
+        public void onChildViewHolderSelected(RecyclerView parent, RecyclerView.ViewHolder child, int position, int subposition) {
+            int count = adapter.getItemCount();
+            if (count - position < 4 && count < total) {
+                reqRelatedRecommend(curPage + 1);
+            }
+        }
+    };
 }

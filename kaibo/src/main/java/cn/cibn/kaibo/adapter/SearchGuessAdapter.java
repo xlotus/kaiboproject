@@ -31,7 +31,7 @@ public class SearchGuessAdapter extends ListBindingAdapter<ModelGuess.Item, Item
 
     @Override
     public void onBindViewHolder(ModelGuess.Item item, ItemSearchGuessBinding binding, int position) {
-        binding.tvSearchGuess.setText(item.getKey());
+        binding.tvSearchGuess.setText(item.getTag());
         if (position == 0) {
             lastSelectedView = binding.getRoot();
         }

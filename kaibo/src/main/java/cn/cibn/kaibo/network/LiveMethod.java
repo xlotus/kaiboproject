@@ -13,6 +13,7 @@ import cn.cibn.kaibo.UserManager;
 import cn.cibn.kaibo.model.BaseModel;
 import cn.cibn.kaibo.model.ModelGoods;
 import cn.cibn.kaibo.model.ModelGpTimeRange;
+import cn.cibn.kaibo.model.ModelGuess;
 import cn.cibn.kaibo.model.ModelLive;
 import cn.cibn.kaibo.model.ModelLogin;
 import cn.cibn.kaibo.model.ModelQrcode;
@@ -31,7 +32,8 @@ public class LiveMethod extends BaseMethod {
     private static final String URL_STAT = "https://sta.cbnlive.cn?from=sdk"; //统计上报
 
     private static final String URL_RECOMMEND = DOMAIN_APP + "api/apk/recomm/index";//推荐列表
-    private static final String URL_RELATED_RECOMMEND = DOMAIN_APP + "api/apk/recomm/related";//推荐列表
+    private static final String URL_RELATED_RECOMMEND = DOMAIN_APP + "api/apk/recomm/related";//相关推荐列表
+    private static final String URL_GUESS_TAG = DOMAIN_APP + "api/apk/recomm/guess-tag";//猜你想搜标签数据
     private static final String URL_USER_INFO = DOMAIN_APP + "api/user/get-user-info";//个人信息
     private static final String URL_GET_TICKET = DOMAIN_APP + "api/apk/empower/get-ticket"; //获取授权ticket
     private static final String URL_LOGIN = DOMAIN_APP + "api/apk/empower/login";//登录
@@ -92,6 +94,15 @@ public class LiveMethod extends BaseMethod {
         params.put("limit", String.valueOf(limit));
         params.put("page", String.valueOf(page));
         return doGet(URL_RELATED_RECOMMEND, params, ModelLive.class);
+    }
+
+    public ModelWrapper<ModelGuess> getGuessTag(String keywork, int page, int limit) {
+        Map<String, String> params = new HashMap<>();
+        params.put("access_token", UserManager.getInstance().getToken());
+        params.put("limit", String.valueOf(limit));
+        params.put("page", String.valueOf(page));
+        params.put("keywork", keywork);
+        return doGet(URL_GUESS_TAG, params, ModelGuess.class);
     }
 
     public ModelWrapper<ModelUser> getUserInfo() {

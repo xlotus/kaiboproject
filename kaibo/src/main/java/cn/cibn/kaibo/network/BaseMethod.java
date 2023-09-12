@@ -6,9 +6,11 @@ import com.google.gson.Gson;
 import com.tv.lib.core.Logger;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.Map;
 
 import cn.cibn.kaibo.model.ModelWrapper;
+import cn.cibn.kaibo.utils.ParamsHelper;
 
 public class BaseMethod extends Connection {
     protected static final String TAG = "BaseMethod";
@@ -45,10 +47,18 @@ public class BaseMethod extends Connection {
     }
 
     protected <T> ModelWrapper<T> doGet(String url, Map<String, String> params, Type tType) {
+        if (!params.containsKey("channel")) {
+            params.put("channel", ParamsHelper.getChannel());
+        }
         return realConnect(GET, url, params, tType);
     }
 
     protected <T> ModelWrapper<T> doPost(String url, Map<String, String> params, Type tType) {
+        if (!url.contains("channel=")) {
+            Map<String, String> query = new HashMap<>();
+            query.put("channel", ParamsHelper.getChannel());
+            url = buildParams(url, query);
+        }
         return realConnect(POST, url, params, tType);
     }
 

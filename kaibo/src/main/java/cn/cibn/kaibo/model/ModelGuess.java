@@ -34,23 +34,23 @@ public class ModelGuess extends BaseModel implements Serializable {
     }
 
     public static class Item implements Serializable {
-        private String key;
-        private String pinyin;
+        private String tag;
+        private String initials;
 
-        public String getKey() {
-            return key;
+        public String getTag() {
+            return tag;
         }
 
-        public void setKey(String key) {
-            this.key = key;
+        public void setTag(String tag) {
+            this.tag = tag;
         }
 
-        public String getPinyin() {
-            return pinyin;
+        public String getInitials() {
+            return initials;
         }
 
-        public void setPinyin(String pinyin) {
-            this.pinyin = pinyin;
+        public void setInitials(String initials) {
+            this.initials = initials;
         }
 
         @Override
@@ -58,12 +58,12 @@ public class ModelGuess extends BaseModel implements Serializable {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Item item = (Item) o;
-            return Objects.equals(key, item.key);
+            return Objects.equals(tag, item.tag);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(key);
+            return Objects.hash(tag);
         }
     }
 }

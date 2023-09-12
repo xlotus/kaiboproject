@@ -15,8 +15,10 @@ import android.view.animation.DecelerateInterpolator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.leanback.widget.OnChildViewHolderSelectedListener;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.tv.lib.core.Logger;
 import com.tv.lib.core.change.ChangeListenerManager;
@@ -48,7 +50,8 @@ import cn.cibn.kaibo.viewmodel.PlayerViewModel;
 
 public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> implements Handler.Callback, View.OnClickListener {
     private static final String TAG = "SearchFragment";
-    private static final int WHAT_SEARCH = 1;
+    public static final int PAGE_FIRST = 1;
+    private static final int WHAT_GUESS = 1;
 
     private Handler handler;
 
@@ -68,6 +71,11 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
     private Animator moveLeftAnimator;
 
     private int lastFocusPart;
+
+    private List<ModelGuess.Item> guessList = new ArrayList<>();
+    private int guessTotal;
+    private int curGuessPage;
+    private int guessLoadingPage;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -131,6 +139,14 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (subBinding != null) {
+            subBinding.recyclerSearchMiddle.removeOnChildViewHolderSelectedListener(guessOnChildViewHolderSelectedListener);
+        }
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if (handler != null) {
@@ -140,8 +156,8 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
 
     @Override
     public boolean handleMessage(@NonNull Message msg) {
-        if (msg.what == WHAT_SEARCH) {
-            reqSearchNames();
+        if (msg.what == WHAT_GUESS) {
+            reqSearchNames(PAGE_FIRST);
             return true;
         }
         return false;
@@ -160,7 +176,7 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
                 subBinding.etSearch.setText(inputValue);
                 if (handler != null) {
                     handler.removeCallbacksAndMessages(null);
-                    handler.sendEmptyMessageDelayed(WHAT_SEARCH, 500);
+                    handler.sendEmptyMessageDelayed(WHAT_GUESS, 500);
                 }
             }
             if (TextUtils.isEmpty(inputValue)) {
@@ -219,7 +235,7 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
                 subBinding.etSearch.setSelection(inputValue.length());
                 if (handler != null) {
                     handler.removeCallbacksAndMessages(null);
-                    handler.sendEmptyMessageDelayed(WHAT_SEARCH, 500);
+                    handler.sendEmptyMessageDelayed(WHAT_GUESS, 500);
                 }
                 if (TextUtils.isEmpty(inputValue)) {
                     showHistory();
@@ -250,9 +266,10 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
             @Override
             public void onItemClick(SearchHistory item) {
                 ModelGuess.Item key = new ModelGuess.Item();
-                key.setKey(item.getHistory());
-                key.setPinyin(item.getPinyin());
+                key.setTag(item.getHistory());
+                key.setInitials(item.getPinyin());
                 reqSearch(key);
+                subBinding.fflSearchResult.requestFocus();
             }
         });
     }
@@ -265,6 +282,7 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
                 reqSearch(item);
             }
         });
+        guessAdapter.submitList(guessList);
     }
 
     private void initSearchResultView() {
@@ -272,6 +290,17 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
         ViewGroup.LayoutParams lp = subBinding.fflSearchResult.getLayoutParams();
         lp.width = w;
         subBinding.fflSearchResult.setLayoutParams(lp);
+        subBinding.fflSearchResult.setOnFocusChangeListener(new FocusFrameLayout.OnFocusChangeListener() {
+            @Override
+            public void onFocusEnter() {
+                subBinding.searchRoot.smoothScrollTo(Utils.getScreenWidth(ObjectStore.getContext()), 0);
+            }
+
+            @Override
+            public void onFocusLeave() {
+
+            }
+        });
 
         resultAdapter = new VideoGridAdapter();
         subBinding.recyclerSearchResult.setAdapter(resultAdapter);
@@ -308,43 +337,62 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
         moveLeftAnimator.setInterpolator(new DecelerateInterpolator());
     }
 
-    private void reqSearchNames() {
+    private void reqSearchNames(int page) {
+        if (guessLoadingPage == page) {
+            return;
+        }
+        guessLoadingPage = page;
+        if (TextUtils.isEmpty(inputValue)) {
+            return;
+        }
         TaskHelper.exec(new TaskHelper.Task() {
             ModelWrapper<ModelGuess> model;
 
             @Override
             public void execute() throws Exception {
-
+                model = LiveMethod.getInstance().getGuessTag(inputValue, page, 20);
             }
 
             @Override
             public void callback(Exception e) {
-                List<ModelGuess.Item> list = new ArrayList<>();
-                for (int i = 0; i < 40; i++) {
-                    ModelGuess.Item item = new ModelGuess.Item();
-                    item.setKey("Guess" + i);
-                    item.setPinyin("sh");
-                    list.add(item);
+                guessLoadingPage = -1;
+                if (model != null && model.isSuccess() && model.getData() != null) {
+                    curGuessPage = page;
+                    guessTotal = model.getData().getRow_count();
+                    if (page == PAGE_FIRST) {
+                        guessList.clear();
+                    }
+                    if (model.getData().getList() != null) {
+                        guessList.addAll(model.getData().getList());
+                    }
+//                    guessAdapter.submitList(guessList);
+                    guessAdapter.notifyDataSetChanged();
+                    if (!guessList.isEmpty()) {
+                        reqSearch(guessList.get(0));
+                    }
+                    subBinding.recyclerSearchMiddle.post(() -> {
+                        if (subBinding.recyclerSearchMiddle.getChildCount() > 0) {
+                            subBinding.recyclerSearchMiddle.getChildAt(0).setSelected(true);
+                        }
+                    });
                 }
-                guessAdapter.submitList(list);
-                reqSearch(list.get(0));
             }
         });
     }
 
     private void reqSearch(ModelGuess.Item key) {
-        subBinding.tvResultTitleKey.setText("\"@" + key.getKey() + "\"");
+        subBinding.tvResultTitleKey.setText("\"@" + key.getTag() + "\"");
         showResult();
-        searchVideoSource.setKey(key.getPinyin());
+        searchVideoSource.setKey(key.getInitials());
         searchVideoSource.reqLiveList();
         TaskHelper.exec(new TaskHelper.Task() {
             @Override
             public void execute() throws Exception {
-                AppDatabase.getInstance(mContext).searchHistoryDao().deleteByKey(key.getKey());
+                AppDatabase.getInstance(mContext).searchHistoryDao().deleteByKey(key.getTag());
 
                 SearchHistory sh = new SearchHistory();
-                sh.setHistory(key.getKey());
-                sh.setPinyin(key.getPinyin());
+                sh.setHistory(key.getTag());
+                sh.setPinyin(key.getInitials());
                 AppDatabase.getInstance(mContext).searchHistoryDao().insert(sh);
             }
 
@@ -370,6 +418,7 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
         subBinding.tvMiddleTitle.setText(R.string.search_history);
         subBinding.recyclerSearchMiddle.setAdapter(historyAdapter);
         subBinding.recyclerSearchMiddle.setNumColumns(3);
+        subBinding.recyclerSearchMiddle.removeOnChildViewHolderSelectedListener(guessOnChildViewHolderSelectedListener);
         ViewGroup.LayoutParams lp = subBinding.fflSearchMiddle.getLayoutParams();
         lp.width = Utils.getScreenWidth(ObjectStore.getContext()) - ObjectStore.getContext().getResources().getDimensionPixelSize(R.dimen.drawer_menu_width);
         subBinding.fflSearchMiddle.setLayoutParams(lp);
@@ -395,12 +444,18 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
     }
 
     private void showGuess() {
+        if (getResources().getString(R.string.search_guess).equals(subBinding.tvMiddleTitle.getText().toString())) {
+            return;
+        }
         subBinding.tvMiddleTitle.setText(R.string.search_guess);
         subBinding.recyclerSearchMiddle.setAdapter(guessAdapter);
         subBinding.recyclerSearchMiddle.setNumColumns(1);
+        subBinding.recyclerSearchMiddle.addOnChildViewHolderSelectedListener(guessOnChildViewHolderSelectedListener);
         ViewGroup.LayoutParams lp = subBinding.fflSearchMiddle.getLayoutParams();
         lp.width = ObjectStore.getContext().getResources().getDimensionPixelSize(R.dimen.dp_279);
         subBinding.fflSearchMiddle.setLayoutParams(lp);
+        guessList.clear();
+        guessAdapter.notifyDataSetChanged();
     }
 
     private void showResult() {
@@ -449,4 +504,14 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
             });
         }
     }
+
+    private OnChildViewHolderSelectedListener guessOnChildViewHolderSelectedListener = new OnChildViewHolderSelectedListener() {
+        @Override
+        public void onChildViewHolderSelected(RecyclerView parent, RecyclerView.ViewHolder child, int position, int subposition) {
+            int count = guessAdapter.getItemCount();
+            if (count - position < 4 && count < guessTotal) {
+                reqSearchNames(curGuessPage + 1);
+            }
+        }
+    };
 }
