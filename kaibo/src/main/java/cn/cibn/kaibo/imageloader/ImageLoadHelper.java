@@ -72,7 +72,7 @@ public class ImageLoadHelper {
             if (isGray) {
                 options = options.transform(new GrayTransform());
             }
-            loadWithOptions(Glide.with(imageView), resourceId, imageView, options);
+            Glide.with(imageView).load(resourceId).apply(options).transition(sCrossFade).into(imageView);
         } catch (Exception e) {
             Logger.e(TAG, "load url failed: ", e);
         }
@@ -82,7 +82,7 @@ public class ImageLoadHelper {
         loadResource(imageView, resourceId, false);
     }
 
-    public static<T> void loadWithOptions(RequestManager requestManager, T source, ImageView destination, RequestOptions options) {
+    public static void loadWithOptions(RequestManager requestManager, String source, ImageView destination, RequestOptions options) {
         requestManager.load(source).apply(options).transition(sCrossFade).into(destination);
     }
 
