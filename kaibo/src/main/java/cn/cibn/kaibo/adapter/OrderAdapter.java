@@ -28,6 +28,8 @@ public class OrderAdapter extends ListBindingAdapter<ModelOrder.Item, ItemOrderB
 
     private OrderActionListener orderActionListener;
 
+    private int orderStatus;
+
     public OrderAdapter() {
         super(new OrderDiffCallback());
     }
@@ -56,13 +58,27 @@ public class OrderAdapter extends ListBindingAdapter<ModelOrder.Item, ItemOrderB
             binding.btnOrderRight.setTextColor(itemView.getResources().getColorStateList(R.color.order_btn_selector));
             binding.tvOrderStatus.setTextColor(0xFFFF3C5B);
         }
-        ImageLoadHelper.loadImage(binding.ivGoodsCover, item.getCover_pic(), (int) itemView.getResources().getDimension(R.dimen.dp_2), ConfigModel.getInstance().isGrayMode());
-        binding.tvGoodsName.setText(item.getName());
-        binding.tvGoodsPrice.setText(item.getPrice());
-        binding.tvGoodsNum.setText("x" + item.getNum());
-        binding.tvOrderCost.setText("¥ 800");
-        if (position % 2 == 0) {
-            binding.tvOrderStatus.setVisibility(View.GONE);
+        if (item.getGoodsList() != null && !item.getGoodsList().isEmpty()) {
+            ModelOrder.GoodsListItem goods = item.getGoodsList().get(0);
+            ImageLoadHelper.loadImage(binding.ivGoodsCover, goods.getGoodsPic(), (int) itemView.getResources().getDimension(R.dimen.dp_2), ConfigModel.getInstance().isGrayMode());
+            binding.tvGoodsName.setText(goods.getGoodsName());
+            binding.tvGoodsPrice.setText(goods.getPrice());
+            binding.tvGoodsNum.setText("x" + goods.getNum());
+        }
+        binding.tvOrderCost.setText("¥ " + item.getPayPrice());
+
+        binding.btnOrderLeft.setVisibility(View.GONE);
+        binding.btnOrderRight.setVisibility(View.GONE);
+        binding.tvOrderStatus.setVisibility(View.GONE);
+        if (orderStatus == 0) {
+            binding.btnOrderRight.setVisibility(View.VISIBLE);
+            binding.btnOrderRight.setText(OrderAction.PAY.getActionName());
+            binding.btnOrderRight.setTag(R.id.tag_order_item, item);
+            binding.btnOrderRight.setTag(R.id.tag_order_action, OrderAction.PAY);
+        } else if (orderStatus == 1) {
+            binding.tvOrderStatus.setVisibility(View.VISIBLE);
+            binding.tvOrderStatus.setText("待发货");
+        } else if (orderStatus == 2) {
             binding.btnOrderRight.setVisibility(View.VISIBLE);
             binding.btnOrderRight.setText(OrderAction.CONFIRM_RECEIPT.getActionName());
             binding.btnOrderRight.setTag(R.id.tag_order_item, item);
@@ -71,13 +87,27 @@ public class OrderAdapter extends ListBindingAdapter<ModelOrder.Item, ItemOrderB
             binding.btnOrderLeft.setText(OrderAction.VIEW_LOGISTICS.getActionName());
             binding.btnOrderLeft.setTag(R.id.tag_order_item, item);
             binding.btnOrderLeft.setTag(R.id.tag_order_action, OrderAction.VIEW_LOGISTICS);
-        } else {
+        } else if (orderStatus == 3) {
             binding.tvOrderStatus.setVisibility(View.VISIBLE);
-            binding.tvOrderStatus.setText("待处理");
-            binding.btnOrderLeft.setVisibility(View.GONE);
-            binding.btnOrderRight.setVisibility(View.GONE);
+            binding.tvOrderStatus.setText("已完成");
         }
-
+        else if (orderStatus == 4) {
+            if (item.getRefundStatus() == 0) {
+                binding.tvOrderStatus.setVisibility(View.VISIBLE);
+                binding.tvOrderStatus.setText("待处理");
+            } else if (item.getRefundStatus() == 1) {
+                binding.tvOrderStatus.setVisibility(View.VISIBLE);
+                binding.tvOrderStatus.setText("已完成");
+            } else if (item.getRefundStatus() == 3) {
+                binding.tvOrderStatus.setVisibility(View.VISIBLE);
+                binding.tvOrderStatus.setText("已拒绝");
+            } else if (item.getIsAgree() == 1) {
+                binding.btnOrderRight.setVisibility(View.VISIBLE);
+                binding.btnOrderRight.setText(OrderAction.RETURN.getActionName());
+                binding.btnOrderRight.setTag(R.id.tag_order_item, item);
+                binding.btnOrderRight.setTag(R.id.tag_order_action, OrderAction.RETURN);
+            }
+        }
 
         setStyle(item, binding, itemView.hasFocus());
 
@@ -130,6 +160,10 @@ public class OrderAdapter extends ListBindingAdapter<ModelOrder.Item, ItemOrderB
 
     public void setOrderActionListener(OrderActionListener orderActionListener) {
         this.orderActionListener = orderActionListener;
+    }
+
+    public void setOrderStatus(int orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
     private static class OrderDiffCallback extends DiffUtil.ItemCallback<ModelOrder.Item> {

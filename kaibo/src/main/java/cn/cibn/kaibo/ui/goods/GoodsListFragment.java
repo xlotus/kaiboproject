@@ -65,15 +65,7 @@ public class GoodsListFragment extends KbBaseFragment<FragmentGoodsListBinding> 
         binding.tvGoodsListTitle.setText(mContext.getResources().getString(R.string.goods_list_title, 0));
         adapter = new GoodsListAdapter();
         binding.recyclerGoods.setAdapter(adapter);
-        binding.recyclerGoods.addOnChildViewHolderSelectedListener(new OnChildViewHolderSelectedListener() {
-            @Override
-            public void onChildViewHolderSelected(RecyclerView parent, RecyclerView.ViewHolder child, int position, int subposition) {
-                int count = adapter.getItemCount();
-                if (count - position < 4 && count < total && goodsViewModel != null) {
-                    goodsViewModel.reqNextPage(liveItem.getId(), liveItem.getType());
-                }
-            }
-        });
+        binding.recyclerGoods.addOnChildViewHolderSelectedListener(onChildViewHolderSelectedListener);
         adapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<ModelGoods.Item>() {
             @Override
             public void onItemClick(ModelGoods.Item item) {
@@ -167,6 +159,9 @@ public class GoodsListFragment extends KbBaseFragment<FragmentGoodsListBinding> 
         if (playerViewModel != null) {
             playerViewModel.playingVideo.removeObservers(getViewLifecycleOwner());
         }
+        if (binding != null) {
+            binding.recyclerGoods.removeOnChildViewHolderSelectedListener(onChildViewHolderSelectedListener);
+        }
     }
 
     public void requestFocus() {
@@ -233,4 +228,14 @@ public class GoodsListFragment extends KbBaseFragment<FragmentGoodsListBinding> 
     public void setOpened(boolean opened) {
         isOpened = opened;
     }
+
+    private OnChildViewHolderSelectedListener onChildViewHolderSelectedListener = new OnChildViewHolderSelectedListener() {
+        @Override
+        public void onChildViewHolderSelected(RecyclerView parent, RecyclerView.ViewHolder child, int position, int subposition) {
+            int count = adapter.getItemCount();
+            if (count - position < 4 && count < total && goodsViewModel != null) {
+                goodsViewModel.reqNextPage(liveItem.getId(), liveItem.getType());
+            }
+        }
+    };
 }

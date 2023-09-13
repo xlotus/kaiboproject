@@ -1,9 +1,6 @@
 package cn.cibn.kaibo.model;
 
-import android.text.TextUtils;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.List;
@@ -38,99 +35,286 @@ public class ModelOrder extends BaseModel {
     }
 
     public static class Item implements Serializable {
-        private String id;
-        private String is_sell;
-        private String goods_id;
-        private String name;
-        private String cover_pic;
+        @SerializedName("order_no")
+        private String orderNo;
+
+        @SerializedName("order_refund_id")
+        private String orderRefundId;
+
+        @SerializedName("pay_price")
+        private String payPrice;
+
+        @SerializedName("refund_type")
+        private String refundType;
+
+        @SerializedName("refund_status")
+        private int refundStatus;
+
+        @SerializedName("consignee")
+        private String consignee;
+
+        @SerializedName("refund_price")
+        private int refundPrice;
+
+        @SerializedName("is_user_send")
+        private String isUserSend;
+
+        @SerializedName("goods_list")
+        private List<GoodsListItem> goodsList;
+
+        @SerializedName("mch")
+        private Mch mch;
+
+        @SerializedName("addtime")
+        private String addtime;
+
+        @SerializedName("qr_code")
+        private String qrCode;
+
+        @SerializedName("or_type")
+        private String orType;
+
+        @SerializedName("is_agree")
+        private int isAgree;
+
+        @SerializedName("order_id")
+        private String orderId;
+
+        @SerializedName("total_price")
+        private String totalPrice;
+
+        @SerializedName("is_pay")
+        private int isPay;
+
+        @SerializedName("is_send")
+        private int isSend;
+
+        @SerializedName("is_confirm")
+        private int isConfirm;
+
+        @SerializedName("is_comment")
+        private int isComment;
+
+        @SerializedName("is_cancel")
+        private int isCancel;
+
+        @SerializedName("is_revoke")
+        private int isRevoke;
+
+        public String getOrderNo(){
+            return orderNo;
+        }
+
+        public String getOrderRefundId(){
+            return orderRefundId;
+        }
+
+        public String getPayPrice(){
+            return payPrice;
+        }
+
+        public String getRefundType(){
+            return refundType;
+        }
+
+        public int getRefundStatus(){
+            return refundStatus;
+        }
+
+        public String getConsignee(){
+            return consignee;
+        }
+
+        public int getRefundPrice(){
+            return refundPrice;
+        }
+
+        public String getIsUserSend(){
+            return isUserSend;
+        }
+
+        public List<GoodsListItem> getGoodsList(){
+            return goodsList;
+        }
+
+        public Mch getMch(){
+            return mch;
+        }
+
+        public String getAddtime(){
+            return addtime;
+        }
+
+        public String getQrCode(){
+            return qrCode;
+        }
+
+        public String getOrType(){
+            return orType;
+        }
+
+        public int getIsAgree(){
+            return isAgree;
+        }
+
+        public String getOrderId(){
+            return orderId;
+        }
+
+        public String getTotalPrice() {
+            return totalPrice;
+        }
+
+        public void setTotalPrice(String totalPrice) {
+            this.totalPrice = totalPrice;
+        }
+
+        public int getIsPay() {
+            return isPay;
+        }
+
+        public void setIsPay(int isPay) {
+            this.isPay = isPay;
+        }
+
+        public int getIsSend() {
+            return isSend;
+        }
+
+        public void setIsSend(int isSend) {
+            this.isSend = isSend;
+        }
+
+        public int getIsConfirm() {
+            return isConfirm;
+        }
+
+        public void setIsConfirm(int isConfirm) {
+            this.isConfirm = isConfirm;
+        }
+
+        public int getIsComment() {
+            return isComment;
+        }
+
+        public void setIsComment(int isComment) {
+            this.isComment = isComment;
+        }
+
+        public int getIsCancel() {
+            return isCancel;
+        }
+
+        public void setIsCancel(int isCancel) {
+            this.isCancel = isCancel;
+        }
+
+        public int getIsRevoke() {
+            return isRevoke;
+        }
+
+        public void setIsRevoke(int isRevoke) {
+            this.isRevoke = isRevoke;
+        }
+    }
+
+    public static class GoodsListItem{
+
+        @SerializedName("goods_name")
+        private String goodsName;
+
+        @SerializedName("attr_list")
+        private List<AttrListItem> attrList;
+
+        @SerializedName("goods_pic")
+        private String goodsPic;
+
+        @SerializedName("price")
         private String price;
-        private String attr;
-        private String original_price;
-        private String qrcode;
 
-        public String getId() {
-            return id;
+        @SerializedName("num")
+        private int num;
+
+        @SerializedName("goods_id")
+        private int goodsId;
+
+        public String getGoodsName(){
+            return goodsName;
         }
 
-        public void setId(String id) {
-            this.id = id;
+        public List<AttrListItem> getAttrList(){
+            return attrList;
         }
 
-        public String getIs_sell() {
-            return is_sell;
+        public String getGoodsPic(){
+            return goodsPic;
         }
 
-        public void setIs_sell(String is_sell) {
-            this.is_sell = is_sell;
-        }
-
-        public String getGoods_id() {
-            return goods_id;
-        }
-
-        public void setGoods_id(String goods_id) {
-            this.goods_id = goods_id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getCover_pic() {
-            return cover_pic;
-        }
-
-        public void setCover_pic(String cover_pic) {
-            this.cover_pic = cover_pic;
-        }
-
-        public String getPrice() {
+        public String getPrice(){
             return price;
         }
 
-        public void setPrice(String price) {
-            this.price = price;
+        public int getNum(){
+            return num;
         }
 
-        public String getAttr() {
-            return attr;
+        public int getGoodsId(){
+            return goodsId;
+        }
+    }
+
+    public static class Mch{
+
+        @SerializedName("name")
+        private String name;
+
+        @SerializedName("logo")
+        private String logo;
+
+        @SerializedName("id")
+        private int id;
+
+        public String getName(){
+            return name;
         }
 
-        public void setAttr(String attr) {
-            this.attr = attr;
+        public String getLogo(){
+            return logo;
         }
 
-        public String getOriginal_price() {
-            return original_price;
+        public int getId(){
+            return id;
+        }
+    }
+
+    public static class AttrListItem{
+
+        @SerializedName("attr_group_name")
+        private String attrGroupName;
+
+        @SerializedName("attr_group_id")
+        private String attrGroupId;
+
+        @SerializedName("attr_name")
+        private String attrName;
+
+        @SerializedName("attr_id")
+        private String attrId;
+
+        public String getAttrGroupName(){
+            return attrGroupName;
         }
 
-        public void setOriginal_price(String original_price) {
-            this.original_price = original_price;
+        public String getAttrGroupId(){
+            return attrGroupId;
         }
 
-        public String getQrcode() {
-            return qrcode;
+        public String getAttrName(){
+            return attrName;
         }
 
-        public void setQrcode(String qrcode) {
-            this.qrcode = qrcode;
-        }
-
-        public int getNum() {
-            if (!TextUtils.isEmpty(attr)) {
-                try {
-                    JSONArray array = new JSONArray(attr);
-                    JSONObject json = array.getJSONObject(0);
-                    return json.optInt("num");
-                } catch (Exception e) {
-//                    e.printStackTrace();
-                }
-            }
-            return 0;
+        public String getAttrId(){
+            return attrId;
         }
     }
 }

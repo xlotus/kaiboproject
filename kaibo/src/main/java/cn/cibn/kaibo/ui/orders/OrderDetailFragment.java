@@ -41,11 +41,12 @@ public class OrderDetailFragment extends KbBaseFragment<FragmentOrderDetailBindi
         }
         binding.tvOrderDetailTitle.setText(title);
         binding.tvQrcodeName.setText(qrcodeTitle);
-        if (order != null) {
-            binding.tvGoodsName.setText(order.getName());
-            binding.tvGoodsNum.setText("x" + order.getNum());
-            binding.tvGoodsPrice.setText(order.getPrice());
-            ImageLoadHelper.loadImage(binding.ivGoodsCover, order.getCover_pic(), (int) mContext.getResources().getDimension(R.dimen.dp_2), ConfigModel.getInstance().isGrayMode());
+        if (order != null && order.getGoodsList() != null && !order.getGoodsList().isEmpty()) {
+            ModelOrder.GoodsListItem goods = order.getGoodsList().get(0);
+            binding.tvGoodsName.setText(goods.getGoodsName());
+            binding.tvGoodsNum.setText("x" + goods.getNum());
+            binding.tvGoodsPrice.setText(goods.getPrice());
+            ImageLoadHelper.loadImage(binding.ivGoodsCover, goods.getGoodsPic(), (int) mContext.getResources().getDimension(R.dimen.dp_4), ConfigModel.getInstance().isGrayMode());
         }
         if (ConfigModel.getInstance().isGrayMode()) {
             binding.tvGoodsPriceSign.setTextColor(getResources().getColor(R.color.color_mode_gray));

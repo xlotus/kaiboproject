@@ -4,10 +4,14 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.core.view.GravityCompat;
+import androidx.leanback.widget.OnChildViewHolderSelectedListener;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.tv.lib.core.lang.thread.TaskHelper;
+import com.tv.lib.core.utils.ui.SafeToast;
 import com.tv.lib.frame.adapter.ListBindingAdapter;
 
 import java.util.ArrayList;
@@ -20,21 +24,29 @@ import cn.cibn.kaibo.data.ConfigModel;
 import cn.cibn.kaibo.databinding.FragmentOrdersHomeBinding;
 import cn.cibn.kaibo.model.MenuItem;
 import cn.cibn.kaibo.model.ModelOrder;
+import cn.cibn.kaibo.model.ModelWrapper;
 import cn.cibn.kaibo.model.OrderAction;
+import cn.cibn.kaibo.network.OrderMethod;
 import cn.cibn.kaibo.ui.BaseStackFragment;
 
 public class OrdersHomeFragment extends BaseStackFragment<FragmentOrdersHomeBinding> implements View.OnClickListener {
-
+    private static final String TAG = "OrdersFragment";
+    private static final int PAGE_FIRST = 1;
     private OrderDetailFragment orderDetailFragment;
 
     private OrderAdapter orderAdapter;
     private MenuAdapter menuAdapter;
 
-    private int page = 0;
+    private int orderStatus = 0;
 
-    public static OrdersHomeFragment createInstance(int page) {
+    private List<ModelOrder.Item> orderList = new ArrayList<>();
+    private int curPage;
+    private int total;
+    private int loadingPage;
+
+    public static OrdersHomeFragment createInstance(int orderStatus) {
         Bundle args = new Bundle();
-        args.putInt("page", page);
+        args.putInt("orderStatus", orderStatus);
         OrdersHomeFragment fragment = new OrdersHomeFragment();
         fragment.setArguments(args);
         return fragment;
@@ -63,14 +75,15 @@ public class OrdersHomeFragment extends BaseStackFragment<FragmentOrdersHomeBind
         menuAdapter.setOnItemClickListener(new ListBindingAdapter.OnItemClickListener<MenuItem>() {
             @Override
             public void onItemClick(MenuItem item) {
-                page = item.getId();
-                reqOrderList();
+                orderStatus = item.getId();
+                reqOrderList(PAGE_FIRST);
             }
         });
 
         orderAdapter = new OrderAdapter();
         subBinding.recyclerOrderList.setNumColumns(2);
         subBinding.recyclerOrderList.setAdapter(orderAdapter);
+        orderAdapter.submitList(orderList);
         orderAdapter.setOrderActionListener(new OrderAdapter.OrderActionListener() {
             @Override
             public void onOrderAction(ModelOrder.Item item, OrderAction action) {
@@ -90,21 +103,21 @@ public class OrdersHomeFragment extends BaseStackFragment<FragmentOrdersHomeBind
                     }
                     orderDetailFragment.setData("售后", "微信扫码寄回商品", item);
                 } else if (action.getId() == OrderAction.CONFIRM_RECEIPT.getId()) {
-
+                    reqConfirm(item);
                 }
             }
         });
 
         Bundle args = getArguments();
         if (args != null) {
-            page = args.getInt("page", 0);
+            orderStatus = args.getInt("orderStatus", 0);
         }
 
         subBinding.recyclerOrderMenu.post(new Runnable() {
             @Override
             public void run() {
-                if (subBinding.recyclerOrderMenu.getChildCount() > page) {
-                    subBinding.recyclerOrderMenu.getChildAt(page).requestFocus();
+                if (subBinding.recyclerOrderMenu.getChildCount() > orderStatus) {
+                    subBinding.recyclerOrderMenu.getChildAt(orderStatus).requestFocus();
                 }
             }
         });
@@ -132,7 +145,7 @@ public class OrdersHomeFragment extends BaseStackFragment<FragmentOrdersHomeBind
         menus.add(new MenuItem(3, getString(R.string.order_finished)));
         menus.add(new MenuItem(4, getString(R.string.order_service)));
         menuAdapter.submitList(menus);
-        reqOrderList();
+        reqOrderList(PAGE_FIRST);
     }
 
     @Override
@@ -151,20 +164,20 @@ public class OrdersHomeFragment extends BaseStackFragment<FragmentOrdersHomeBind
         if (id == subBinding.btnGoHome.getId()) {
             goHome();
         } else if (id == subBinding.btnPageNeedPay.getId()) {
-            page = 0;
-            reqOrderList();
+            orderStatus = 0;
+            reqOrderList(PAGE_FIRST);
         } else if (id == subBinding.btnPageNeedSend.getId()) {
-            page = 1;
-            reqOrderList();
+            orderStatus = 1;
+            reqOrderList(PAGE_FIRST);
         } else if (id == subBinding.btnPageNeedReceive.getId()) {
-            page = 2;
-            reqOrderList();
+            orderStatus = 2;
+            reqOrderList(PAGE_FIRST);
         } else if (id == subBinding.btnPageFinished.getId()) {
-            page = 3;
-            reqOrderList();
+            orderStatus = 3;
+            reqOrderList(PAGE_FIRST);
         } else if (id == subBinding.btnPageService.getId()) {
-            page = 4;
-            reqOrderList();
+            orderStatus = 4;
+            reqOrderList(PAGE_FIRST);
         }
     }
 
@@ -185,28 +198,74 @@ public class OrdersHomeFragment extends BaseStackFragment<FragmentOrdersHomeBind
         getChildFragmentManager().clearFragmentResultListener("meGroup");
     }
 
-    private void reqOrderList() {
+    private void reqOrderList(int page) {
+        if (loadingPage == page) {
+            return;
+        }
+        loadingPage = page;
+        if (page == PAGE_FIRST) {
+            total = 0;
+            orderList.clear();
+            orderAdapter.notifyDataSetChanged();
+        }
         TaskHelper.exec(new TaskHelper.Task() {
-            List<ModelOrder.Item> orders;
+            ModelWrapper<ModelOrder> model;
 
             @Override
             public void execute() throws Exception {
-                orders = new ArrayList<>();
-                for (int i = 0; i < 10; i++) {
-                    ModelOrder.Item item = new ModelOrder.Item();
-                    item.setId("" + i);
-                    item.setName("namenamenamenamenamenamenamenamenamenamename" + i);
-                    item.setPrice("100");
-                    item.setAttr("[{\"num\":2}]");
-                    item.setCover_pic("https://img.cbnlive.cn/web/uploads/image/store_1/503630a36565cb688fc94bb7380fd1fe9fb99cf5.jpg");
-                    orders.add(item);
-                }
+                model = OrderMethod.getInstance().reqOrderList(orderStatus, page, 10);
             }
 
             @Override
             public void callback(Exception e) {
-                orderAdapter.submitList(orders);
+                loadingPage = -1;
+                if (model != null && model.isSuccess() && model.getData() != null) {
+                    curPage = page;
+                    total = model.getData().getRow_count();
+                    if (page == PAGE_FIRST) {
+                        orderList.clear();
+                    }
+                    if (model.getData().getList() != null) {
+                        orderList.addAll(model.getData().getList());
+                    }
+                    orderAdapter.notifyDataSetChanged();
+                }
             }
         });
     }
+
+    private void reqConfirm(ModelOrder.Item item) {
+        TaskHelper.exec(new TaskHelper.Task() {
+            ModelWrapper<String> model;
+            @Override
+            public void execute() throws Exception {
+                model = OrderMethod.getInstance().reqOrderConfirm(item.getOrderId());
+            }
+
+            @Override
+            public void callback(Exception e) {
+                if (model != null) {
+                    if (model.isSuccess()) {
+//                        reqOrderList(PAGE_FIRST);
+                        int position = orderList.indexOf(item);
+                        orderList.remove(item);
+                        orderAdapter.notifyItemRemoved(position);
+                        SafeToast.showToast("已确认收货", Toast.LENGTH_SHORT);
+                    } else {
+                        SafeToast.showToast(model.getErrMsg(), Toast.LENGTH_SHORT);
+                    }
+                }
+            }
+        });
+    }
+
+    private OnChildViewHolderSelectedListener onChildViewHolderSelectedListener = new OnChildViewHolderSelectedListener() {
+        @Override
+        public void onChildViewHolderSelected(RecyclerView parent, RecyclerView.ViewHolder child, int position, int subposition) {
+            int count = orderAdapter.getItemCount();
+            if (count - position < 4 && count < total) {
+                reqOrderList(curPage + 1);
+            }
+        }
+    };
 }
