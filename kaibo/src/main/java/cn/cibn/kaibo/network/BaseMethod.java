@@ -15,7 +15,9 @@ import cn.cibn.kaibo.utils.ParamsHelper;
 public class BaseMethod extends Connection {
     protected static final String TAG = "BaseMethod";
 
-    protected static final String SOURCE = "kumiao";
+    protected static final String SOURCE_PLATFORM = "platform";
+    protected static final String SOURCE_LESHI = "leshi";
+    protected static final String SOURCE = SOURCE_PLATFORM;
     protected static final String DOMAIN = "https://api.cbnlive.cn/";
 //    private static final String DOMAIN = "http://liveshop-admin.oeob.net/";
 

@@ -4,6 +4,8 @@ import static cn.cibn.kaibo.network.Constants.CODE_SUCCESS;
 
 import com.google.gson.Gson;
 import com.tv.lib.core.Logger;
+import com.tv.lib.core.lang.ObjectStore;
+import com.tv.lib.core.utils.device.DeviceHelper;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -119,6 +121,7 @@ public class LiveMethod extends BaseMethod {
     public ModelWrapper<ModelLogin> reqLogin(String code) {
         Map<String, String> params = new HashMap<>();
         params.put("code", code);
+        params.put("useridentify", DeviceHelper.getDeviceId(ObjectStore.getContext()));
         return doPost(URL_LOGIN, params, ModelLogin.class);
     }
 
