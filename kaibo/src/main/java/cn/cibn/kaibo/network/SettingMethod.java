@@ -10,6 +10,7 @@ import cn.cibn.kaibo.UserManager;
 import cn.cibn.kaibo.model.ModelConfig;
 import cn.cibn.kaibo.model.ModelOption;
 import cn.cibn.kaibo.model.ModelQuestions;
+import cn.cibn.kaibo.model.ModelVersion;
 import cn.cibn.kaibo.model.ModelWrapper;
 
 public class SettingMethod extends BaseMethod {
@@ -17,6 +18,8 @@ public class SettingMethod extends BaseMethod {
     private static final String URL_SERVER_CONFIG = DOMAIN_APP + "api/default/apk-config";//获取apk配置信息
     private static final String URL_OPTION_LIST = DOMAIN_APP + "api/default/opinion-list";//意见列表
     private static final String URL_FEEDBACK = DOMAIN_APP + "api/user/feedback";//提交意见反馈
+
+    private static final String URL_VERSION = DOMAIN_APP + "api/default/version";//获取最新版本信息
 
     private static SettingMethod instance = new SettingMethod();
 
@@ -55,5 +58,10 @@ public class SettingMethod extends BaseMethod {
         queryParams.put("access_token", UserManager.getInstance().getToken());
         String url = buildParams(URL_FEEDBACK, queryParams);
         return doPost(url, params, ModelConfig.class);
+    }
+
+    public ModelWrapper<ModelVersion.Item> reqCheckVersion() {
+        Map<String, String> params = new HashMap<>();
+        return doGet(URL_VERSION, params, ModelVersion.Item.class);
     }
 }

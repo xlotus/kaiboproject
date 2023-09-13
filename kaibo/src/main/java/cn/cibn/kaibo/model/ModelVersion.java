@@ -1,5 +1,7 @@
 package cn.cibn.kaibo.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -33,52 +35,136 @@ public class ModelVersion extends BaseModel implements Serializable {
     }
 
     public static class Item implements Serializable {
-        private String id;
-        private String versionName;
-        private String updateTime;
+        @SerializedName("store_id")
+        private String storeId;
 
+        @SerializedName("update_time")
+        private long updateTime;
+
+        @SerializedName("file")
+        private String file;
+
+        @SerializedName("is_force")
+        private String isForce;
+
+        @SerializedName("channel")
+        private String channel;
+
+        @SerializedName("version_number")
+        private String versionNumber;
+
+        @SerializedName("id")
+        private String id;
+
+        @SerializedName("add_time")
+        private long addTime;
+
+        @SerializedName("channel_id")
+        private String channelId;
+
+        @SerializedName("file_size")
+        private String fileSize;
+
+        @SerializedName("content")
         private String content;
 
-        private String size;
+        @SerializedName("is_delete")
+        private String isDelete;
 
-        public String getId() {
+        public String getStoreId(){
+            return storeId;
+        }
+
+        public long getUpdateTime(){
+            return updateTime;
+        }
+
+        public String getFile(){
+            return file;
+        }
+
+        public String getIsForce(){
+            return isForce;
+        }
+
+        public String getChannel(){
+            return channel;
+        }
+
+        public String getVersionNumber(){
+            return versionNumber;
+        }
+
+        public String getId(){
             return id;
+        }
+
+        public long getAddTime(){
+            return addTime;
+        }
+
+        public String getChannelId(){
+            return channelId;
+        }
+
+        public String getFileSize(){
+            return fileSize;
+        }
+
+        public String getContent(){
+            return content;
+        }
+
+        public String getIsDelete(){
+            return isDelete;
+        }
+
+        public void setStoreId(String storeId) {
+            this.storeId = storeId;
+        }
+
+        public void setUpdateTime(long updateTime) {
+            this.updateTime = updateTime;
+        }
+
+        public void setFile(String file) {
+            this.file = file;
+        }
+
+        public void setIsForce(String isForce) {
+            this.isForce = isForce;
+        }
+
+        public void setChannel(String channel) {
+            this.channel = channel;
+        }
+
+        public void setVersionNumber(String versionNumber) {
+            this.versionNumber = versionNumber;
         }
 
         public void setId(String id) {
             this.id = id;
         }
 
-        public String getVersionName() {
-            return versionName;
+        public void setAddTime(long addTime) {
+            this.addTime = addTime;
         }
 
-        public void setVersionName(String versionName) {
-            this.versionName = versionName;
+        public void setChannelId(String channelId) {
+            this.channelId = channelId;
         }
 
-        public String getUpdateTime() {
-            return updateTime;
-        }
-
-        public void setUpdateTime(String updateTime) {
-            this.updateTime = updateTime;
-        }
-
-        public String getContent() {
-            return content;
+        public void setFileSize(String fileSize) {
+            this.fileSize = fileSize;
         }
 
         public void setContent(String content) {
             this.content = content;
         }
 
-        public String getSize() {
-            return size;
-        }
-
-        public void setSize(String size) {
-            this.size = size;
+        public void setIsDelete(String isDelete) {
+            this.isDelete = isDelete;
         }
     }
 }

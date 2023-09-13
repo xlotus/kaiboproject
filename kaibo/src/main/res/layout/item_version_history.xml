@@ -48,6 +48,23 @@
         app:layout_constraintBottom_toTopOf="@id/tv_version_time"/>
 
     <TextView
+        android:id="@+id/tv_file_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginStart="@dimen/dp_16"
+        app:layout_goneMarginStart="0dp"
+        android:ellipsize="end"
+        android:lines="1"
+        android:maxWidth="@dimen/dp_180"
+        android:maxLines="1"
+        android:text="大小：12.7MB"
+        android:textColor="@color/common_white_transparent_80"
+        android:textSize="@dimen/sp_10"
+        app:layout_constraintLeft_toRightOf="@id/tv_version_name"
+        app:layout_constraintTop_toTopOf="@id/tv_version_name"/>
+
+    <TextView
         android:id="@+id/tv_version_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

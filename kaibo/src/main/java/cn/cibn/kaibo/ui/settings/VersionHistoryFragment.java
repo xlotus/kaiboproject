@@ -46,9 +46,9 @@ public class VersionHistoryFragment extends KbBaseFragment<FragmentVersionHistor
         List<ModelVersion.Item> list = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             ModelVersion.Item item = new ModelVersion.Item();
-            item.setVersionName("1.0.0");
-            item.setUpdateTime("2023-12-23");
-            item.setSize("12MB");
+            item.setVersionNumber("1.0.0");
+            item.setUpdateTime(1692688941);
+            item.setFileSize("12MB");
             item.setContent(i + "\n1.更人性化的操作界面\n" +
                     "界面全新设计，清新简洁，点划之问尽享愉悦的操作体验\n" +
                     "\n" +

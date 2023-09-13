@@ -18,6 +18,7 @@ import cn.cibn.kaibo.R;
 import cn.cibn.kaibo.data.ConfigModel;
 import cn.cibn.kaibo.databinding.ItemVersionHistoryBinding;
 import cn.cibn.kaibo.model.ModelVersion;
+import cn.cibn.kaibo.utils.DateUtils;
 
 public class VersionHistoryAdapter extends ListBindingAdapter<ModelVersion.Item, ItemVersionHistoryBinding> {
     private static final String TAG = "VideoListAdapter";
@@ -36,8 +37,9 @@ public class VersionHistoryAdapter extends ListBindingAdapter<ModelVersion.Item,
 
     @Override
     public void onBindViewHolder(ModelVersion.Item item, ItemVersionHistoryBinding binding, int position) {
-        binding.tvVersionName.setText(item.getVersionName());
-        binding.tvVersionTime.setText(item.getUpdateTime());
+        binding.tvVersionName.setText("版本：" + item.getVersionNumber());
+        binding.tvFileSize.setText("大小：" + item.getFileSize());
+        binding.tvVersionTime.setText("更新时间：" + DateUtils.formatDate(item.getUpdateTime() * 1000));
         setStyle(item, binding, binding.getRoot().hasFocus());
         if (position == 0) {
             lastSelectedView = binding.getRoot();

@@ -341,10 +341,10 @@ public class SearchFragment extends BaseStackFragment<FragmentSearchBinding> imp
         if (guessLoadingPage == page) {
             return;
         }
-        guessLoadingPage = page;
         if (TextUtils.isEmpty(inputValue)) {
             return;
         }
+        guessLoadingPage = page;
         TaskHelper.exec(new TaskHelper.Task() {
             ModelWrapper<ModelGuess> model;
 
