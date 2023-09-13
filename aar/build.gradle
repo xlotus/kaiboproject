@@ -2,7 +2,10 @@ plugins {
     id 'com.android.library'
 //    id 'walle'
     id 'com.kezong.fat-aar'
+//    id 'com.github.dcendents.android-maven'
+
 }
+group='com.gitee.lastRain'
 
 android {
     compileSdk rootProject.ext.COMPILE_SDK
@@ -52,7 +55,11 @@ android {
         enabled = true
     }
 
-
+    lintOptions {
+        abortOnError false
+        disable 'ValidFragment'
+        disable 'MissingTranslation'
+    }
 }
 
 fataar {
@@ -68,7 +75,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.leanback:leanback:1.0.0'
-    implementation "com.tencent.liteav:LiteAVSDK_Player:11.3.0.13176"
+    embed("com.tencent.liteav:LiteAVSDK_Player:11.3.0.13176")
 }
 
 //walle {

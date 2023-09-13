@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CIBN开播</string>
+    <string name="cign_app_name">CIBN开播</string>
 
 
     <string name="live_list_title">直播列表</string>
